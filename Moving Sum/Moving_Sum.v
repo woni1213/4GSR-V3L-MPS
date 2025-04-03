@@ -49,6 +49,7 @@ module Moving_Sum
 	reg [31:0] add_1_buf[7:0];
 	reg [31:0] add_2_buf[4:0];
 	reg [31:0] add_3_buf[1:0];
+	reg [31:0] add_4_buf;
 
 	// FSM Control
 	always @(posedge i_clk or negedge i_rst)
@@ -166,16 +167,19 @@ module Moving_Sum
 	always @(posedge i_clk or negedge i_rst)
     begin
         if (~i_rst)
-			adc_m_axis_tdata <= 0;
-
-		else if (state == ADD_4)
-			adc_m_axis_tdata <= add_3_buf[0] + add_3_buf[1];
-
-		else if (state == SHIFT)
-			adc_m_axis_tdata <= adc_m_axis_tdata >> 4;
+			add_4_buf <= 0;
 
 		else
-			adc_m_axis_tdata <= adc_m_axis_tdata;
+			add_4_buf <= (state == ADD_4) ? (add_3_buf[0] + add_3_buf[1]) : add_4_buf;
+	end
+
+	always @(posedge i_clk or negedge i_rst)
+    begin
+        if (~i_rst)
+			adc_m_axis_tdata <= 0;
+
+		else
+			adc_m_axis_tdata <= (state == SHIFT) ? (add_4_buf >> 4) : adc_m_axis_tdata;
 	end
 
 	always @(posedge i_clk or negedge i_rst) 
