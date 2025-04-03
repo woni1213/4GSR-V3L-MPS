@@ -37,16 +37,6 @@ module AXI4_Lite_MPS_Core #
 	output reg [7:0]    o_slave_3_ram_addr,
 	output reg		    o_axi_pwm_en,
 
-	// External DO
-	output reg o_main_mc,
-	output reg o_charge_mc,
-	output reg o_discharge_mc,
-	output reg o_ext_do_1,
-	output reg o_ext_do_2,
-	output reg o_ext_do_3,
-	output reg o_earth_rst,
-	output reg o_ext_do_spare, 
-
 	// DPBRAM Read
 	input [31:0]		i_dsp_max_duty,
 	input [31:0]		i_dsp_max_phase,
@@ -369,15 +359,6 @@ module AXI4_Lite_MPS_Core #
 		o_slave_3_ram_cs	<= slv_reg[18][0];
 		o_slave_3_ram_addr	<= slv_reg[19][7:0];
 		o_axi_pwm_en		<= slv_reg[20][0];
-
-		o_main_mc			<= slv_reg[21];
-		o_charge_mc			<= slv_reg[22];
-		o_discharge_mc		<= slv_reg[23];
-		o_ext_do_1			<= slv_reg[24];
-		o_ext_do_2			<= slv_reg[25];
-		o_ext_do_3			<= slv_reg[26];
-		o_earth_rst			<= slv_reg[27];
-		o_ext_do_spare		<= slv_reg[28];
 
 		o_axi_data_valid	<= slv_reg[57];
 		o_m_sfp_1_cmd		<= slv_reg[58][7:0];

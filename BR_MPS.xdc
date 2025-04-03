@@ -117,12 +117,12 @@ set_property -dict { PACKAGE_PIN D11	IOSTANDARD LVCMOS33 } [get_ports o_en_dsp_b
 set_property -dict { PACKAGE_PIN B10	IOSTANDARD LVCMOS33 } [get_ports o_sys_rst];		# ENSOMMR
 set_property -dict { PACKAGE_PIN G8		IOSTANDARD LVCMOS18 } [get_ports o_eeprom_rst];		# WEMEEP~
 
-set_property -dict { PACKAGE_PIN R7		IOSTANDARD LVCMOS18 } [get_ports o_main_mc];		# ILDO0xM
-set_property -dict { PACKAGE_PIN T7		IOSTANDARD LVCMOS18 } [get_ports o_charge_mc];
-set_property -dict { PACKAGE_PIN L7		IOSTANDARD LVCMOS18 } [get_ports o_discharge_mc];
-set_property -dict { PACKAGE_PIN L6		IOSTANDARD LVCMOS18 } [get_ports o_ext_do_1];
-set_property -dict { PACKAGE_PIN H9		IOSTANDARD LVCMOS18 } [get_ports o_ext_do_2];
-set_property -dict { PACKAGE_PIN H8		IOSTANDARD LVCMOS18 } [get_ports o_ext_do_3];
-set_property -dict { PACKAGE_PIN AD2	IOSTANDARD LVCMOS18 } [get_ports o_earth_rst];
-set_property -dict { PACKAGE_PIN AD1	IOSTANDARD LVCMOS18 } [get_ports o_ext_do_spare];
+set_property -dict { PACKAGE_PIN R7		IOSTANDARD LVCMOS18 } [get_ports o_ext_do[0]];		# ILDO0xM
+set_property -dict { PACKAGE_PIN T7		IOSTANDARD LVCMOS18 } [get_ports o_ext_do[1]];
+set_property -dict { PACKAGE_PIN L7		IOSTANDARD LVCMOS18 } [get_ports o_ext_do[2]];
+set_property -dict { PACKAGE_PIN L6		IOSTANDARD LVCMOS18 } [get_ports o_ext_do[3]];
+set_property -dict { PACKAGE_PIN H9		IOSTANDARD LVCMOS18 } [get_ports o_ext_do[4]];
+set_property -dict { PACKAGE_PIN H8		IOSTANDARD LVCMOS18 } [get_ports o_ext_do[5]];
+set_property -dict { PACKAGE_PIN AD2	IOSTANDARD LVCMOS18 } [get_ports o_ext_do[6]];
+set_property -dict { PACKAGE_PIN AD1	IOSTANDARD LVCMOS18 } [get_ports o_ext_do[7]];
 

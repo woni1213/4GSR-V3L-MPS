@@ -65,9 +65,16 @@ module INTL_Top #
 	input i_ext_trg,			// External Trigger i_MEXTRG
 
 	// ADC Raw Data
-	input [31:0] i_dc_floating_data,
-    input [31:0] i_v_floating_data,
-    input [31:0] i_c_floating_data,
+	input [31:0] i_c_data,
+	input [31:0] i_v_data,
+	input [31:0] i_dc_c_data,
+	input [31:0] i_dc_v_data,
+	input [31:0] i_phase_r_adc,
+	input [31:0] i_phase_s_adc,
+	input [31:0] i_phase_t_adc,
+	input [31:0] i_igbt_t_adc,
+	input [31:0] i_i_inductor_t_adc,
+	input [31:0] i_o_inductor_t_adc,
 
 	// Interlock State Out
 	output [31:0] o_intl_state,
@@ -226,9 +233,20 @@ module INTL_Top #
 
 		.i_sys_rst_flag(i_sys_rst_flag),
 
-		.i_dc_floating_data(i_dc_floating_data),
-		.i_c_floating_data(i_c_floating_data),
-		.i_v_floating_data(i_v_floating_data),
+		// .i_c_data(i_c_data),
+		// .i_v_data(i_v_data),
+		// .i_dc_c_data(i_dc_c_data),
+		// .i_dc_v_data(i_dc_v_data),
+		// .i_phase_r_adc(i_phase_r_adc),
+		// .i_phase_s_adc(i_phase_s_adc),
+		// .i_phase_t_adc(i_phase_t_adc),
+		// .i_igbt_t_adc(i_igbt_t_adc),
+		// .i_i_inductor_t_adc(i_i_inductor_t_adc),
+		// .i_o_inductor_t_adc(i_o_inductor_t_adc),
+
+		.i_dc_floating_data(i_dc_v_data),
+		.i_c_floating_data(i_c_data),
+		.i_v_floating_data(i_v_data),
 
 		.i_intl_OC_p(intl_OC_p),
 		.i_intl_OC_n(intl_OC_n),

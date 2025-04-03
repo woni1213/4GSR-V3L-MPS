@@ -56,6 +56,10 @@ module SPI #
 	input i_cpol,
 	input i_cpha,
 
+	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
+	output [31:0] miso_m_axis_tdata,
+	output miso_m_axis_tvalid,
+
 	output o_valid,									// o_miso_data valid.
     output [2:0] o_spi_state						// Debug 용도
 );
@@ -354,6 +358,7 @@ module SPI #
             o_miso_data <= o_miso_data;
     end
 
+	assign o_spi_state = state;
     assign o_spi_clk = spi_clk_flag;
     assign spi_data_p_flag = ((spi_clk_width_cnt == 0) && (spi_clk_flag) && (spi_data_cnt <= (DATA_WIDTH * 2))) ? 1 : 0;	// 마지막 조건은 data 마지막에 한번 더 동작해서 조건을 걸었음
     assign spi_data_n_flag = ((spi_clk_width_cnt == 0) && (~spi_clk_flag) && (spi_data_cnt <= (DATA_WIDTH * 2))) ? 1 : 0;
@@ -364,7 +369,9 @@ module SPI #
     // assign o_miso_data = (spi_data_comp_flag) ? miso_reg : o_miso_data;			// i_miso data는 전송이 완료된 후 write
     assign o_mosi = ( ~o_cs ) ? mosi_reg[DATA_WIDTH - 1] : 1'bz;
 	assign o_valid = (state == done);
-    assign o_spi_state = state;
+    
+	assign miso_m_axis_tdata = o_miso_data;
+	assign miso_m_axis_tvalid = (state == done);
 
 endmodule
         

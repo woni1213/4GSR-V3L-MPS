@@ -2,7 +2,7 @@
 
 /*
 
-MPS MPS Core Module
+BR MPS Core Module
 
 개발 4팀 전경원 차장
 개발 4팀 김선경 사원
@@ -84,16 +84,46 @@ module MPS_Core_Top #
 
     // From ADC
 	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
-	input [31:0] c_adc_s_axis_tdata,					// Current ADC Data (Data Type : Float)
-	input c_adc_s_axis_tvalid,					// Current ADC Data (Data Type : Float)
+	input [31:0] 	c_adc_s_axis_tdata,					// Current ADC Data
+	input 			c_adc_s_axis_tvalid,
 
 	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
-	input [31:0] v_adc_s_axis_tdata,					// Voltage ADC Data (Data Type : Float)
-	input v_adc_s_axis_tvalid,					// Voltage ADC Data (Data Type : Float)
+	input [31:0] 	v_adc_s_axis_tdata,					// Voltage ADC Data
+	input			v_adc_s_axis_tvalid,
 
-	input [31:0] i_dc_adc_data,
+	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
+	input [31:0] 	sub_adc_0_s_axis_tdata,				// DC-Link Voltage Data
+	input 			sub_adc_0_s_axis_tvalid,
+	
+	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
+	input [31:0] 	sub_adc_1_s_axis_tdata,				// Phase R ADC Data
+	input 			sub_adc_1_s_axis_tvalid,
 
-    // Float ?뿰?궛 ?슜 Factor AXIS
+	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
+	input [31:0] 	sub_adc_2_s_axis_tdata,				// Phase S ADC Data
+	input 			sub_adc_2_s_axis_tvalid,
+
+	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
+	input [31:0] 	sub_adc_3_s_axis_tdata,				// Phase T ADC Data
+	input 			sub_adc_3_s_axis_tvalid,
+
+	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
+	input [31:0] 	sub_adc_4_s_axis_tdata,				// DC-Link Current
+	input 			sub_adc_4_s_axis_tvalid,
+
+	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
+	input [31:0] 	sub_adc_5_s_axis_tdata,				// IGBT Temp. ADC Data
+	input 			sub_adc_5_s_axis_tvalid,
+
+	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
+	input [31:0] 	sub_adc_6_s_axis_tdata,				// In Inductor Temp. ADC Data
+	input 			sub_adc_6_s_axis_tvalid,
+
+	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
+	input [31:0] 	sub_adc_7_s_axis_tdata,				// Out Inductor Temp. ADC Data
+	input 			sub_adc_7_s_axis_tvalid,
+
+    // Factor AXIS
 	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
 	output [31:0] o_c_factor_axis_tdata,
 	output o_c_factor_axis_tvalid,
@@ -128,20 +158,19 @@ module MPS_Core_Top #
     (* X_INTERFACE_INFO = "HMT:JKW:m_dpbram_port:1.0 S_XINTF_R_DPBRAM dout1" *) input [15:0] i_xintf_r_ram_dout,
 
 	output o_intl_clr,
+
 	output [31:0] o_set_c,
 	output [31:0] o_set_v,
 	output [31:0] o_c_adc,
 	output [31:0] o_v_adc,
-	output [31:0] o_dc_adc,
-
-	output o_main_mc,
-	output o_charge_mc,
-	output o_discharge_mc,
-	output o_ext_do_1,
-	output o_ext_do_2,
-	output o_ext_do_3,
-	output o_earth_rst,
-	output o_ext_do_spare,
+	output [31:0] o_dc_c_adc,
+	output [31:0] o_dc_v_adc,
+	output [31:0] o_phase_r_adc,
+	output [31:0] o_phase_s_adc,
+	output [31:0] o_phase_t_adc,
+	output [31:0] o_igbt_t_adc,
+	output [31:0] o_i_inductor_t_adc,
+	output [31:0] o_o_inductor_t_adc,
 
     // AXI4 Lite Bus Interface Ports
 	input wire  s00_axi_aclk,
@@ -317,15 +346,6 @@ module MPS_Core_Top #
 		.o_slave_3_ram_addr(slave_3_ram_addr),
 		.o_axi_pwm_en(axi_pwm_en),
 
-		.o_main_mc(o_main_mc),
-		.o_charge_mc(o_charge_mc),
-		.o_discharge_mc(o_discharge_mc),
-		.o_ext_do_1(o_ext_do_1),
-		.o_ext_do_2(o_ext_do_2),
-		.o_ext_do_3(o_ext_do_3),
-		.o_earth_rst(o_earth_rst),
-		.o_ext_do_spare(o_ext_do_spare),
-
 		// DPBRAM Read
         .i_dsp_max_duty(dsp_max_duty),
 		.i_dsp_max_phase(dsp_max_phase),
@@ -350,7 +370,7 @@ module MPS_Core_Top #
 		.i_slave_v(slave_v),
 		.i_slave_status(slave_status),
 		.i_dsp_status(dsp_status),
-		.i_dc_adc_data(i_dc_adc_data),
+		.i_dc_adc_data(sub_adc_4_s_axis_tdata),
 		.i_dsp_ver(dsp_ver),
 		.i_slave_1_ram_data(slave_1_ram_data),
 		.i_slave_2_ram_data(slave_2_ram_data),
@@ -550,7 +570,7 @@ module MPS_Core_Top #
 		.i_slv_state(s_zynq_intl),						// Slave Mode MPS Status
 		.i_curr_data(c_adc_s_axis_tdata),
 		.i_volt_data(v_adc_s_axis_tdata),
-		.i_dc_data(i_dc_adc_data),						// Slave Mode DC-Link
+		.i_dc_data(sub_adc_4_s_axis_tdata),				// Slave Mode DC-Link
 
 		.o_sfp_cmd		(sfp_cmd),						// Slave Mode Input Command
 		.o_sfp_data_1	(sfp_data_1),
@@ -682,6 +702,13 @@ module MPS_Core_Top #
 
 	assign o_c_adc = c_adc_s_axis_tdata;
 	assign o_v_adc = v_adc_s_axis_tdata;
-	assign o_dc_adc = 0;
+	assign o_dc_c_adc = sub_adc_4_s_axis_tdata;
+	assign o_dc_v_adc = sub_adc_0_s_axis_tdata;
+	assign o_phase_r_adc = sub_adc_1_s_axis_tdata;
+	assign o_phase_s_adc = sub_adc_2_s_axis_tdata;
+	assign o_phase_t_adc = sub_adc_3_s_axis_tdata;
+	assign o_igbt_t_adc = sub_adc_5_s_axis_tdata;
+	assign o_i_inductor_t_adc = sub_adc_6_s_axis_tdata;
+	assign o_o_inductor_t_adc = sub_adc_7_s_axis_tdata;
 	
 endmodule
