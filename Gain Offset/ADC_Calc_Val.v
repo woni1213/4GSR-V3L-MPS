@@ -32,17 +32,29 @@ module ADC_Calc_Val
 
 	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
 	output [31:0] v_offset_m_axis_tdata,
-	output v_offset_m_axis_tvalid
+	output v_offset_m_axis_tvalid,
+
+	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
+	output [31:0] sub_gain_m_axis_tdata,
+	output sub_gain_m_axis_tvalid,
+
+	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
+	output [31:0] sub_offset_m_axis_tdata,
+	output sub_offset_m_axis_tvalid
 );
 
 	assign i_gain_m_axis_tdata = 32'h35a0_0000;
 	assign i_offset_m_axis_tdata = 32'hc120_0000;
 	assign v_gain_m_axis_tdata = 32'h35a0_0000;
 	assign v_offset_m_axis_tdata = 32'hc120_0000;
+	assign sub_gain_m_axis_tdata = 32'h39a000a0;
+	assign sub_offset_m_axis_tvalid = 32'hc120_0000;
 
 	assign i_gain_m_axis_tvalid = 1;
 	assign i_offset_m_axis_tvalid = 1;
 	assign v_gain_m_axis_tvalid = 1;
 	assign v_offset_m_axis_tvalid = 1;
+	assign sub_gain_m_axis_tvalid = 1;
+	assign sub_offset_m_axis_tvalid = 1;
 
 endmodule
