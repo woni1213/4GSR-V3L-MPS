@@ -13,14 +13,14 @@ module AXI4_Lite_ADC #
 	input [23:0] i_i_adc_raw_data,
 	input [23:0] i_v_adc_raw_data,
 	
-	input [15:0] i_m_adc_data_0,
-	input [15:0] i_m_adc_data_1,
-	input [15:0] i_m_adc_data_2,
-	input [15:0] i_m_adc_data_3,
-	input [15:0] i_m_adc_data_4,
-	input [15:0] i_m_adc_data_5,
-	input [15:0] i_m_adc_data_6,
-	input [15:0] i_m_adc_data_7,
+	input [15:0] i_s_adc_data_0,
+	input [15:0] i_s_adc_data_1,
+	input [15:0] i_s_adc_data_2,
+	input [15:0] i_s_adc_data_3,
+	input [15:0] i_s_adc_data_4,
+	input [15:0] i_s_adc_data_5,
+	input [15:0] i_s_adc_data_6,
+	input [15:0] i_s_adc_data_7,
 
 	input S_AXI_ACLK,
 	input S_AXI_ARESETN,
@@ -258,14 +258,14 @@ module AXI4_Lite_ADC #
 	begin
 		slv_reg[2] <= i_i_adc_raw_data;
 		slv_reg[3] <= i_v_adc_raw_data;
-		slv_reg[4] <= i_m_adc_data_0;
-		slv_reg[5] <= i_m_adc_data_1;
-		slv_reg[6] <= i_m_adc_data_2;
-		slv_reg[7] <= i_m_adc_data_3;
-		slv_reg[8] <= i_m_adc_data_4;
-		slv_reg[9] <= i_m_adc_data_5;
-		slv_reg[10] <= i_m_adc_data_6;
-		slv_reg[11] <= i_m_adc_data_7;
+		slv_reg[4] <= i_s_adc_data_0;
+		slv_reg[5] <= i_s_adc_data_1;
+		slv_reg[6] <= i_s_adc_data_2;
+		slv_reg[7] <= i_s_adc_data_3;
+		slv_reg[8] <= i_s_adc_data_4;
+		slv_reg[9] <= i_s_adc_data_5;
+		slv_reg[10] <= i_s_adc_data_6;
+		slv_reg[11] <= i_s_adc_data_7;
 	end
 
 	// User logic ends

@@ -42,6 +42,7 @@ set_property -dict { PACKAGE_PIN AF3   IOSTANDARD LVCMOS18 } [get_ports i_s_adc_
 # DSP Control
 set_property -dict { PACKAGE_PIN Y9		IOSTANDARD LVCMOS33 } [get_ports i_dsp_ce];			# CESOM~
 set_property -dict { PACKAGE_PIN AB10	IOSTANDARD LVCMOS33 } [get_ports i_dsp_we];			# XWE0~
+set_property -dict { PACKAGE_PIN AA8	IOSTANDARD LVCMOS33 } [get_ports i_dsp_rd];			# XRD~
 
 # DSP Address
 set_property -dict { PACKAGE_PIN AB15	IOSTANDARD LVCMOS33 } [get_ports i_dsp_addr[0]];	# XA [0]
@@ -83,7 +84,7 @@ set_property -dict { PACKAGE_PIN AH1	IOSTANDARD LVCMOS18 } [get_ports i_w_ready]
 set_property -dict { PACKAGE_PIN AD5	IOSTANDARD LVCMOS18 } [get_ports o_w_valid];		# MMTXP3  DSP : GPIO30
 # set_property -dict { PACKAGE_PIN AD4	IOSTANDARD LVCMOS18 } [get_ports ];					# MMTXP3  DSP : GPIO30
 
-set_property -dict { PACKAGE_PIN AD10	IOSTANDARD LVCMOS33 } [get_ports o_nMENPWM];		# MENPWM
+set_property -dict { PACKAGE_PIN AD10	IOSTANDARD LVCMOS33 } [get_ports o_pwm_en];			# MENPWM
 
 # Extenal Interlock
 set_property -dict { PACKAGE_PIN M6		IOSTANDARD LVCMOS18 } [get_ports i_intl_ext[0]];	# ILDI0xM
@@ -112,7 +113,7 @@ set_property -dict { PACKAGE_PIN K12	IOSTANDARD LVCMOS33 } [get_ports i_pwm_faul
 set_property -dict { PACKAGE_PIN F7		IOSTANDARD LVCMOS18 } [get_ports o_intl_OC_rst];	# MCLOCF~
 
 # System Control
-set_property -dict { PACKAGE_PIN AF10	IOSTANDARD LVCMOS33 } [get_ports i_ext_trg];		# MEXTRG~
+# set_property -dict { PACKAGE_PIN AF10	IOSTANDARD LVCMOS33 } [get_ports ];		# MEXTRG~
 set_property -dict { PACKAGE_PIN D11	IOSTANDARD LVCMOS33 } [get_ports o_en_dsp_boot];	# ENSOMBT~
 set_property -dict { PACKAGE_PIN B10	IOSTANDARD LVCMOS33 } [get_ports o_sys_rst];		# ENSOMMR
 set_property -dict { PACKAGE_PIN G8		IOSTANDARD LVCMOS18 } [get_ports o_eeprom_rst];		# WEMEEP~

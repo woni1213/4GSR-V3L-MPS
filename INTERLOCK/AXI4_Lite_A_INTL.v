@@ -1,26 +1,35 @@
 `timescale 1 ns / 1 ps
 
-module AXI4_Lite_MPS_System #
+module AXI4_Lite_A_INTL #
 (
 	parameter integer C_S_AXI_DATA_WIDTH	= 0,
 	parameter integer C_S_AXI_ADDR_NUM 		= 0,
-	parameter integer C_S_AXI_ADDR_WIDTH	= $clog2(C_S_AXI_ADDR_NUM) + 2
+	parameter integer C_S_AXI_ADDR_WIDTH	= 0
 )
 (
-	output reg o_op_on,
-	output reg o_run,
-	output reg o_ready,
-	output reg o_op_off,
-	output reg [4:0] o_ext_do,
+	output reg [31:0] o_c_over_sp,
+	output reg [31:0] o_v_over_sp,
+	output reg [31:0] o_dc_c_over_sp,
+	output reg [31:0] o_dc_v_over_sp,
 
-	input i_pwm_en,
-	input [15:0] i_ext_di,
-	input [16:0] i_analog_intl,
-	input [2:0] i_mps_fsm_m,
-	input [3:0] i_op_on_fsm,
-	input [3:0] i_op_off_fsm,
-	input [3:0] i_on_state_fail_buf,
-	input [2:0] i_mc,
+	output reg [31:0] o_igbt_t_over_sp,
+	output reg [31:0] o_i_id_t_over_sp,
+	output reg [31:0] o_o_id_t_over_sp,
+
+	output reg [31:0] o_c_data_thresh,
+	output reg [31:0] o_c_cnt_thresh,
+	output reg [31:0] o_c_period,
+	output reg [31:0] o_c_cycle_cnt,
+	output reg [31:0] o_c_diff,
+	output reg [31:0] o_c_delay,
+
+	output reg [31:0] o_v_data_thresh,
+	output reg [31:0] o_v_cnt_thresh,
+	output reg [31:0] o_v_period,
+	output reg [31:0] o_v_cycle_cnt,
+	output reg [31:0] o_v_diff,
+	output reg [31:0] o_v_delay,
+
 
 	input S_AXI_ACLK,
 	input S_AXI_ARESETN,
@@ -61,7 +70,7 @@ module AXI4_Lite_MPS_System #
 
 	// slv_reg IO Type Select. 0 : Input, 1 : Output
 	// slv_reg Start to LSB
-	localparam [C_S_AXI_ADDR_NUM - 1 : 0] io_sel = {10{1'b1}};	// 0 : Input, 1 : Output
+	localparam [C_S_AXI_ADDR_NUM - 1 : 0] io_sel = {20{1'b1}};	// 0 : Input, 1 : Output
 
 	reg [C_S_AXI_DATA_WIDTH - 1 : 0] slv_reg[C_S_AXI_ADDR_NUM - 1 : 0];
 
@@ -246,28 +255,31 @@ module AXI4_Lite_MPS_System #
 		end
 	end
 
-	// User logic start
-
 	always @(posedge S_AXI_ACLK)
 	begin
-		o_op_on		<= slv_reg[0];
-		o_run		<= slv_reg[1];
-		o_ready		<= slv_reg[2];
-		o_ext_do	<= slv_reg[3];
-	end
+		o_c_over_sp 		<= slv_reg[0];
+		o_v_over_sp 		<= slv_reg[1];
+		o_dc_c_over_sp 		<= slv_reg[2];
+		o_dc_v_over_sp 		<= slv_reg[3];
 
-	always @(posedge S_AXI_ACLK)
-	begin
-		slv_reg[10] <= i_pwm_en;
-		slv_reg[11] <= i_ext_di;
-		slv_reg[12] <= i_analog_intl;
-		slv_reg[13] <= i_mps_fsm_m;
-		slv_reg[14] <= i_op_on_fsm;
-		slv_reg[15] <= i_op_off_fsm;
-		slv_reg[16] <= i_on_state_fail_buf;
-		slv_reg[17] <= i_mc;
-	end
+		o_igbt_t_over_sp 	<= slv_reg[4];
+		o_i_id_t_over_sp 	<= slv_reg[5];
+		o_o_id_t_over_sp 	<= slv_reg[6];
 
+		o_c_data_thresh 	<= slv_reg[7];
+		o_c_cnt_thresh 		<= slv_reg[8];
+		o_c_period 			<= slv_reg[9];
+		o_c_cycle_cnt 		<= slv_reg[10];
+		o_c_diff 			<= slv_reg[11];
+		o_c_delay 			<= slv_reg[12];
+
+		o_v_data_thresh 	<= slv_reg[13];
+		o_v_cnt_thresh 		<= slv_reg[14];
+		o_v_period 			<= slv_reg[15];
+		o_v_cycle_cnt 		<= slv_reg[16];
+		o_v_diff 			<= slv_reg[17];
+		o_v_delay 			<= slv_reg[18];
+	end
 	// User logic ends
 
 	assign S_AXI_AWREADY = axi_awready;

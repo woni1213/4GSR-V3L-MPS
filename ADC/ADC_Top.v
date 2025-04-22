@@ -73,7 +73,7 @@ module ADC_Top #
 	output [15:0] o_s_adc_data_6,
 	output [15:0] o_s_adc_data_7,
 
-	output [2:0] o_m_adc_state,
+	output [3:0] o_m_adc_state,
 	output [3:0] o_s_adc_state,
 
 	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
@@ -171,14 +171,14 @@ module ADC_Top #
 		.i_i_adc_raw_data(o_i_adc_data),
 		.i_v_adc_raw_data(o_v_adc_data),
 
-		.i_m_adc_data_0(i_m_adc_data_0),
-		.i_m_adc_data_1(i_m_adc_data_1),
-		.i_m_adc_data_2(i_m_adc_data_2),
-		.i_m_adc_data_3(i_m_adc_data_3),
-		.i_m_adc_data_4(i_m_adc_data_4),
-		.i_m_adc_data_5(i_m_adc_data_5),
-		.i_m_adc_data_6(i_m_adc_data_6),
-		.i_m_adc_data_7(i_m_adc_data_7),
+		.i_s_adc_data_0(i_s_adc_data_0),
+		.i_s_adc_data_1(i_s_adc_data_1),
+		.i_s_adc_data_2(i_s_adc_data_2),
+		.i_s_adc_data_3(i_s_adc_data_3),
+		.i_s_adc_data_4(i_s_adc_data_4),
+		.i_s_adc_data_5(i_s_adc_data_5),
+		.i_s_adc_data_6(i_s_adc_data_6),
+		.i_s_adc_data_7(i_s_adc_data_7),
 		
 		.S_AXI_ACLK(i_clk),
 		.S_AXI_ARESETN(i_rst),

@@ -73,7 +73,7 @@ module SPI_4_Lane
 			RUN 	: n_state = (spi_data_comp_flag) ? DELAY_2 : RUN;
 			DELAY_2 : n_state = (delay_2_cnt >= 2) ? DONE : DELAY_2;
 			DONE 	: n_state = (~i_spi_start) ? IDLE : DONE;
-			default : n_state <= IDLE;
+			default : n_state = IDLE;
 		endcase
 	end
 
@@ -158,8 +158,8 @@ module SPI_4_Lane
 		else if (spi_data_flag)
 			miso_buf <= {miso_buf[4:0], i_miso};
 
-		else if (state == DONE)
-			miso_buf <= 0;
+		// else if (state == DONE)
+		// 	miso_buf <= 0;
 
 		else
 			miso_buf <= miso_buf;

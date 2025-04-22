@@ -50,10 +50,11 @@ module AD7606C
 	localparam INIT_WAIT= 2;
 	localparam IDLE		= 3;
 	localparam CONV		= 4;
-	localparam BUSY		= 5;
-	localparam SPI		= 6;
-	localparam SPI_WAIT	= 7;
-	localparam DONE		= 8;
+	localparam BUSY_H	= 5;
+	localparam BUSY		= 6;
+	localparam SPI		= 7;
+	localparam SPI_WAIT	= 8;
+	localparam DONE		= 9;
 
 	localparam INIT_SET		= 16'h6F00;
 	localparam INIT_DATA_1	= 16'hFFFF;
@@ -88,7 +89,8 @@ module AD7606C
 			INIT		: n_state = INIT_WAIT;
 			INIT_WAIT	: n_state = (i_init_spi_done) ? ((init_cnt == 3) ? IDLE : DELAY) : INIT_WAIT;
 			IDLE		: n_state = (conv_flag) ? CONV : IDLE;
-			CONV		: n_state = (&conv_cnt) ? BUSY : CONV;
+			CONV		: n_state = (conv_cnt == 4) ? BUSY_H : CONV;
+			BUSY_H		: n_state = (i_adc_busy) ? BUSY : BUSY_H;
 			BUSY		: n_state = (~i_adc_busy) ? SPI : BUSY;
 			SPI			: n_state = SPI_WAIT;
 			SPI_WAIT	: n_state = (i_adc_spi_done) ? DONE : SPI_WAIT;
@@ -175,7 +177,7 @@ module AD7606C
 
 	assign o_state = state;
 	assign conv_flag = (cyc_cnt == i_adc_cyc_t - 1);
-	assign o_adc_cnv = ~((state == CONV) && (conv_cnt < 3));
+	assign o_adc_cnv = ~(state == CONV);
 	assign o_cpol = 1;
 	assign o_cpha = (state > 3);
 	assign o_adc_rst = 0;

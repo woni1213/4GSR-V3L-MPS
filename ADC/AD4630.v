@@ -51,17 +51,18 @@ module AD4630
 	output reg [23:0] o_i_adc_data,
 	output reg [23:0] o_v_adc_data,
 
-	output [2:0] o_state
+	output [3:0] o_state
 );
 
 	localparam DELAY	= 0;
 	localparam INIT		= 1;
-	localparam IDLE		= 2;
-	localparam CONV		= 3;
-	localparam BUSY		= 4;
-	localparam SPI		= 5;
-	localparam SPI_WAIT	= 6;
-	localparam DONE		= 7;
+	localparam INIT_WAIT= 2;
+	localparam IDLE		= 3;
+	localparam CONV		= 4;
+	localparam BUSY		= 5;
+	localparam SPI		= 6;
+	localparam SPI_WAIT	= 7;
+	localparam DONE		= 8;
 
 	localparam ADC_CONV_T	= 4;			// 20ns
 
@@ -69,8 +70,8 @@ module AD4630
 	localparam INIT_DATA 	= 24'h00_2080;		// 4-Lane Setting
 	localparam INIT_CLR 	= 24'h00_1401;		// Reg. Mode Config Mode OUT
 
-	reg [2:0] state;
-	reg [2:0] n_state;
+	reg [3:0] state;
+	reg [3:0] n_state;
 
 	// Counter
 	reg [3:0] init_delay_cnt;
@@ -93,15 +94,16 @@ module AD4630
 	always @(*)
 	begin
 		case (state)
-			DELAY	: n_state = ((&init_delay_cnt) && (i_adc_cyc_t >= 100)) ? INIT : DELAY;
-			INIT	: n_state = (i_adc_spi_done) ? ((init_cnt == 2) ? IDLE : DELAY) : INIT;
-			IDLE 	: n_state = (conv_flag) ? CONV : IDLE;
-			CONV	: n_state = (&conv_cnt) ? BUSY : CONV;
-			BUSY	: n_state = (~i_adc_busy) ? SPI : BUSY;
-			SPI		: n_state = SPI_WAIT;
-			SPI_WAIT: n_state = (i_adc_spi_done) ? DONE : SPI_WAIT;
-			DONE	: n_state = IDLE;
-			default : n_state = DELAY;
+			DELAY		: n_state = ((&init_delay_cnt) && (i_adc_cyc_t >= 100)) ? INIT : DELAY;
+			INIT		: n_state = INIT_WAIT;
+			INIT_WAIT	: n_state = (i_adc_spi_done) ? ((init_cnt == 2) ? IDLE : DELAY) : INIT_WAIT;
+			IDLE 		: n_state = (conv_flag) ? CONV : IDLE;
+			CONV		: n_state = (&conv_cnt) ? BUSY : CONV;
+			BUSY		: n_state = (~i_adc_busy) ? SPI : BUSY;
+			SPI			: n_state = SPI_WAIT;
+			SPI_WAIT	: n_state = (i_adc_spi_done) ? DONE : SPI_WAIT;
+			DONE		: n_state = IDLE;
+			default 	: n_state = DELAY;
 		endcase
 	end
 
@@ -138,7 +140,7 @@ module AD4630
 			init_cnt <= 0;
 
 		else
-			init_cnt <= ((state == INIT) && (i_adc_spi_done))? init_cnt + 1 : init_cnt;
+			init_cnt <= ((state == INIT_WAIT) && (i_adc_spi_done))? init_cnt + 1 : init_cnt;
 	end
 
 	always @(posedge i_clk or negedge i_rst)
@@ -147,7 +149,7 @@ module AD4630
 			o_adc_spi_start <= 0;
 
 		else
-			o_adc_spi_start <= (state == SPI);
+			o_adc_spi_start <= ((state == SPI) || (state == INIT));
 	end
 
 	always @(posedge i_clk or negedge i_rst)
@@ -178,14 +180,6 @@ module AD4630
 
 		else
 		begin
-			if (state == INIT)
-			begin
-				o_i_adc_data <= 0;
-				o_v_adc_data <= 0;
-			end
-
-			else
-			begin
 				o_i_adc_data <= (i_adc_spi_done) ? 	{	i_adc_data_4[5], i_adc_data_5[5], i_adc_data_6[5], i_adc_data_7[5],
 														i_adc_data_4[4], i_adc_data_5[4], i_adc_data_6[4], i_adc_data_7[4],
 														i_adc_data_4[3], i_adc_data_5[3], i_adc_data_6[3], i_adc_data_7[3],
@@ -201,14 +195,14 @@ module AD4630
 														i_adc_data_0[1], i_adc_data_1[1], i_adc_data_2[1], i_adc_data_3[1],
 														i_adc_data_0[0], i_adc_data_1[0], i_adc_data_2[0], i_adc_data_3[0] }
 														: o_v_adc_data;
-			end
 		end
 	end
+
 
 	assign o_state = state;
 	assign conv_flag = (cyc_cnt == i_adc_cyc_t - 1);
 	assign o_adc_cnv = (state == CONV);
 	assign o_adc_data_valid = (state == DONE);
-	assign o_adc_init = ((state == DELAY) || (state == INIT));
+	assign o_adc_init = ((state == DELAY) || (state == INIT) || (state == INIT_WAIT));
 	
 endmodule

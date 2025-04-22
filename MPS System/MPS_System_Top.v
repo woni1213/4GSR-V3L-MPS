@@ -12,6 +12,8 @@ BR MPS System Module
  - MPS FSM
  - MPS I/F
 
+ System Off - System On - RUN - INTL - 
+
 */
 
 module MPS_System_Top #
@@ -24,25 +26,15 @@ module MPS_System_Top #
 	input i_clk,
 	input i_rst,
 
+	input [16:0] i_analog_intl,
+	output o_pwm_en,
+
+	input [31:0] i_dc_v,
 	input [15:0] i_ext_di,
 	output [7:0] o_ext_do,
 
-	output o_emergency,
-	output o_main_mc_m,
-	output o_slow_charge_mc_m,
-	output o_discharge_mc_m,
-	output o_diode_over_t_m,
-	output o_igbt_over_t_m,
-	output o_damp_res_over_t_m,
-	output o_diode_flow_m,
-	output o_igbt_res_flow_m,
-	output o_f_door_m,
-	output o_r_door_m,
-	output o_leakage_m,
-	output o_spare_di_m,
-	output o_ext_1_m,
-	output o_ext_2_m,
-	output o_ext_3_m,
+	output [3:0] o_op_on_state,
+	output [3:0] o_op_off_state,
 
 	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
 	input [C_S_AXI_ADDR_WIDTH-1 : 0] s00_axi_awaddr,
@@ -66,23 +58,31 @@ module MPS_System_Top #
 	input s00_axi_rready
 );
 
-	wire ps_main_mc;
-	wire ps_slow_charge_mc;
-	wire ps_discharge_mc;
-	wire ps_ext_do_1;
-	wire ps_ext_do_2;
-	wire ps_ext_do_3;
-	wire ps_leakage_rst;
-	wire ps_spare_do;
+	wire [4:0] ext_do;
+	wire [2:0] mps_fsm_m;
 
-	wire pl_main_mc;
-	wire pl_slow_charge_mc;
-	wire pl_discharge_mc;
-	wire pl_ext_do_1;
-	wire pl_ext_do_2;
-	wire pl_ext_do_3;
-	wire pl_leakage_rst;
-	wire pl_spare_do;
+	reg intl_flag;
+
+	wire op_on;
+	wire run;
+	wire ready;
+	wire op_off;
+	wire op_on_flag;
+	wire op_off_flag;
+	wire [2:0] mc;
+
+	wire [3:0] op_on_fail_buf;
+	wire [3:0] op_on_fsm;
+	wire [3:0] op_off_fsm;
+
+	always @(posedge i_clk or negedge i_rst)
+	begin
+		if (~i_rst)
+			intl_flag <= 0;
+
+		else
+			intl_flag <= ((|i_analog_intl) || (i_ext_di[0]) || (|i_ext_di[8:4]));
+	end
 
 	AXI4_Lite_MPS_System #
 	(
@@ -92,19 +92,21 @@ module MPS_System_Top #
 	)
 	u_AXI4_Lite_MPS_System
 	(
-		.o_mps_sys			(),
-		.o_mps_fsm			(),
-		.o_main_mc			(ps_main_mc),
-		.o_slow_charge_mc	(ps_slow_charge_mc),
-		.o_discharge_mc		(ps_discharge_mc),
-		.o_ext_do_1			(ps_ext_do_1),
-		.o_ext_do_2			(ps_ext_do_2),
-		.o_ext_do_3			(ps_ext_do_3),
-		.o_leakage_rst		(ps_leakage_rst),
-		.o_spare_do			(ps_spare_do),
+		.o_op_on		(op_on),
+		.o_run			(run),
+		.o_ready		(ready),
+		.o_op_off		(op_off),
+		.o_ext_do		(ext_do),
 
+		.i_pwm_en		(o_pwm_en),
 		.i_ext_di		(i_ext_di),
-		.i_mps_fsm_m	(0),
+		.i_analog_intl	(i_analog_intl),
+		.i_mps_fsm_m	(mps_fsm_m),
+		.i_op_on_fsm	(op_on_fsm),
+		.i_op_off_fsm	(op_off_fsm),
+		.i_on_state_fail_buf(op_on_fail_buf),
+		.i_mc			(mc),
+
 
 		.S_AXI_ACLK(i_clk),
 		.S_AXI_ARESETN(i_rst),
@@ -129,23 +131,57 @@ module MPS_System_Top #
 		.S_AXI_RREADY(s00_axi_rready)
 	);
 
-	assign o_emergency = i_ext_di[0];
-	assign o_main_mc_m = i_ext_di[1];
-	assign o_slow_charge_mc_m = i_ext_di[2];
-	assign o_discharge_mc_m = i_ext_di[3];
-	assign o_diode_over_t_m = i_ext_di[4];
-	assign o_igbt_over_t_m = i_ext_di[5];
-	assign o_damp_res_over_t_m = i_ext_di[6];
-	assign o_diode_flow_m = i_ext_di[7];
-	assign o_igbt_res_flow_m = i_ext_di[8];
-	assign o_f_door_m = i_ext_di[9];
-	assign o_r_door_m = i_ext_di[10];
-	assign o_leakage_m = i_ext_di[11];
-	assign o_spare_di_m = i_ext_di[12];
-	assign o_ext_1_m = i_ext_di[13];
-	assign o_ext_2_m = i_ext_di[14];
-	assign o_ext_3_m = i_ext_di[15];
+	MPS_INTL u_MPS_INTL
+	(
+		.i_clk(i_clk),
+		.i_rst(i_rst),
 
-	assign o_ext_do = {ps_main_mc, ps_slow_charge_mc, ps_discharge_mc, ps_ext_do_1, ps_ext_do_2, ps_ext_do_3, ps_leakage_rst, ps_spare_do};
+		.i_analog_intl(i_analog_intl),
+		.i_ext_di(i_ext_di),
+
+		.o_intl_flag(intl_flag)
+	);
+
+	MPS_System_FSM u_MPS_System_FSM
+	(
+		.i_clk(i_clk),
+		.i_rst(i_rst),
+
+		.i_op_on(op_on),
+		.i_run(run),
+		.i_ready(ready),
+		.i_op_off(op_off),
+		.o_mps_fsm_m(mps_fsm_m),
+		.i_op_on_fsm(op_on_fsm),
+		.i_op_off_fsm(op_off_fsm),
+
+		.i_intl_flag(intl_flag),
+		.o_op_on_flag(op_on_flag),
+		.o_op_off_flag(op_off_flag),
+
+		.o_mc(mc),
+		.o_pwm_en(o_pwm_en)
+	);
+
+	MPS_Operation_FSM u_MPS_Operation_FSM
+	(
+		.i_clk(i_clk),
+		.i_rst(i_rst),
+
+		.i_op_on_flag(op_on_flag),
+		.i_op_off_flag(op_off_flag),
+		.i_op_intl(intl_flag),
+
+		.i_dc_v(i_dc_v),
+		.i_ext_di(i_ext_di),
+		
+		.o_on_state_fail_buf(op_on_fail_buf),
+		.o_on_state(op_on_fsm),
+		.o_off_state(op_off_fsm)
+	);
+
+	assign o_op_on_state = op_on_fsm;
+	assign o_op_off_state = op_off_fsm;
+	assign o_ext_do = {ext_do, mc};
 
 endmodule
