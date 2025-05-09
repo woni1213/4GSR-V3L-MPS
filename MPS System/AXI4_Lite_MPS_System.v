@@ -15,7 +15,7 @@ module AXI4_Lite_MPS_System #
 
 	input i_pwm_en,
 	input [15:0] i_ext_di,
-	input [16:0] i_analog_intl,
+	input [17:0] i_analog_intl,
 	input [2:0] i_mps_fsm_m,
 	input [3:0] i_op_on_fsm,
 	input [3:0] i_op_off_fsm,

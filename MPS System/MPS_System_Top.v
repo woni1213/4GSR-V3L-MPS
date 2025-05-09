@@ -26,7 +26,7 @@ module MPS_System_Top #
 	input i_clk,
 	input i_rst,
 
-	input [16:0] i_analog_intl,
+	input [17:0] i_analog_intl,
 	output o_pwm_en,
 
 	input [31:0] i_dc_v,
