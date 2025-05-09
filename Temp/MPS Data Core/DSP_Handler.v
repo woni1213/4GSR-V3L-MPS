@@ -55,16 +55,16 @@ module DSP_Handler
 	output reg [31:0] o_dsp_max_phase,
 	output reg [31:0] o_dsp_max_frequency,
 	output reg [31:0] o_dsp_min_frequency,
-	output reg [31:0] o_dsp_i_min_v,
-	output reg [31:0] o_dsp_i_max_v,
+	output reg [31:0] o_dsp_min_v,
+	output reg [31:0] o_dsp_max_v,
 	output reg [31:0] o_dsp_min_c,
 	output reg [31:0] o_dsp_max_c,
-	output reg [15:0] o_dsp_i_deadband,
-	output reg [15:0] o_dsp_i_sw_freq,
-	output reg [31:0] o_dsp_i_p_gain_c,
+	output reg [15:0] o_dsp_deadband,
+	output reg [15:0] o_dsp_sw_freq,
+	output reg [31:0] o_dsp_p_gain_c,
 	output reg [31:0] o_dsp_i_gain_c,
 	output reg [31:0] o_dsp_d_gain_c,
-	output reg [31:0] o_dsp_i_p_gain_v,
+	output reg [31:0] o_dsp_p_gain_v,
 	output reg [31:0] o_dsp_i_gain_v,
 	output reg [31:0] o_dsp_d_gain_v,
 	output reg [31:0] o_dsp_set_c,
@@ -233,16 +233,16 @@ module DSP_Handler
 			o_dsp_max_phase <= 0;
 			o_dsp_max_frequency <= 0;
 			o_dsp_min_frequency <= 0;
-			o_dsp_i_min_v <= 0;
-			o_dsp_i_max_v <= 0;
+			o_dsp_min_v <= 0;
+			o_dsp_max_v <= 0;
 			o_dsp_min_c <= 0;
 			o_dsp_max_c <= 0;
-			o_dsp_i_deadband <= 0;
-			o_dsp_i_sw_freq <= 0;
-			o_dsp_i_p_gain_c <= 0;
+			o_dsp_deadband <= 0;
+			o_dsp_sw_freq <= 0;
+			o_dsp_p_gain_c <= 0;
 			o_dsp_i_gain_c <= 0;
 			o_dsp_d_gain_c <= 0;
-			o_dsp_i_p_gain_v <= 0;
+			o_dsp_p_gain_v <= 0;
 			o_dsp_i_gain_v <= 0;
 			o_dsp_d_gain_v <= 0;
 			o_dsp_set_c <= 0;
@@ -265,24 +265,24 @@ module DSP_Handler
 				134 : begin o_xintf_r_ram_addr <= 135;		o_dsp_max_frequency[31:16]	<= i_xintf_r_ram_dout;  end
 				135 : begin o_xintf_r_ram_addr <= 136;		o_dsp_min_frequency[15:0]	<= i_xintf_r_ram_dout;  end
 				136 : begin o_xintf_r_ram_addr <= 137;		o_dsp_min_frequency[31:16]	<= i_xintf_r_ram_dout;  end
-				137 : begin o_xintf_r_ram_addr <= 138;		o_dsp_i_min_v[15:0]			<= i_xintf_r_ram_dout;  end
-				138 : begin o_xintf_r_ram_addr <= 139;		o_dsp_i_min_v[31:16]		<= i_xintf_r_ram_dout;  end
-				139 : begin o_xintf_r_ram_addr <= 140;		o_dsp_i_max_v[15:0]			<= i_xintf_r_ram_dout;  end
-				140 : begin o_xintf_r_ram_addr <= 141;		o_dsp_i_max_v[31:16]		<= i_xintf_r_ram_dout;  end
+				137 : begin o_xintf_r_ram_addr <= 138;		o_dsp_min_v[15:0]			<= i_xintf_r_ram_dout;  end
+				138 : begin o_xintf_r_ram_addr <= 139;		o_dsp_min_v[31:16]		<= i_xintf_r_ram_dout;  end
+				139 : begin o_xintf_r_ram_addr <= 140;		o_dsp_max_v[15:0]			<= i_xintf_r_ram_dout;  end
+				140 : begin o_xintf_r_ram_addr <= 141;		o_dsp_max_v[31:16]		<= i_xintf_r_ram_dout;  end
 				141 : begin o_xintf_r_ram_addr <= 142;		o_dsp_min_c[15:0]			<= i_xintf_r_ram_dout;  end
 				142 : begin o_xintf_r_ram_addr <= 143;		o_dsp_min_c[31:16]			<= i_xintf_r_ram_dout;  end
 				143 : begin o_xintf_r_ram_addr <= 144;		o_dsp_max_c[15:0]			<= i_xintf_r_ram_dout;  end
 				144 : begin o_xintf_r_ram_addr <= 145;		o_dsp_max_c[31:16]			<= i_xintf_r_ram_dout;  end
-				145 : begin o_xintf_r_ram_addr <= 146;		o_dsp_i_deadband			<= i_xintf_r_ram_dout;  end
-				146 : begin o_xintf_r_ram_addr <= 147;		o_dsp_i_sw_freq				<= i_xintf_r_ram_dout;  end
-				147 : begin o_xintf_r_ram_addr <= 148;		o_dsp_i_p_gain_c[15:0]		<= i_xintf_r_ram_dout;  end
-				148 : begin o_xintf_r_ram_addr <= 149;		o_dsp_i_p_gain_c[31:16]		<= i_xintf_r_ram_dout;  end
+				145 : begin o_xintf_r_ram_addr <= 146;		o_dsp_deadband			<= i_xintf_r_ram_dout;  end
+				146 : begin o_xintf_r_ram_addr <= 147;		o_dsp_sw_freq				<= i_xintf_r_ram_dout;  end
+				147 : begin o_xintf_r_ram_addr <= 148;		o_dsp_p_gain_c[15:0]		<= i_xintf_r_ram_dout;  end
+				148 : begin o_xintf_r_ram_addr <= 149;		o_dsp_p_gain_c[31:16]		<= i_xintf_r_ram_dout;  end
 				149 : begin o_xintf_r_ram_addr <= 150;		o_dsp_i_gain_c[15:0]		<= i_xintf_r_ram_dout;  end
 				150 : begin o_xintf_r_ram_addr <= 151;		o_dsp_i_gain_c[31:16]		<= i_xintf_r_ram_dout;  end
 				151 : begin o_xintf_r_ram_addr <= 152;		o_dsp_d_gain_c[15:0]		<= i_xintf_r_ram_dout;  end
 				152 : begin o_xintf_r_ram_addr <= 153;		o_dsp_d_gain_c[31:16]		<= i_xintf_r_ram_dout;  end
-				153 : begin o_xintf_r_ram_addr <= 154;		o_dsp_i_p_gain_v[15:0]		<= i_xintf_r_ram_dout;  end
-				154 : begin o_xintf_r_ram_addr <= 155;		o_dsp_i_p_gain_v[31:16]		<= i_xintf_r_ram_dout;  end
+				153 : begin o_xintf_r_ram_addr <= 154;		o_dsp_p_gain_v[15:0]		<= i_xintf_r_ram_dout;  end
+				154 : begin o_xintf_r_ram_addr <= 155;		o_dsp_p_gain_v[31:16]		<= i_xintf_r_ram_dout;  end
 				155 : begin o_xintf_r_ram_addr <= 156;		o_dsp_i_gain_v[15:0]		<= i_xintf_r_ram_dout;  end
 				156 : begin o_xintf_r_ram_addr <= 157;		o_dsp_i_gain_v[31:16]		<= i_xintf_r_ram_dout;  end
 				157 : begin o_xintf_r_ram_addr <= 158;		o_dsp_d_gain_v[15:0]		<= i_xintf_r_ram_dout;  end
@@ -302,16 +302,16 @@ module DSP_Handler
 			o_dsp_max_phase <= o_dsp_max_phase;
 			o_dsp_max_frequency <= o_dsp_max_frequency;
 			o_dsp_min_frequency <= o_dsp_min_frequency;
-			o_dsp_i_min_v <= o_dsp_i_min_v;
-			o_dsp_i_max_v <= o_dsp_i_max_v;
+			o_dsp_min_v <= o_dsp_min_v;
+			o_dsp_max_v <= o_dsp_max_v;
 			o_dsp_min_c <= o_dsp_min_c;
 			o_dsp_max_c <= o_dsp_max_c;
-			o_dsp_i_deadband <= o_dsp_i_deadband;
-			o_dsp_i_sw_freq <= o_dsp_i_sw_freq;
-			o_dsp_i_p_gain_c <= o_dsp_i_p_gain_c;
+			o_dsp_deadband <= o_dsp_deadband;
+			o_dsp_sw_freq <= o_dsp_sw_freq;
+			o_dsp_p_gain_c <= o_dsp_p_gain_c;
 			o_dsp_i_gain_c <= o_dsp_i_gain_c;
 			o_dsp_d_gain_c <= o_dsp_d_gain_c;
-			o_dsp_i_p_gain_v <= o_dsp_i_p_gain_v;
+			o_dsp_p_gain_v <= o_dsp_p_gain_v;
 			o_dsp_i_gain_v <= o_dsp_i_gain_v;
 			o_dsp_d_gain_v <= o_dsp_d_gain_v;
 			o_dsp_set_c <= o_dsp_set_c;

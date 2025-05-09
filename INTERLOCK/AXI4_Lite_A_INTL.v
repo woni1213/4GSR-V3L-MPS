@@ -11,6 +11,7 @@ module AXI4_Lite_A_INTL #
 	output reg [31:0] o_v_over_sp,
 	output reg [31:0] o_dc_c_over_sp,
 	output reg [31:0] o_dc_v_over_sp,
+	output reg [31:0] o_dc_v_under_sp,
 
 	output reg [31:0] o_igbt_t_over_sp,
 	output reg [31:0] o_i_id_t_over_sp,
@@ -29,7 +30,6 @@ module AXI4_Lite_A_INTL #
 	output reg [31:0] o_v_cycle_cnt,
 	output reg [31:0] o_v_diff,
 	output reg [31:0] o_v_delay,
-
 
 	input S_AXI_ACLK,
 	input S_AXI_ARESETN,
@@ -261,24 +261,25 @@ module AXI4_Lite_A_INTL #
 		o_v_over_sp 		<= slv_reg[1];
 		o_dc_c_over_sp 		<= slv_reg[2];
 		o_dc_v_over_sp 		<= slv_reg[3];
+		o_dc_v_under_sp		<= slv_reg[4];
 
-		o_igbt_t_over_sp 	<= slv_reg[4];
-		o_i_id_t_over_sp 	<= slv_reg[5];
-		o_o_id_t_over_sp 	<= slv_reg[6];
+		o_igbt_t_over_sp 	<= slv_reg[5];
+		o_i_id_t_over_sp 	<= slv_reg[6];
+		o_o_id_t_over_sp 	<= slv_reg[7];
 
-		o_c_data_thresh 	<= slv_reg[7];
-		o_c_cnt_thresh 		<= slv_reg[8];
-		o_c_period 			<= slv_reg[9];
-		o_c_cycle_cnt 		<= slv_reg[10];
-		o_c_diff 			<= slv_reg[11];
-		o_c_delay 			<= slv_reg[12];
+		o_c_data_thresh 	<= slv_reg[8];
+		o_c_cnt_thresh 		<= slv_reg[9];
+		o_c_period 			<= slv_reg[10];
+		o_c_cycle_cnt 		<= slv_reg[11];
+		o_c_diff 			<= slv_reg[12];
+		o_c_delay 			<= slv_reg[13];
 
-		o_v_data_thresh 	<= slv_reg[13];
-		o_v_cnt_thresh 		<= slv_reg[14];
-		o_v_period 			<= slv_reg[15];
-		o_v_cycle_cnt 		<= slv_reg[16];
-		o_v_diff 			<= slv_reg[17];
-		o_v_delay 			<= slv_reg[18];
+		o_v_data_thresh 	<= slv_reg[14];
+		o_v_cnt_thresh 		<= slv_reg[15];
+		o_v_period 			<= slv_reg[16];
+		o_v_cycle_cnt 		<= slv_reg[17];
+		o_v_diff 			<= slv_reg[18];
+		o_v_delay 			<= slv_reg[19];
 	end
 	// User logic ends
 

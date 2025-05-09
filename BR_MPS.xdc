@@ -3,6 +3,12 @@
 # 그리고 포트의 라우팅 이름이 해당 보드의 핀 이름임
 # 예시) 회로도 내 CN1001의 라우팅 이름이 A3라면  Kria_K26_SOM_Rev1.xdc 파일의 get_ports는 "som240_1_a3"이다.
 
+set_property -dict { PACKAGE_PIN C3		IOSTANDARD LVCMOS18 } [get_ports sys_clk];			# HPARCK
+
+### LAN Constraints (See Notion - Zynq - Error and Critical Warning Page)
+set_property IODELAY_GROUP tri_mode_ethernet_mac_iodelay_grp1 [get_cells -hier -filter {NAME =~ design_1_i/Ethernet/axi_ethernet_1/* && IODELAY_GROUP != "" }] 
+set_property IODELAY_GROUP tri_mode_ethernet_mac_iodelay_grp2 [get_cells -hier -filter {NAME =~ design_1_i/Ethernet/axi_ethernet_2/* && IODELAY_GROUP != "" }]
+
 # Reset
 # Interlock Reset
 set_property -dict { PACKAGE_PIN F8		IOSTANDARD LVCMOS18 } [get_ports i_sys_rst_flag];	# MONXRST~
@@ -79,7 +85,7 @@ set_property -dict { PACKAGE_PIN W13	IOSTANDARD LVCMOS33 } [get_ports io_dsp_dat
 set_property -dict { PACKAGE_PIN AH2	IOSTANDARD LVCMOS18 } [get_ports i_r_valid];		# MXTMP3  DSP : GPIO26
 set_property -dict { PACKAGE_PIN AH1	IOSTANDARD LVCMOS18 } [get_ports i_w_ready];		# MXTMP4  DSP : GPIO27
 
-# set_property -dict { PACKAGE_PIN AC9	IOSTANDARD LVCMOS18 } [get_ports o_dsp_wf_mode];	# MMTXP1  DSP : GPIO32
+set_property -dict { PACKAGE_PIN AC9	IOSTANDARD LVCMOS18 } [get_ports o_dsp_pwm_on];		# MMTXP1  DSP : GPIO32
 # set_property -dict { PACKAGE_PIN AD9	IOSTANDARD LVCMOS18 } [get_ports o_r_ready];		# MMTXP2  DSP : GPIO33  Not Used
 set_property -dict { PACKAGE_PIN AD5	IOSTANDARD LVCMOS18 } [get_ports o_w_valid];		# MMTXP3  DSP : GPIO30
 # set_property -dict { PACKAGE_PIN AD4	IOSTANDARD LVCMOS18 } [get_ports ];					# MMTXP3  DSP : GPIO30
@@ -116,7 +122,7 @@ set_property -dict { PACKAGE_PIN F7		IOSTANDARD LVCMOS18 } [get_ports o_intl_OC_
 # set_property -dict { PACKAGE_PIN AF10	IOSTANDARD LVCMOS33 } [get_ports ];		# MEXTRG~
 set_property -dict { PACKAGE_PIN D11	IOSTANDARD LVCMOS33 } [get_ports o_en_dsp_boot];	# ENSOMBT~
 set_property -dict { PACKAGE_PIN B10	IOSTANDARD LVCMOS33 } [get_ports o_sys_rst];		# ENSOMMR
-set_property -dict { PACKAGE_PIN G8		IOSTANDARD LVCMOS18 } [get_ports o_eeprom_rst];		# WEMEEP~
+# set_property -dict { PACKAGE_PIN G8		IOSTANDARD LVCMOS18 } [get_ports o_eeprom_rst];		# WEMEEP~
 
 set_property -dict { PACKAGE_PIN R7		IOSTANDARD LVCMOS18 } [get_ports o_ext_do[0]];		# ILDO0xM
 set_property -dict { PACKAGE_PIN T7		IOSTANDARD LVCMOS18 } [get_ports o_ext_do[1]];
@@ -127,3 +133,50 @@ set_property -dict { PACKAGE_PIN H8		IOSTANDARD LVCMOS18 } [get_ports o_ext_do[5
 set_property -dict { PACKAGE_PIN AD2	IOSTANDARD LVCMOS18 } [get_ports o_ext_do[6]];
 set_property -dict { PACKAGE_PIN AD1	IOSTANDARD LVCMOS18 } [get_ports o_ext_do[7]];
 
+### LAN 1	
+set_property -dict { PACKAGE_PIN G3		IOSTANDARD LVCMOS18 } [get_ports lan_1_mdio_mdc];		# EMDCA
+set_property -dict { PACKAGE_PIN F3		IOSTANDARD LVCMOS18 } [get_ports lan_1_mdio_mdio_io];	# EMDIOA
+set_property -dict { PACKAGE_PIN B1		IOSTANDARD LVCMOS18 } [get_ports lan_1_phy_reset];		# ENMREA~
+set_property -dict { PACKAGE_PIN D4		IOSTANDARD LVCMOS18 } [get_ports lan_1_rgmii_rxc];		# ERXCKA
+set_property -dict { PACKAGE_PIN A4		IOSTANDARD LVCMOS18 } [get_ports lan_1_rgmii_rx_ctl];	# ERXCTLA
+set_property -dict { PACKAGE_PIN A1		IOSTANDARD LVCMOS18 } [get_ports lan_1_rgmii_rd[0]];	# ERXD0A
+set_property -dict { PACKAGE_PIN B3		IOSTANDARD LVCMOS18 } [get_ports lan_1_rgmii_rd[1]];	# ERXD1A
+set_property -dict { PACKAGE_PIN A3		IOSTANDARD LVCMOS18 } [get_ports lan_1_rgmii_rd[2]];	# ERXD2A
+set_property -dict { PACKAGE_PIN B4		IOSTANDARD LVCMOS18 } [get_ports lan_1_rgmii_rd[3]];	# ERXD3A
+set_property -dict { PACKAGE_PIN A2		IOSTANDARD LVCMOS18 } [get_ports lan_1_rgmii_txc];		# EGTCKA
+set_property -dict { PACKAGE_PIN F1		IOSTANDARD LVCMOS18 } [get_ports lan_1_rgmii_tx_ctl];	# ETXCTLA
+set_property -dict { PACKAGE_PIN E1		IOSTANDARD LVCMOS18 } [get_ports lan_1_rgmii_td[0]];	# ETXD0A
+set_property -dict { PACKAGE_PIN D1		IOSTANDARD LVCMOS18 } [get_ports lan_1_rgmii_td[1]];	# ETXD1A
+set_property -dict { PACKAGE_PIN F2		IOSTANDARD LVCMOS18 } [get_ports lan_1_rgmii_td[2]];	# ETXD2A
+set_property -dict { PACKAGE_PIN E2		IOSTANDARD LVCMOS18 } [get_ports lan_1_rgmii_td[3]];	# ETXD3A
+
+### LAN 2
+set_property -dict { PACKAGE_PIN R8		IOSTANDARD LVCMOS18 } [get_ports lan_2_mdio_mdc];		# EMDCB
+set_property -dict { PACKAGE_PIN T8		IOSTANDARD LVCMOS18 } [get_ports lan_2_mdio_mdio_io];	# EMDIOB
+set_property -dict { PACKAGE_PIN K1		IOSTANDARD LVCMOS18 } [get_ports lan_2_phy_reset];		# ENMREB~
+set_property -dict { PACKAGE_PIN K4		IOSTANDARD LVCMOS18 } [get_ports lan_2_rgmii_rxc];		# ERXCKB
+set_property -dict { PACKAGE_PIN H3		IOSTANDARD LVCMOS18 } [get_ports lan_2_rgmii_rx_ctl];	# ERXCTLB
+set_property -dict { PACKAGE_PIN H1		IOSTANDARD LVCMOS18 } [get_ports lan_2_rgmii_rd[0]];	# ERXD0B
+set_property -dict { PACKAGE_PIN K2		IOSTANDARD LVCMOS18 } [get_ports lan_2_rgmii_rd[1]];	# ERXD1B
+set_property -dict { PACKAGE_PIN J2		IOSTANDARD LVCMOS18 } [get_ports lan_2_rgmii_rd[2]];	# ERXD2B
+set_property -dict { PACKAGE_PIN H4		IOSTANDARD LVCMOS18 } [get_ports lan_2_rgmii_rd[3]];	# ERXD3B
+set_property -dict { PACKAGE_PIN J1		IOSTANDARD LVCMOS18 } [get_ports lan_2_rgmii_txc];		# EGTCKB
+set_property -dict { PACKAGE_PIN Y8		IOSTANDARD LVCMOS18 } [get_ports lan_2_rgmii_tx_ctl];	# ETXCTLB
+set_property -dict { PACKAGE_PIN U9		IOSTANDARD LVCMOS18 } [get_ports lan_2_rgmii_td[0]];	# ETXD0B
+set_property -dict { PACKAGE_PIN V9		IOSTANDARD LVCMOS18 } [get_ports lan_2_rgmii_td[1]];	# ETXD1B
+set_property -dict { PACKAGE_PIN U8		IOSTANDARD LVCMOS18 } [get_ports lan_2_rgmii_td[2]];	# ETXD2B
+set_property -dict { PACKAGE_PIN V8		IOSTANDARD LVCMOS18 } [get_ports lan_2_rgmii_td[3]];	# ETXD3B
+
+# FRONT
+set_property -dict { PACKAGE_PIN AE12   IOSTANDARD LVCMOS33 } [get_ports front_sw_spi_clk];		# SKSPI
+set_property -dict { PACKAGE_PIN AF12   IOSTANDARD LVCMOS33 } [get_ports o_lcd_cs];				# nCSODM  
+set_property -dict { PACKAGE_PIN AG10   IOSTANDARD LVCMOS33 } [get_ports o_sw_cs];				# nCSIOE
+set_property -dict { PACKAGE_PIN AH10   IOSTANDARD LVCMOS33 } [get_ports front_sw_spi_mosi];	# SCSPI
+set_property -dict { PACKAGE_PIN AF11   IOSTANDARD LVCMOS33 } [get_ports front_sw_spi_miso];	# SDSPI
+set_property -dict { PACKAGE_PIN AG11   IOSTANDARD LVCMOS33 } [get_ports i_sw_intr];			# nINTKY
+set_property -dict { PACKAGE_PIN AH12   IOSTANDARD LVCMOS33 } [get_ports i_ro_enc_state_a];		# ENCKYA
+set_property -dict { PACKAGE_PIN AH11   IOSTANDARD LVCMOS33 } [get_ports i_ro_enc_state_b];		# ENCKYB
+
+# Uart
+set_property -dict { PACKAGE_PIN A12	IOSTANDARD LVCMOS33 } [get_ports uart_rxd];		# 
+set_property -dict { PACKAGE_PIN B11	IOSTANDARD LVCMOS33 } [get_ports uart_txd];		# 

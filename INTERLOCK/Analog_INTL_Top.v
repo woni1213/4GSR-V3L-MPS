@@ -23,6 +23,7 @@ module Analog_INTL_Top #
 	output [31:0] o_v_over_sp,
 	output [31:0] o_dc_c_over_sp,
 	output [31:0] o_dc_v_over_sp,
+	output [31:0] o_dc_v_under_sp,
 
 	output [31:0] o_igbt_t_over_sp,
 	output [31:0] o_i_id_t_over_sp,
@@ -47,6 +48,9 @@ module Analog_INTL_Top #
 	output [31:0] o_phase_under_data,
 	output [31:0] o_phase_over_data,
 
+
+
+	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
 	input wire [C_S_AXI_ADDR_WIDTH-1 : 0] s00_axi_awaddr,
 	input wire [2 : 0] s00_axi_awprot,
 	input wire  s00_axi_awvalid,
@@ -80,6 +84,7 @@ module Analog_INTL_Top #
 		.o_v_over_sp(o_v_over_sp),
 		.o_dc_c_over_sp(o_dc_c_over_sp),
 		.o_dc_v_over_sp(o_dc_v_over_sp),
+		.o_dc_v_under_sp(o_dc_v_under_sp),
 
 		.o_igbt_t_over_sp(o_igbt_t_over_sp),
 		.o_i_id_t_over_sp(o_i_id_t_over_sp),

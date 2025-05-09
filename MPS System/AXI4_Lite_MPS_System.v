@@ -22,6 +22,12 @@ module AXI4_Lite_MPS_System #
 	input [3:0] i_on_state_fail_buf,
 	input [2:0] i_mc,
 
+	output reg o_intl_clr,
+	input i_sys_rst_flag,
+	output reg o_en_dsp_boot,
+	output reg o_sys_rst,
+	output reg o_intl_OC_rst,
+
 	input S_AXI_ACLK,
 	input S_AXI_ARESETN,
 	input [C_S_AXI_ADDR_WIDTH - 1 : 0] S_AXI_AWADDR,
@@ -253,7 +259,13 @@ module AXI4_Lite_MPS_System #
 		o_op_on		<= slv_reg[0];
 		o_run		<= slv_reg[1];
 		o_ready		<= slv_reg[2];
-		o_ext_do	<= slv_reg[3];
+		o_op_off	<= slv_reg[3];
+		o_ext_do	<= slv_reg[4];
+
+		o_en_dsp_boot	<= slv_reg[5];	//
+		o_sys_rst		<= slv_reg[6];	//
+		o_intl_OC_rst	<= slv_reg[7];	//
+		o_intl_clr		<= slv_reg[8];	//
 	end
 
 	always @(posedge S_AXI_ACLK)
@@ -266,6 +278,7 @@ module AXI4_Lite_MPS_System #
 		slv_reg[15] <= i_op_off_fsm;
 		slv_reg[16] <= i_on_state_fail_buf;
 		slv_reg[17] <= i_mc;
+		slv_reg[18] <= i_sys_rst_flag;	//
 	end
 
 	// User logic ends

@@ -56,10 +56,10 @@ module AD7606C
 	localparam SPI_WAIT	= 8;
 	localparam DONE		= 9;
 
-	localparam INIT_SET		= 16'h6F00;
-	localparam INIT_DATA_1	= 16'hFFFF;
-	localparam INIT_DATA_2	= 16'h0218;
-	localparam INIT_CLR		= 16'h0000;
+	localparam INIT_SET		= 16'h6F00;			// Reg. Mode On
+	localparam INIT_DATA_1	= 16'hFFFF;			// Dummy
+	localparam INIT_DATA_2	= 16'h0218;			// DOUT 8 Ch
+	localparam INIT_CLR		= 16'h0000;			// ADC Mode On
 
 	reg [3:0] state;
 	reg [3:0] n_state;

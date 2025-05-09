@@ -19,13 +19,10 @@ module MPS_Data_Core_Top #
 	input i_clk,
 	input i_rst,
 
-	input i_dsp_we,
-	input i_dsp_rd,
-	input i_i_dsp_ce,
-	input [8:0] i_dsp_xa,
-	inout [15:0] io_dsp_xd,
-
+	input i_w_ready,				// Write Ready by DSP. to DSP (MXTMP4)
+	output o_w_valid,				// Write Valid to DSP. to DSP (MXTMP3)
 	input i_tx_en,					// from AXIS FRAME IP
+	input i_r_valid,
 
 	input i_intl_clr,
 	input i_pwm_en,
@@ -80,6 +77,22 @@ module MPS_Data_Core_Top #
 	// SFP Flag
 	output o_sfp_tx_start_flag,
 	input i_sfp_rx_end_flag,
+
+	(* X_INTERFACE_INFO = "xilinx.com:interface:bram_rtl:1.0 XINTF_W_RAM ADDR" *) 	output [9:0] 	o_xintf_w_ram_addr,
+	(* X_INTERFACE_INFO = "xilinx.com:interface:bram_rtl:1.0 XINTF_W_RAM CLK" *) 	output 			o_xintf_w_ram_clk,
+	(* X_INTERFACE_INFO = "xilinx.com:interface:bram_rtl:1.0 XINTF_W_RAM DIN" *) 	output [15:0]	o_xintf_w_ram_din,
+	(* X_INTERFACE_INFO = "xilinx.com:interface:bram_rtl:1.0 XINTF_W_RAM DOUT" *) 	input [15:0]	i_xintf_w_ram_dout,
+	(* X_INTERFACE_INFO = "xilinx.com:interface:bram_rtl:1.0 XINTF_W_RAM EN" *) 	output 			o_xintf_w_ram_en,
+	(* X_INTERFACE_INFO = "xilinx.com:interface:bram_rtl:1.0 XINTF_W_RAM RST" *) 	output 			o_xintf_w_ram_rst,
+	(* X_INTERFACE_INFO = "xilinx.com:interface:bram_rtl:1.0 XINTF_W_RAM WE" *)		output 			o_xintf_w_ram_we,
+
+	(* X_INTERFACE_INFO = "xilinx.com:interface:bram_rtl:1.0 XINTF_R_RAM ADDR" *) 	output [9:0] 	o_xintf_r_ram_addr,
+	(* X_INTERFACE_INFO = "xilinx.com:interface:bram_rtl:1.0 XINTF_R_RAM CLK" *) 	output 			o_xintf_r_ram_clk,
+	(* X_INTERFACE_INFO = "xilinx.com:interface:bram_rtl:1.0 XINTF_R_RAM DIN" *) 	output [15:0]	o_xintf_r_ram_din,
+	(* X_INTERFACE_INFO = "xilinx.com:interface:bram_rtl:1.0 XINTF_R_RAM DOUT" *) 	input [15:0]	i_xintf_r_ram_dout,
+	(* X_INTERFACE_INFO = "xilinx.com:interface:bram_rtl:1.0 XINTF_R_RAM EN" *) 	output 			o_xintf_r_ram_en,
+	(* X_INTERFACE_INFO = "xilinx.com:interface:bram_rtl:1.0 XINTF_R_RAM RST" *) 	output 			o_xintf_r_ram_rst,
+	(* X_INTERFACE_INFO = "xilinx.com:interface:bram_rtl:1.0 XINTF_R_RAM WE" *)		output 			o_xintf_r_ram_we,
 
 	output [31:0] o_set_c,
 	output [31:0] o_set_v,
@@ -244,8 +257,6 @@ module MPS_Data_Core_Top #
 	wire [31:0] sfp_v_diff;
 	wire [31:0] sfp_v_delay;
 
-	wire [15:0]		xintf_z_to_d_data;
-	wire [15:0]		xintf_d_to_z_data;
 
 	AXI4_Lite_MPS_Core #
 	(
@@ -255,12 +266,6 @@ module MPS_Data_Core_Top #
 	)
 	u_AXI4_Lite_MPS_Core
 	(
-		.i_xintf_addr(i_dsp_xa),
-		.o_xintf_z_to_d_data(xintf_z_to_d_data),
-		.i_xintf_d_to_z_data(xintf_d_to_z_data),
-		.i_dsp_we(i_dsp_we),
-
-		.i_zynq_status({i_pwm_en, intl_clr, mps_status}),
 		// ADC Data
 		.i_c_data(o_c),
 		.i_v_data(o_v),
@@ -296,7 +301,6 @@ module MPS_Data_Core_Top #
 		.o_p_gain_v(ps_p_gain_v),
 		.o_i_gain_v(ps_i_gain_v),
 		.o_d_gain_v(ps_d_gain_v),
-		
 
 		// DSP -> Zynq
 		.i_dsp_max_duty(dsp_max_duty),
@@ -379,6 +383,73 @@ module MPS_Data_Core_Top #
 		.S_AXI_RRESP(s00_axi_rresp),
 		.S_AXI_RVALID(s00_axi_rvalid),
 		.S_AXI_RREADY(s00_axi_rready)
+	);
+
+	DSP_Handler
+	u_DSP_Handler
+	(
+		.i_clk(i_clk),
+		.i_rst(i_rst),
+
+		.i_w_ready(i_w_ready),
+		.o_w_valid(o_w_valid),
+		.i_r_valid(i_r_valid),
+
+		// Zynq -> DSP
+		.o_xintf_w_ram_addr(o_xintf_w_ram_addr),
+		.o_xintf_w_ram_din(o_xintf_w_ram_din),
+		.o_xintf_w_ram_ce(o_xintf_w_ram_we),
+
+		.i_c_adc_data(o_c),
+		.i_v_adc_data(o_v),
+		.i_zynq_status({i_pwm_en, intl_clr, mps_status}),
+		.i_set_c(set_c),
+		.i_set_v(set_v),
+		.i_max_duty(max_duty),
+		.i_max_phase(max_phase),
+		.i_max_freq(max_freq),
+		.i_min_freq(min_freq),
+
+		.i_min_c(min_c),
+		.i_max_c(max_c),
+		.i_min_v(min_v),
+		.i_max_v(max_v),
+		.i_deadband(deadband),
+		.i_sw_freq(sw_freq),
+		.i_p_gain_c(p_gain_c),
+		.i_i_gain_c(i_gain_c),
+		.i_d_gain_c(d_gain_c),
+		.i_p_gain_v(p_gain_v),
+		.i_i_gain_v(i_gain_v),
+		.i_d_gain_v(d_gain_v),
+
+		// DSP -> Zynq
+		.i_xintf_r_ram_dout(i_xintf_r_ram_dout),
+		.o_xintf_r_ram_addr(o_xintf_r_ram_addr),
+		.o_xintf_r_ram_ce(),
+
+		.o_dsp_max_duty(dsp_max_duty),
+		.o_dsp_max_phase(dsp_max_phase),
+		.o_dsp_max_frequency(dsp_max_frequency),
+		.o_dsp_min_frequency(dsp_min_frequency),
+		.o_dsp_min_v(dsp_min_v),
+		.o_dsp_max_v(dsp_max_v),
+		.o_dsp_min_c(dsp_min_c),
+		.o_dsp_max_c(dsp_max_c),
+		.o_dsp_deadband(dsp_deadband),
+		.o_dsp_sw_freq(dsp_sw_freq),
+		.o_dsp_p_gain_c(dsp_p_gain_c),
+		.o_dsp_i_gain_c(dsp_i_gain_c),
+		.o_dsp_d_gain_c(dsp_d_gain_c),
+		.o_dsp_p_gain_v(dsp_p_gain_v),
+		.o_dsp_i_gain_v(dsp_i_gain_v),
+		.o_dsp_d_gain_v(dsp_d_gain_v),
+		.o_dsp_set_c(dsp_set_c),
+		.o_dsp_set_v(dsp_set_v),
+		.o_dsp_status(dsp_status),
+
+		.o_r_state(o_r_state),
+		.o_w_state(o_w_state)
 	);
 
 	SFP_Handler
@@ -487,9 +558,6 @@ module MPS_Data_Core_Top #
 
 		.o_state()
 	);
-
-	assign io_dsp_xd = (i_dsp_we) ? xintf_z_to_d_data : 16'hZZZZ;
-	assign xintf_d_to_z_data = (~i_dsp_we) ? io_dsp_xd : 16'hZZZZ;
 
 	assign sfp_slave = (sfp_en && sfp_id);
 

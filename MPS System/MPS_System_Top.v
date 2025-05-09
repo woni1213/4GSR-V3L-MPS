@@ -32,7 +32,16 @@ module MPS_System_Top #
 	input [31:0] i_dc_v,
 	input [15:0] i_ext_di,
 	output [7:0] o_ext_do,
+	input [3:0] i_pwm_fault,
+	input i_intl_OC,
 
+	output o_intl_clr,
+	input i_sys_rst_flag,
+	output o_en_dsp_boot,
+	output o_sys_rst,
+	output o_intl_OC_rst,
+
+	output [2:0] o_mps_fsm_m,
 	output [3:0] o_op_on_state,
 	output [3:0] o_op_off_state,
 
@@ -59,7 +68,6 @@ module MPS_System_Top #
 );
 
 	wire [4:0] ext_do;
-	wire [2:0] mps_fsm_m;
 
 	reg intl_flag;
 
@@ -101,12 +109,17 @@ module MPS_System_Top #
 		.i_pwm_en		(o_pwm_en),
 		.i_ext_di		(i_ext_di),
 		.i_analog_intl	(i_analog_intl),
-		.i_mps_fsm_m	(mps_fsm_m),
+		.i_mps_fsm_m	(o_mps_fsm_m),
 		.i_op_on_fsm	(op_on_fsm),
 		.i_op_off_fsm	(op_off_fsm),
 		.i_on_state_fail_buf(op_on_fail_buf),
 		.i_mc			(mc),
 
+		.o_intl_clr		(o_intl_clr),
+		.i_sys_rst_flag	(i_sys_rst_flag),
+		.o_en_dsp_boot	(o_en_dsp_boot),
+		.o_sys_rst		(o_sys_rst),
+		.o_intl_OC_rst	(o_intl_OC_rst),
 
 		.S_AXI_ACLK(i_clk),
 		.S_AXI_ARESETN(i_rst),
@@ -131,17 +144,6 @@ module MPS_System_Top #
 		.S_AXI_RREADY(s00_axi_rready)
 	);
 
-	MPS_INTL u_MPS_INTL
-	(
-		.i_clk(i_clk),
-		.i_rst(i_rst),
-
-		.i_analog_intl(i_analog_intl),
-		.i_ext_di(i_ext_di),
-
-		.o_intl_flag(intl_flag)
-	);
-
 	MPS_System_FSM u_MPS_System_FSM
 	(
 		.i_clk(i_clk),
@@ -151,7 +153,7 @@ module MPS_System_Top #
 		.i_run(run),
 		.i_ready(ready),
 		.i_op_off(op_off),
-		.o_mps_fsm_m(mps_fsm_m),
+		.o_mps_fsm_m(o_mps_fsm_m),
 		.i_op_on_fsm(op_on_fsm),
 		.i_op_off_fsm(op_off_fsm),
 

@@ -5,6 +5,10 @@
 BR MPS System FSM Module
 개발 2팀 전경원 부장
 
+o_mc[0] : Main MC (Active 1)
+o_mc[1] : Slow Charge MC (Active 1)
+o_mc[2] : DisCharge MC (Active 0)
+
 */
 
 module MPS_System_FSM
@@ -88,16 +92,16 @@ module MPS_System_FSM
 	always @(posedge i_clk or negedge i_rst)
 	begin
 		if (~i_rst)
-			o_mc <= 3'b100;
+			o_mc <= 3'b000;
 
 		else if (state == OP_ON_HOLD)
 		begin
 			case (i_op_on_fsm)
-				1		: o_mc <= 3'b000;
-				3		: o_mc <= 3'b100;
+				1		: o_mc <= 3'b100;
 				5		: o_mc <= 3'b110;
 				9		: o_mc <= 3'b111;
 				11		: o_mc <= 3'b101;
+				15		: o_mc <= 3'b000;
 				default : o_mc <= o_mc;
 			endcase
 		end

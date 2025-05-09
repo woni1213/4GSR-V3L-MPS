@@ -45,9 +45,7 @@ module Osc_INTL
 	reg [31:0] osc_cnt;
 
 	wire min_flag;
-	wire min_valid;
 	wire max_flag;
-	wire max_valid;
 	wire osc_flag;
 	wire osc_valid;
 	wire sub_valid;
@@ -113,10 +111,10 @@ module Osc_INTL
 			min_buf <= 0;
 
 		else if ((state == IDLE) || (state == RESET))
-			min_buf <= i_data;
+			min_buf <= 0;
 
 		else
-			min_buf <= (state == RUN) ? ((min_flag && min_valid) ? i_data : min_buf) : min_buf;
+			min_buf <= (state == RUN) ? ((min_flag) ? i_data : min_buf) : min_buf;
 	end
 
 	always @(posedge i_clk or negedge i_rst) 
@@ -125,10 +123,10 @@ module Osc_INTL
 			max_buf <= 0;
 
 		else if ((state == IDLE) || (state == RESET))
-			max_buf <= i_data;
+			max_buf <= 0;
 
 		else
-			max_buf <= (state == RUN) ? ((max_flag && max_valid) ? i_data : max_buf) : max_buf;
+			max_buf <= (state == RUN) ? ((max_flag) ? i_data : max_buf) : max_buf;
 	end
 
 	always @(posedge i_clk or negedge i_rst) 
@@ -155,30 +153,6 @@ module Osc_INTL
 			o_osc_flag <= ((osc_cnt >= i_cnt_thresh) && i_osc_en) ? 1 : o_osc_flag;
 	end
 
-	floating_point_CGT
-	u_floating_point_CGT_min
-	(
-		.aclk(i_clk),
-		.s_axis_a_tdata(min_buf),
-		.s_axis_a_tvalid(state == RUN),
-		.s_axis_b_tdata(i_data),
-		.s_axis_b_tvalid(state == RUN),
-		.m_axis_result_tdata(min_flag),
-		.m_axis_result_tvalid(min_valid)
-	);
-
-	floating_point_CGT
-	u_floating_point_CGT_max
-	(
-		.aclk(i_clk),
-		.s_axis_a_tdata(i_data),
-		.s_axis_a_tvalid(state == RUN),
-		.s_axis_b_tdata(max_buf),
-		.s_axis_b_tvalid(state == RUN),
-		.m_axis_result_tdata(max_flag),
-		.m_axis_result_tvalid(max_valid)
-	);
-
 	floating_point_sub
 	u_floating_point_sub
 	(
@@ -202,6 +176,24 @@ module Osc_INTL
 		.m_axis_result_tdata(osc_flag),
 		.m_axis_result_tvalid(osc_valid)
 	);
+
+	assign max_flag = (i_data[31] != max_buf[31])  ? (i_data[31] == 0) : (i_data[31] == 0)? 
+							((i_data[30:23] > max_buf[30:23]) ? 1 :
+							(i_data[30:23] < max_buf[30:23]) ? 0 :
+							(i_data[22:0] > max_buf[22:0]) ? 1 : 0) 
+							:
+							((i_data[30:23] < max_buf[30:23]) ? 1 :
+							(i_data[30:23] > max_buf[30:23]) ? 0 :
+							(i_data[22:0] < max_buf[22:0]) ? 1 : 0);
+
+	assign min_flag = (min_buf[31] != i_data[31])  ? (min_buf[31] == 0) : (min_buf[31] == 0)? 
+							((min_buf[30:23] > i_data[30:23]) ? 1 :
+							(min_buf[30:23] < i_data[30:23]) ? 0 :
+							(min_buf[22:0] > i_data[22:0]) ? 1 : 0) 
+							:
+							((min_buf[30:23] < i_data[30:23]) ? 1 :
+							(min_buf[30:23] > i_data[30:23]) ? 0 :
+							(min_buf[22:0] < i_data[22:0]) ? 1 : 0);
 
 	assign o_state = state;
 

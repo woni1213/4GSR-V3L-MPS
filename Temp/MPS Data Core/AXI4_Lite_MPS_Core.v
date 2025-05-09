@@ -7,12 +7,6 @@ module AXI4_Lite_MPS_Core #
 	parameter integer C_S_AXI_ADDR_WIDTH	= 0
 )
 (
-	input [8:0]			i_xintf_addr,
-	output [15:0]		o_xintf_z_to_d_data,
-	input [15:0]		i_xintf_d_to_z_data,
-	input				i_dsp_we,
-
-	input [15:0] 		i_zynq_status,
 	// ADC Data
 	input [31:0]		i_c_data,
 	input [31:0]		i_v_data,
@@ -330,46 +324,71 @@ module AXI4_Lite_MPS_Core #
 		end
 	end
 
-	assign o_xintf_z_to_d_data = 	(i_xintf_addr == 8) ? 	slv_reg[3][15:0] :
-									(i_xintf_addr == 9) ? 	slv_reg[3][31:16] :
-									(i_xintf_addr == 10) ? 	slv_reg[4][15:0] :
-									(i_xintf_addr == 11) ? 	slv_reg[4][31:16] :
-									(i_xintf_addr == 12) ? 	slv_reg[5][15:0] :
-									(i_xintf_addr == 13) ? 	slv_reg[5][31:16] :
-									(i_xintf_addr == 14) ? 	slv_reg[6][15:0] :
-									(i_xintf_addr == 15) ? 	slv_reg[6][31:16] :
-									(i_xintf_addr == 16) ? 	slv_reg[9][15:0] :
-									(i_xintf_addr == 17) ? 	slv_reg[9][31:16] :
-									(i_xintf_addr == 18) ? 	slv_reg[10][15:0] :
-									(i_xintf_addr == 19) ? 	slv_reg[10][31:16] :
-									(i_xintf_addr == 20) ? 	slv_reg[7][15:0] :
-									(i_xintf_addr == 21) ? 	slv_reg[7][31:16] :
-									(i_xintf_addr == 22) ? 	slv_reg[8][15:0] :
-									(i_xintf_addr == 23) ? 	slv_reg[8][31:16] :
-									(i_xintf_addr == 24) ? 	slv_reg[11][15:0] :
-									(i_xintf_addr == 25) ? 	slv_reg[12][15:0] :
-									(i_xintf_addr == 26) ? 	slv_reg[13][15:0] :
-									(i_xintf_addr == 27) ? 	slv_reg[13][31:16] :
-									(i_xintf_addr == 28) ? 	slv_reg[14][15:0] :
-									(i_xintf_addr == 29) ? 	slv_reg[14][31:16] :
-									(i_xintf_addr == 30) ? 	slv_reg[15][15:0] :
-									(i_xintf_addr == 31) ? 	slv_reg[15][31:16] :
-									(i_xintf_addr == 32) ? 	slv_reg[16][15:0] :
-									(i_xintf_addr == 33) ? 	slv_reg[16][31:16] :
-									(i_xintf_addr == 34) ? 	slv_reg[17][15:0] :
-									(i_xintf_addr == 35) ? 	slv_reg[17][31:16] :
-									(i_xintf_addr == 36) ? 	slv_reg[18][15:0] :
-									(i_xintf_addr == 37) ? 	slv_reg[18][31:16] :
-									(i_xintf_addr == 39) ? 	i_zynq_status :
-									(i_xintf_addr == 40) ? 	i_c_data[15:0] :
-									(i_xintf_addr == 41) ? 	i_c_data[31:16] :
-									(i_xintf_addr == 42) ? 	i_v_data[15:0] :
-									(i_xintf_addr == 43) ? 	i_v_data[31:16] :
-									(i_xintf_addr == 44) ? 	slv_reg[1][15:0] :
-									(i_xintf_addr == 45) ? 	slv_reg[1][31:16] :
-									(i_xintf_addr == 46) ? 	slv_reg[2][15:0] :
-									(i_xintf_addr == 47) ? 	slv_reg[2][31:16] : 0;
+	always @(posedge S_AXI_ACLK)
+	begin
+		o_mps_status	<= slv_reg[0];
+		o_set_c			<= slv_reg[1];
+		o_set_v 		<= slv_reg[2];
+		o_max_duty 		<= slv_reg[3];
+		o_max_phase 	<= slv_reg[4];
+		o_max_freq 		<= slv_reg[5];
+		o_min_freq 		<= slv_reg[6];
+		o_min_c 		<= slv_reg[7];
+		o_max_c 		<= slv_reg[8];
+		o_min_v 		<= slv_reg[9];
+		o_max_v 		<= slv_reg[10];
+		o_deadband 		<= slv_reg[11];
+		o_sw_freq 		<= slv_reg[12];
+		o_p_gain_c 		<= slv_reg[13];
+		o_i_gain_c 		<= slv_reg[14];
+		o_d_gain_c 		<= slv_reg[15];
+		o_p_gain_v 		<= slv_reg[16];
+		o_i_gain_v 		<= slv_reg[17];
+		o_d_gain_v 		<= slv_reg[18];
+		o_sfp_en 		<= slv_reg[19];
+		o_sfp_id 		<= slv_reg[20];
 
+		o_m_sfp_data[10:0] 		<= slv_reg[21];
+		o_m_sfp_data[15:11] 	<= slv_reg[22];
+		o_m_sfp_data[47:16] 	<= slv_reg[23];
+		o_m_sfp_data[79:48] 	<= slv_reg[24];
+		o_m_sfp_data[111:80] 	<= slv_reg[25];
+		o_m_sfp_data[143:112] 	<= slv_reg[26];
+		o_m_sfp_data[175:144] 	<= slv_reg[27];
+		o_m_sfp_data[207:176] 	<= slv_reg[28];
+		o_m_sfp_data[239:208] 	<= slv_reg[29];
+		o_m_sfp_data[271:240] 	<= slv_reg[30];
+		o_m_sfp_data[303:272] 	<= slv_reg[31];
+		o_m_sfp_data[335:304] 	<= slv_reg[32];
+		o_m_sfp_data[351:336] 	<= slv_reg[33];
+		o_m_sfp_data[367:352] 	<= slv_reg[34];
+		o_m_sfp_data[399:368] 	<= slv_reg[35];
+		o_m_sfp_data[431:400] 	<= slv_reg[36];
+		o_m_sfp_data[463:432] 	<= slv_reg[37];
+		o_m_sfp_data[495:464] 	<= slv_reg[38];
+		o_m_sfp_data[527:496] 	<= slv_reg[39];
+		o_m_sfp_data[559:528] 	<= slv_reg[40];
+
+		o_m_sfp_data[591:560]	<= slv_reg[41];
+		o_m_sfp_data[623:592]	<= slv_reg[42];
+		o_m_sfp_data[655:624]	<= slv_reg[43];
+		o_m_sfp_data[687:656]	<= slv_reg[44];
+		o_m_sfp_data[719:688]	<= slv_reg[45];
+		o_m_sfp_data[751:720]	<= slv_reg[46];
+		o_m_sfp_data[783:752]	<= slv_reg[47];
+		o_m_sfp_data[815:784]	<= slv_reg[48];
+		o_m_sfp_data[847:816]	<= slv_reg[49];
+		o_m_sfp_data[879:848]	<= slv_reg[50];
+		o_m_sfp_data[911:880]	<= slv_reg[51];
+		o_m_sfp_data[943:912]	<= slv_reg[52];
+		o_m_sfp_data[975:944]	<= slv_reg[53];
+		o_m_sfp_data[1007:976]	<= slv_reg[54];
+		o_m_sfp_data[1039:1008]	<= slv_reg[55];
+		o_m_sfp_data[1071:1040]	<= slv_reg[56];
+		o_m_sfp_data[1103:1072]	<= slv_reg[57];
+		o_m_sfp_data[1135:1104]	<= slv_reg[58];
+		o_m_sfp_data[1167:1136]	<= slv_reg[59];
+	end
 	always @(posedge S_AXI_ACLK)
 	begin
 		slv_reg[64] 	<= i_c_data;
@@ -386,41 +405,24 @@ module AXI4_Lite_MPS_Core #
 		slv_reg[75] 	<= i_phase_rms_r;
 		slv_reg[76] 	<= i_phase_rms_r;
 
-		slv_reg[77][15:0] 	<= ((~i_dsp_we) && (i_xintf_addr == 128)) ? i_xintf_d_to_z_data : slv_reg[77][15:0];
-		slv_reg[77][31:16] 	<= ((~i_dsp_we) && (i_xintf_addr == 129)) ? i_xintf_d_to_z_data : slv_reg[77][31:16];
-		slv_reg[78][15:0] 	<= ((~i_dsp_we) && (i_xintf_addr == 130)) ? i_xintf_d_to_z_data : slv_reg[78][15:0];
-		slv_reg[78][31:16] 	<= ((~i_dsp_we) && (i_xintf_addr == 131)) ? i_xintf_d_to_z_data : slv_reg[78][31:16];
-		slv_reg[79][15:0] 	<= ((~i_dsp_we) && (i_xintf_addr == 132)) ? i_xintf_d_to_z_data : slv_reg[79][15:0];
-		slv_reg[79][31:16] 	<= ((~i_dsp_we) && (i_xintf_addr == 133)) ? i_xintf_d_to_z_data : slv_reg[79][31:16];
-		slv_reg[80][15:0] 	<= ((~i_dsp_we) && (i_xintf_addr == 134)) ? i_xintf_d_to_z_data : slv_reg[80][15:0];
-		slv_reg[80][31:16] 	<= ((~i_dsp_we) && (i_xintf_addr == 135)) ? i_xintf_d_to_z_data : slv_reg[80][31:16];
-		slv_reg[81][15:0] 	<= ((~i_dsp_we) && (i_xintf_addr == 136)) ? i_xintf_d_to_z_data : slv_reg[81][15:0];
-		slv_reg[81][31:16] 	<= ((~i_dsp_we) && (i_xintf_addr == 137)) ? i_xintf_d_to_z_data : slv_reg[81][31:16];
-		slv_reg[82][15:0] 	<= ((~i_dsp_we) && (i_xintf_addr == 138)) ? i_xintf_d_to_z_data : slv_reg[82][15:0];
-		slv_reg[82][31:16] 	<= ((~i_dsp_we) && (i_xintf_addr == 139)) ? i_xintf_d_to_z_data : slv_reg[82][31:16];
-		slv_reg[83][15:0] 	<= ((~i_dsp_we) && (i_xintf_addr == 140)) ? i_xintf_d_to_z_data : slv_reg[83][15:0];
-		slv_reg[83][31:16] 	<= ((~i_dsp_we) && (i_xintf_addr == 141)) ? i_xintf_d_to_z_data : slv_reg[83][31:16];
-		slv_reg[84][15:0] 	<= ((~i_dsp_we) && (i_xintf_addr == 142)) ? i_xintf_d_to_z_data : slv_reg[84][15:0];
-		slv_reg[84][31:16] 	<= ((~i_dsp_we) && (i_xintf_addr == 143)) ? i_xintf_d_to_z_data : slv_reg[84][31:16];
-		slv_reg[85][15:0] 	<= ((~i_dsp_we) && (i_xintf_addr == 144)) ? i_xintf_d_to_z_data : slv_reg[85][15:0];
-		slv_reg[86][15:0] 	<= ((~i_dsp_we) && (i_xintf_addr == 145)) ? i_xintf_d_to_z_data : slv_reg[86][15:0];
-		slv_reg[87][15:0] 	<= ((~i_dsp_we) && (i_xintf_addr == 146)) ? i_xintf_d_to_z_data : slv_reg[87][15:0];
-		slv_reg[87][31:16] 	<= ((~i_dsp_we) && (i_xintf_addr == 147)) ? i_xintf_d_to_z_data : slv_reg[87][31:16];
-		slv_reg[88][15:0] 	<= ((~i_dsp_we) && (i_xintf_addr == 148)) ? i_xintf_d_to_z_data : slv_reg[88][15:0];
-		slv_reg[88][31:16] 	<= ((~i_dsp_we) && (i_xintf_addr == 149)) ? i_xintf_d_to_z_data : slv_reg[88][31:16];
-		slv_reg[89][15:0] 	<= ((~i_dsp_we) && (i_xintf_addr == 150)) ? i_xintf_d_to_z_data : slv_reg[89][15:0];
-		slv_reg[89][31:16] 	<= ((~i_dsp_we) && (i_xintf_addr == 151)) ? i_xintf_d_to_z_data : slv_reg[89][31:16];
-		slv_reg[90][15:0] 	<= ((~i_dsp_we) && (i_xintf_addr == 152)) ? i_xintf_d_to_z_data : slv_reg[90][15:0];
-		slv_reg[90][31:16] 	<= ((~i_dsp_we) && (i_xintf_addr == 153)) ? i_xintf_d_to_z_data : slv_reg[90][31:16];
-		slv_reg[91][15:0] 	<= ((~i_dsp_we) && (i_xintf_addr == 154)) ? i_xintf_d_to_z_data : slv_reg[91][15:0];
-		slv_reg[91][31:16] 	<= ((~i_dsp_we) && (i_xintf_addr == 155)) ? i_xintf_d_to_z_data : slv_reg[91][31:16];
-		slv_reg[92][15:0] 	<= ((~i_dsp_we) && (i_xintf_addr == 156)) ? i_xintf_d_to_z_data : slv_reg[92][15:0];
-		slv_reg[92][31:16] 	<= ((~i_dsp_we) && (i_xintf_addr == 157)) ? i_xintf_d_to_z_data : slv_reg[92][31:16];
-		slv_reg[93][15:0] 	<= ((~i_dsp_we) && (i_xintf_addr == 158)) ? i_xintf_d_to_z_data : slv_reg[93][15:0];
-		slv_reg[93][31:16] 	<= ((~i_dsp_we) && (i_xintf_addr == 159)) ? i_xintf_d_to_z_data : slv_reg[93][31:16];
-		slv_reg[94][15:0] 	<= ((~i_dsp_we) && (i_xintf_addr == 160)) ? i_xintf_d_to_z_data : slv_reg[94][15:0];
-		slv_reg[94][31:16] 	<= ((~i_dsp_we) && (i_xintf_addr == 161)) ? i_xintf_d_to_z_data : slv_reg[94][31:16];
-
+		slv_reg[77]		<= i_dsp_max_duty;
+		slv_reg[78]		<= i_dsp_max_phase;
+		slv_reg[79]		<= i_dsp_max_frequency;
+		slv_reg[80]		<= i_dsp_min_frequency;
+		slv_reg[81]		<= i_dsp_min_v;
+		slv_reg[82]		<= i_dsp_max_v;
+		slv_reg[83]		<= i_dsp_min_c;
+		slv_reg[84]		<= i_dsp_max_c;
+		slv_reg[85]		<= i_dsp_deadband;
+		slv_reg[86]		<= i_dsp_sw_freq;
+		slv_reg[87]		<= i_dsp_p_gain_c;
+		slv_reg[88]		<= i_dsp_i_gain_c;
+		slv_reg[89]		<= i_dsp_d_gain_c;
+		slv_reg[90]		<= i_dsp_p_gain_v;
+		slv_reg[91]		<= i_dsp_i_gain_v;
+		slv_reg[92]		<= i_dsp_d_gain_v;
+		slv_reg[93]		<= i_dsp_set_c;
+		slv_reg[94]		<= i_dsp_set_v;
 		slv_reg[95]		<= i_dsp_status;
 
 		slv_reg[96]		<= i_sfp_c;

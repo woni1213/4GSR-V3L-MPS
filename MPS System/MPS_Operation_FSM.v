@@ -26,8 +26,6 @@ module MPS_Operation_FSM
 
 	localparam IDLE			= 0;
 	localparam CLR			= 1;
-	localparam PHASE_CHK	= 2;
-	localparam PHASE_DONE	= 3;
 	localparam DISCHA_CHK	= 4;
 	localparam DISCHA_DONE	= 5;
 	localparam SLOW_ON_CHK	= 6;
@@ -50,8 +48,8 @@ module MPS_Operation_FSM
 	reg [3:0] off_state;
 	reg [3:0] n_off_state;
 
-	reg [28:0] on_hold_cnt;
-	reg [28:0] off_hold_cnt;
+	reg [27:0] on_hold_cnt;
+	reg [27:0] off_hold_cnt;
 	reg [28:0] timeout_cnt;
 
 	wire dc_on_flag;
@@ -84,9 +82,7 @@ module MPS_Operation_FSM
 	begin
 		case (on_state)
 			IDLE			: n_on_state = (i_op_on_flag) ? CLR : IDLE;
-			CLR				: n_on_state = PHASE_CHK;
-			PHASE_CHK		: n_on_state = ((&on_hold_cnt) && (~i_op_intl)) ? PHASE_DONE : PHASE_CHK;
-			PHASE_DONE		: n_on_state = DISCHA_CHK;
+			CLR				: n_on_state = DISCHA_CHK;
 			DISCHA_CHK		: n_on_state = ((&on_hold_cnt) && (~i_ext_di[3])) ? DISCHA_DONE : DISCHA_CHK;
 			DISCHA_DONE		: n_on_state = SLOW_ON_CHK;
 			SLOW_ON_CHK		: n_on_state = ((&on_hold_cnt) && (i_ext_di[2])) ? SLOW_ON_DONE : SLOW_ON_CHK;
@@ -123,7 +119,7 @@ module MPS_Operation_FSM
 			o_on_state_fail_buf <= 0;
 
 		else
-			o_on_state_fail_buf <= (on_state > o_on_state_fail_buf) ? on_state : o_on_state_fail_buf;
+			o_on_state_fail_buf <= (on_state > o_on_state_fail_buf) ? ((on_state == 15) ? o_on_state_fail_buf : on_state) : o_on_state_fail_buf;
 	end
 
 	always @(posedge i_clk or negedge i_rst)
