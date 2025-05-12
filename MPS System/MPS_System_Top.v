@@ -18,7 +18,7 @@ BR MPS System Module
 
 module MPS_System_Top #
 (
-    parameter integer C_S_AXI_DATA_WIDTH = 32,								// AXI4-Lite Data Width
+	parameter integer C_S_AXI_DATA_WIDTH = 32,								// AXI4-Lite Data Width
 	parameter integer C_S_AXI_ADDR_NUM = 20,								// AXI4-Lite Slave Reg Number
 	parameter integer C_S_AXI_ADDR_WIDTH = $clog2(C_S_AXI_ADDR_NUM) + 2		// AXI4-Lite Address
 )
@@ -162,7 +162,8 @@ module MPS_System_Top #
 		.o_op_off_flag(op_off_flag),
 
 		.o_mc(mc),
-		.o_pwm_en(o_pwm_en)
+		.o_pwm_en(o_pwm_en),
+		.o_fsm_intl()
 	);
 
 	MPS_Operation_FSM u_MPS_Operation_FSM

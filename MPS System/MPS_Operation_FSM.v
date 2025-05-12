@@ -15,6 +15,7 @@ module MPS_Operation_FSM
 	input i_op_on_flag,
 	input i_op_off_flag,
 	input i_op_intl,
+	input i_fsm_intl,
 
 	input [31:0] i_dc_v,
 	input [15:0] i_ext_di,
@@ -130,7 +131,7 @@ module MPS_Operation_FSM
 		else
 			on_hold_cnt <= (on_state[0]) ? 0 : 
 							((&on_hold_cnt) ? on_hold_cnt : 
-							((on_state == 0) || (on_state == 14)) ? 0 : on_hold_cnt + 1);
+							((on_state == 0) || (on_state == 14) || (on_state == 8)) ? 0 : on_hold_cnt + 1);
 	end
 
 	always @(posedge i_clk or negedge i_rst)

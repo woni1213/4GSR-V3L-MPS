@@ -231,7 +231,7 @@ module AXI4_Lite_MPS_System #
 	end
 
 	// Read Data (S to M)
-	always @(*)
+	always @(*) 
 	begin
 		reg_data_out = 0;
 

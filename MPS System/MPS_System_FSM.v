@@ -29,7 +29,8 @@ module MPS_System_FSM
 	output reg o_op_off_flag,
 
 	output reg [2:0] o_mc,
-	output o_pwm_en
+	output o_pwm_en,
+	output o_fsm_intl
 );
 
 	localparam IDLE			= 0;
@@ -66,7 +67,7 @@ module MPS_System_FSM
 			RUN			: n_state = (i_ready) ? READY : RUN;
 			OP_OFF		: n_state = OP_OFF_HOLD;
 			OP_OFF_HOLD	: n_state = (i_op_off_fsm == 3) ? IDLE : OP_OFF_HOLD;
-			INTL		: n_state = OP_OFF;
+			INTL		: n_state = IDLE;
 			default 	: n_state = IDLE;
 		endcase
 	end
@@ -97,6 +98,7 @@ module MPS_System_FSM
 		else if (state == OP_ON_HOLD)
 		begin
 			case (i_op_on_fsm)
+				0		: o_mc <= 3'b000;
 				1		: o_mc <= 3'b100;
 				5		: o_mc <= 3'b110;
 				9		: o_mc <= 3'b111;
