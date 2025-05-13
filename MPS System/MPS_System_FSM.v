@@ -30,7 +30,7 @@ module MPS_System_FSM
 
 	output reg [2:0] o_mc,
 	output o_pwm_en,
-	output o_fsm_intl
+	output o_pm
 );
 
 	localparam IDLE			= 0;
@@ -44,6 +44,8 @@ module MPS_System_FSM
 
 	reg [2:0] state;
 	reg [2:0] n_state;
+
+	reg [1:0] pm_cnt;
 
 	always @(posedge i_clk or negedge i_rst)
 	begin
@@ -103,10 +105,12 @@ module MPS_System_FSM
 				5		: o_mc <= 3'b110;
 				9		: o_mc <= 3'b111;
 				11		: o_mc <= 3'b101;
-				15		: o_mc <= 3'b000;
 				default : o_mc <= o_mc;
 			endcase
 		end
+
+		else if (state == INTL)
+			o_mc <= 3'b000;
 
 		else if (state == OP_OFF_HOLD)
 		begin
@@ -121,7 +125,16 @@ module MPS_System_FSM
 			o_mc <= o_mc;
 	end
 
+	always @(posedge i_clk or negedge i_rst)
+	begin
+		if (~i_rst)
+			pm_cnt <= 0;
+
+		else
+			pm_cnt <= (state == INTL) ? ((&pm_cnt) ? pm_cnt : pm_cnt + 1) : 0;
+	end
+
 	assign o_pwm_en = (state == RUN);
-	assign o_fsm_intl = (state == INTL);
+	assign o_pm = (pm_cnt == 1);
 
 endmodule

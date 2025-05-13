@@ -40,6 +40,7 @@ module MPS_System_Top #
 	output o_en_dsp_boot,
 	output o_sys_rst,
 	output o_intl_OC_rst,
+	output o_dc_v_under_intl_en,
 
 	output [2:0] o_mps_fsm_m,
 	output [3:0] o_op_on_state,
@@ -163,7 +164,7 @@ module MPS_System_Top #
 
 		.o_mc(mc),
 		.o_pwm_en(o_pwm_en),
-		.o_fsm_intl()
+		.o_pm()
 	);
 
 	MPS_Operation_FSM u_MPS_Operation_FSM
@@ -183,6 +184,7 @@ module MPS_System_Top #
 		.o_off_state(op_off_fsm)
 	);
 
+	assign o_dc_v_under_intl_en = ((o_mps_fsm_m == 3) || (o_mps_fsm_m == 4));
 	assign o_op_on_state = op_on_fsm;
 	assign o_op_off_state = op_off_fsm;
 	assign o_ext_do = {ext_do, mc};
