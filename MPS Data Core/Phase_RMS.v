@@ -60,7 +60,7 @@ module Phase_RMS
 
 	always @(posedge i_clk or negedge i_rst) 
 	begin
-		if (~i_rst) 
+		if (~i_rst)
 			period_cnt <= 0;
 
 		else

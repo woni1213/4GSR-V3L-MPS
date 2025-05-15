@@ -383,8 +383,8 @@ module AXI4_Lite_MPS_Core #
 		slv_reg[72] 	<= i_i_inductor_t_data;
 		slv_reg[73] 	<= i_o_inductor_t_data;
 		slv_reg[74] 	<= i_phase_rms_r;
-		slv_reg[75] 	<= i_phase_rms_r;
-		slv_reg[76] 	<= i_phase_rms_r;
+		slv_reg[75] 	<= i_phase_rms_s;
+		slv_reg[76] 	<= i_phase_rms_t;
 
 		slv_reg[77][15:0] 	<= ((~i_dsp_we) && (i_xintf_addr == 128)) ? i_xintf_d_to_z_data : slv_reg[77][15:0];
 		slv_reg[77][31:16] 	<= ((~i_dsp_we) && (i_xintf_addr == 129)) ? i_xintf_d_to_z_data : slv_reg[77][31:16];

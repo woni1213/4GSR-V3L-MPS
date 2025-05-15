@@ -90,7 +90,8 @@ module MPS_System_Top #
 			intl_flag <= 0;
 
 		else
-			intl_flag <= ((|i_analog_intl) || (i_ext_di[0]) || (|i_ext_di[8:4]));
+			// intl_flag <= ((|i_analog_intl) || (i_ext_di[0]) || (|i_ext_di[8:4]));
+			intl_flag <= (|i_analog_intl);
 	end
 
 	AXI4_Lite_MPS_System #

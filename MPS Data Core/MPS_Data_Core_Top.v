@@ -83,19 +83,19 @@ module MPS_Data_Core_Top #
 
 	output [31:0] o_set_c,
 	output [31:0] o_set_v,
-	output [31:0] o_c,
-	output [31:0] o_v,
-	output [31:0] o_dc_c,
-	output [31:0] o_dc_v,
-	output [31:0] o_phase_r,
-	output [31:0] o_phase_s,
-	output [31:0] o_phase_t,
-	output [31:0] o_igbt_t,
-	output [31:0] o_i_inductor_t,
-	output [31:0] o_o_inductor_t,
-	output [31:0] o_phase_rms_r,
-	output [31:0] o_phase_rms_s,
-	output [31:0] o_phase_rms_t,
+	output reg [31:0] o_c,
+	output reg [31:0] o_v,
+	output reg [31:0] o_dc_c,
+	output reg [31:0] o_dc_v,
+	output reg [31:0] o_phase_r,
+	output reg [31:0] o_phase_s,
+	output reg [31:0] o_phase_t,
+	output reg [31:0] o_igbt_t,
+	output reg [31:0] o_i_inductor_t,
+	output reg [31:0] o_o_inductor_t,
+	output reg [31:0] o_phase_rms_r,
+	output reg [31:0] o_phase_rms_s,
+	output reg [31:0] o_phase_rms_t,
 
 	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
 	input wire [C_S_AXI_ADDR_WIDTH-1 : 0] s00_axi_awaddr,
@@ -246,6 +246,37 @@ module MPS_Data_Core_Top #
 
 	wire [15:0]		xintf_z_to_d_data;
 	wire [15:0]		xintf_d_to_z_data;
+
+	always @(posedge i_clk or negedge i_rst) 
+	begin
+		if (~i_rst)
+		begin
+			o_c 			<= 0;
+			o_v 			<= 0;
+			o_dc_c 			<= 0;
+			o_dc_v 			<= 0;
+			o_phase_r 		<= 0;
+			o_phase_s 		<= 0;
+			o_phase_t 		<= 0;
+			o_igbt_t 		<= 0;
+			o_i_inductor_t 	<= 0;
+			o_o_inductor_t 	<= 0;
+		end
+
+		else
+		begin
+			o_c 			<= (c_adc_s_axis_tvalid) ? c_adc_s_axis_tdata : o_c;
+			o_v 			<= (v_adc_s_axis_tvalid) ? v_adc_s_axis_tdata : o_v;
+			o_dc_c 			<= (sub_adc_4_s_axis_tvalid) ? sub_adc_4_s_axis_tdata : o_dc_c;
+			o_dc_v 			<= (sub_adc_0_s_axis_tvalid) ? sub_adc_0_s_axis_tdata : o_dc_v;
+			o_phase_r 		<= (sub_adc_1_s_axis_tvalid) ? sub_adc_1_s_axis_tdata : o_phase_r;
+			o_phase_s 		<= (sub_adc_2_s_axis_tvalid) ? sub_adc_2_s_axis_tdata : o_phase_s;
+			o_phase_t 		<= (sub_adc_3_s_axis_tvalid) ? sub_adc_3_s_axis_tdata : o_phase_t;
+			o_igbt_t 		<= (sub_adc_5_s_axis_tvalid) ? sub_adc_5_s_axis_tdata : o_igbt_t;
+			o_i_inductor_t 	<= (sub_adc_6_s_axis_tvalid) ? sub_adc_6_s_axis_tdata : o_i_inductor_t;
+			o_o_inductor_t 	<= (sub_adc_7_s_axis_tvalid) ? sub_adc_7_s_axis_tdata : o_o_inductor_t;
+		end
+	end
 
 	AXI4_Lite_MPS_Core #
 	(
@@ -516,39 +547,8 @@ module MPS_Data_Core_Top #
 	assign p_gain_v 	= (sfp_slave) ? sfp_p_gain_v : ps_p_gain_v;
 	assign i_gain_v 	= (sfp_slave) ? sfp_i_gain_v : ps_i_gain_v;
 	assign d_gain_v 	= (sfp_slave) ? sfp_d_gain_v : ps_d_gain_v;
-
-	assign o_c_factor_axis_tvalid = 1;
-	assign o_v_factor_axis_tvalid = 1;
-	assign o_dc_c_factor_axis_tvalid = 1;
-	assign o_dc_v_factor_axis_tvalid = 1;
-	assign o_phase_r_factor_axis_tvalid = 1;
-	assign o_phase_s_factor_axis_tvalid = 1;
-	assign o_phase_t_factor_axis_tvalid = 1;
-	assign o_igbt_t_factor_axis_tvalid = 1;
-	assign o_i_inductor_t_factor_axis_tvalid = 1;
-	assign o_o_inductor_t_factor_axis_tvalid = 1;
-
-	assign o_xintf_w_ram_clk = i_clk;
-	assign o_xintf_w_ram_en = 1;
-	assign o_xintf_w_ram_rst = 0;
-	assign o_xintf_r_ram_clk = i_clk;
-	assign o_xintf_r_ram_din = 0;
-	assign o_xintf_r_ram_en = 1;
-	assign o_xintf_r_ram_rst = 0;
-	assign o_xintf_r_ram_we = 0;
 	
 	assign o_set_c = set_c;
 	assign o_set_v = set_v;
-	
-	assign o_c 				= (c_adc_s_axis_tvalid) ? c_adc_s_axis_tdata : o_c;
-	assign o_v 				= (v_adc_s_axis_tvalid) ? v_adc_s_axis_tdata : o_v;
-	assign o_dc_c 			= (sub_adc_4_s_axis_tvalid) ? sub_adc_4_s_axis_tdata : o_dc_c;
-	assign o_dc_v 			= (sub_adc_0_s_axis_tvalid) ? sub_adc_0_s_axis_tdata : o_dc_v;
-	assign o_phase_r 		= (sub_adc_1_s_axis_tvalid) ? sub_adc_1_s_axis_tdata : o_phase_r;
-	assign o_phase_s 		= (sub_adc_2_s_axis_tvalid) ? sub_adc_2_s_axis_tdata : o_phase_s;
-	assign o_phase_t 		= (sub_adc_3_s_axis_tvalid) ? sub_adc_3_s_axis_tdata : o_phase_t;
-	assign o_igbt_t 		= (sub_adc_5_s_axis_tvalid) ? sub_adc_5_s_axis_tdata : o_igbt_t;
-	assign o_i_inductor_t 	= (sub_adc_6_s_axis_tvalid) ? sub_adc_6_s_axis_tdata : o_i_inductor_t;
-	assign o_o_inductor_t 	= (sub_adc_7_s_axis_tvalid) ? sub_adc_7_s_axis_tdata : o_o_inductor_t;
 	
 endmodule
