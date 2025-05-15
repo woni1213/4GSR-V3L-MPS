@@ -372,6 +372,12 @@ module AXI4_Lite_MPS_Core #
 
 	always @(posedge S_AXI_ACLK)
 	begin
+		o_set_c <= slv_reg[1];
+		o_set_v <= slv_reg[2];
+	end
+
+	always @(posedge S_AXI_ACLK)
+	begin
 		slv_reg[64] 	<= i_c_data;
 		slv_reg[65] 	<= i_v_data;
 		slv_reg[66] 	<= i_dc_c_data;
