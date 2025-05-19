@@ -4,11 +4,11 @@
 
 BR MPS System Module
 
-개발 2팀 전경원 부장
+���� 2�� ����� ����
 
-25.04.03 :	최초 생성
+25.04.03 :	���� ����
 
-1. 개요
+1. ����
  - MPS FSM
  - MPS I/F
 
@@ -90,8 +90,8 @@ module MPS_System_Top #
 			intl_flag <= 0;
 
 		else
-			// intl_flag <= ((|i_analog_intl) || (i_ext_di[0]) || (|i_ext_di[8:4]));
 			intl_flag <= (|i_analog_intl);
+			// intl_flag <= ((|i_analog_intl) || (i_ext_di[0]) || (|i_ext_di[8:4]));
 	end
 
 	AXI4_Lite_MPS_System #

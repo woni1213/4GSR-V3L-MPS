@@ -2,12 +2,12 @@
 /*
 
 BR MPS Phase RMS Module
-ê°œë°œ 2íŒ€ ì „ê²½ì› ë¶€ì¥
+°³¹ß 2ÆÀ Àü°æ¿ø ºÎÀå
 
-25.04.24 :	ìµœì´ˆ ìƒì„±
+25.04.24 :	ÃÖÃÊ »ı¼º
 
-1. ê°œìš”
- 3ìƒ ì „ì••ì„ RMSë¡œ ë³€í™˜
+1. °³¿ä
+ 3»ó Àü¾ĞÀ» RMS·Î º¯È¯
 
 */
 
@@ -60,7 +60,7 @@ module Phase_RMS
 
 	always @(posedge i_clk or negedge i_rst) 
 	begin
-		if (~i_rst)
+		if (~i_rst) 
 			period_cnt <= 0;
 
 		else

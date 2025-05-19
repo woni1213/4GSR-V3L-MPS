@@ -1,7 +1,7 @@
-# Kria_K26_SOM_Rev1.xdc íŒŒì¼ ë‚´ì—ì„œ Package Pinì„ ì°¾ì•„ì•¼í•¨.
-# íšŒë¡œë„ ë‚´ CN1001ì´ som240_1, CN1002ê°€ som240_2
-# ê·¸ë¦¬ê³  í¬íŠ¸ì˜ ë¼ìš°íŒ… ì´ë¦„ì´ í•´ë‹¹ ë³´ë“œì˜ í•€ ì´ë¦„ì„
-# ì˜ˆì‹œ) íšŒë¡œë„ ë‚´ CN1001ì˜ ë¼ìš°íŒ… ì´ë¦„ì´ A3ë¼ë©´  Kria_K26_SOM_Rev1.xdc íŒŒì¼ì˜ get_portsëŠ” "som240_1_a3"ì´ë‹¤.
+# Kria_K26_SOM_Rev1.xdc ÆÄÀÏ ³»¿¡¼­ Package PinÀ» Ã£¾Æ¾ßÇÔ.
+# È¸·Îµµ ³» CN1001ÀÌ som240_1, CN1002°¡ som240_2
+# ±×¸®°í Æ÷Æ®ÀÇ ¶ó¿ìÆÃ ÀÌ¸§ÀÌ ÇØ´ç º¸µåÀÇ ÇÉ ÀÌ¸§ÀÓ
+# ¿¹½Ã) È¸·Îµµ ³» CN1001ÀÇ ¶ó¿ìÆÃ ÀÌ¸§ÀÌ A3¶ó¸é  Kria_K26_SOM_Rev1.xdc ÆÄÀÏÀÇ get_ports´Â "som240_1_a3"ÀÌ´Ù.
 
 set_property -dict { PACKAGE_PIN C3		IOSTANDARD LVCMOS18 } [get_ports sys_clk];			# HPARCK
 
@@ -85,12 +85,12 @@ set_property -dict { PACKAGE_PIN W13	IOSTANDARD LVCMOS33 } [get_ports io_dsp_dat
 set_property -dict { PACKAGE_PIN AH2	IOSTANDARD LVCMOS18 } [get_ports i_r_valid];		# MXTMP3  DSP : GPIO26
 set_property -dict { PACKAGE_PIN AH1	IOSTANDARD LVCMOS18 } [get_ports i_w_ready];		# MXTMP4  DSP : GPIO27
 
-set_property -dict { PACKAGE_PIN AC9	IOSTANDARD LVCMOS18 } [get_ports o_dsp_pwm_on];		# MMTXP1  DSP : GPIO32
-# set_property -dict { PACKAGE_PIN AD9	IOSTANDARD LVCMOS18 } [get_ports o_r_ready];		# MMTXP2  DSP : GPIO33  Not Used
+ set_property -dict { PACKAGE_PIN AC9	IOSTANDARD LVCMOS18 } [get_ports o_pwm_on];         # MMTXP1  DSP : GPIO22
+# set_property -dict { PACKAGE_PIN AD9	IOSTANDARD LVCMOS18 } [get_ports o_r_ready];		# MMTXP2  DSP : GPIO23  Not Used
 set_property -dict { PACKAGE_PIN AD5	IOSTANDARD LVCMOS18 } [get_ports o_w_valid];		# MMTXP3  DSP : GPIO30
 # set_property -dict { PACKAGE_PIN AD4	IOSTANDARD LVCMOS18 } [get_ports ];					# MMTXP3  DSP : GPIO30
 
-set_property -dict { PACKAGE_PIN AD10	IOSTANDARD LVCMOS33 } [get_ports o_pwm_en];			# MENPWM
+set_property -dict { PACKAGE_PIN AD10	IOSTANDARD LVCMOS33 } [get_ports o_nMENPWM];		# MENPWM
 
 # Extenal Interlock
 set_property -dict { PACKAGE_PIN M6		IOSTANDARD LVCMOS18 } [get_ports i_intl_ext[0]];	# ILDI0xM
@@ -123,6 +123,7 @@ set_property -dict { PACKAGE_PIN F7		IOSTANDARD LVCMOS18 } [get_ports o_intl_OC_
 set_property -dict { PACKAGE_PIN D11	IOSTANDARD LVCMOS33 } [get_ports o_en_dsp_boot];	# ENSOMBT~
 set_property -dict { PACKAGE_PIN B10	IOSTANDARD LVCMOS33 } [get_ports o_sys_rst];		# ENSOMMR
 # set_property -dict { PACKAGE_PIN G8		IOSTANDARD LVCMOS18 } [get_ports o_eeprom_rst];		# WEMEEP~
+set_property -dict { PACKAGE_PIN E12	IOSTANDARD LVCMOS33 } [get_ports o_ext_do_buf_en];	# MENILO~
 
 set_property -dict { PACKAGE_PIN R7		IOSTANDARD LVCMOS18 } [get_ports o_ext_do[0]];		# ILDO0xM
 set_property -dict { PACKAGE_PIN T7		IOSTANDARD LVCMOS18 } [get_ports o_ext_do[1]];

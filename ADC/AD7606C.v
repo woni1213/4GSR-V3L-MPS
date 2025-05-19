@@ -56,10 +56,10 @@ module AD7606C
 	localparam SPI_WAIT	= 8;
 	localparam DONE		= 9;
 
-	localparam INIT_SET		= 16'h6F00;			// Reg. Mode On
-	localparam INIT_DATA_1	= 16'hFFFF;			// Dummy
-	localparam INIT_DATA_2	= 16'h0218;			// DOUT 8 Ch
-	localparam INIT_CLR		= 16'h0000;			// ADC Mode On
+	localparam INIT_SET		= 16'h6F00;
+	localparam INIT_DATA_1	= 16'hFFFF;
+	localparam INIT_DATA_2	= 16'h0218;
+	localparam INIT_CLR		= 16'h0000;
 
 	reg [3:0] state;
 	reg [3:0] n_state;
@@ -81,6 +81,22 @@ module AD7606C
 		else 
 			state <= n_state;
 	end
+
+	// always @(*)
+	// begin
+	// 	case (state)
+	// 		DELAY		: n_state = (&delay_cnt) ? INIT : DELAY;
+	// 		INIT		: n_state = INIT_WAIT;
+	// 		INIT_WAIT	: n_state = (i_init_spi_done) ? ((init_cnt == 3) ? IDLE : DELAY) : INIT_WAIT;
+	// 		IDLE		: n_state = (conv_flag) ? CONV : IDLE;
+	// 		CONV		: n_state = (&conv_cnt) ? BUSY : CONV;
+	// 		BUSY		: n_state = (~i_adc_busy) ? SPI : BUSY;
+	// 		SPI			: n_state = SPI_WAIT;
+	// 		SPI_WAIT	: n_state = (i_adc_spi_done) ? DONE : SPI_WAIT;
+	// 		DONE		: n_state = IDLE;
+	// 		default 	: n_state = DELAY;
+	// 	endcase
+	// end
 
 	always @(*)
 	begin

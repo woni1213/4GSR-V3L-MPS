@@ -3,7 +3,7 @@
 /*
 
 BR MPS System Operation Module
-ê°œë°œ 2íŒ€ ì „ê²½ì› ë¶€ìž¥
+°³¹ß 2ÆÀ Àü°æ¿ø ºÎÀå
 
 */
 

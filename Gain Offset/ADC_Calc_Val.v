@@ -3,12 +3,12 @@
 /*
 
 BR MPS Calculation Parameter Module
-媛쒕컻 2?? ?쟾寃쎌썝 遺??옣
+??? 2?? ????? ????
 
-25.03.31 :	理쒖큹 ?깮?꽦
+25.03.31 :	??? ????
 
-1. 媛쒖슂
- ?뿰?궛?떇?뿉 ?븘?슂?븳 ?긽?닔
+1. ???
+ ???????? ?????? ????
  1 Step : 0.00000059604644775390625 V (0.59604 uV)
 
  Offset : -10 (0xc1200000)
@@ -266,22 +266,22 @@ module ADC_Calc_Val #
 	assign i_offset_m_axis_tdata = 32'hc120_0000;
 	assign v_gain_m_axis_tdata = 32'h35a0_0000;
 	assign v_offset_m_axis_tdata = 32'hc120_0000;
-	assign o_dc_v_gain_m_axis_tdata = 32'h39a000a0;
-	assign o_dc_v_offset_m_axis_tdata = 32'hc120_0000;
-	assign o_p_r_gain_m_axis_tdata = 32'h39a000a0;
-	assign o_p_r_offset_m_axis_tdata = 32'hc120_0000;
-	assign o_p_s_gain_m_axis_tdata = 32'h39a000a0;
-	assign o_p_s_offset_m_axis_tdata = 32'hc120_0000;
-	assign o_p_t_gain_m_axis_tdata = 32'h39a000a0;
-	assign o_p_t_offset_m_axis_tdata = 32'hc120_0000;
-	assign o_dc_c_gain_m_axis_tdata = 32'h39a000a0;
-	assign o_dc_c_offset_m_axis_tdata = 32'hc120_0000;
-	assign o_igbt_t_gain_m_axis_tdata = 32'h39a000a0;
-	assign o_igbt_t_offset_m_axis_tdata = 32'hc120_0000;
-	assign o_i_id_t_gain_m_axis_tdata = 32'h39a000a0;
-	assign o_i_id_t_offset_m_axis_tdata = 32'hc120_0000;
-	assign o_o_id_t_gain_m_axis_tdata = 32'h39a000a0;
-	assign o_o_id_t_offset_m_axis_tdata = 32'hc120_0000;
+	assign o_dc_v_gain_m_axis_tdata = 32'h3920_0000;
+	assign o_dc_v_offset_m_axis_tdata = 32'hc0a0_0000;
+	assign o_p_r_gain_m_axis_tdata = 32'h3920_0000;
+	assign o_p_r_offset_m_axis_tdata = 32'hc0a0_0000;
+	assign o_p_s_gain_m_axis_tdata = 32'h3920_0000;
+	assign o_p_s_offset_m_axis_tdata = 32'hc0a0_0000;
+	assign o_p_t_gain_m_axis_tdata = 32'h3920_0000;
+	assign o_p_t_offset_m_axis_tdata = 32'hc0a0_0000;
+	assign o_dc_c_gain_m_axis_tdata = 32'h3920_0000;
+	assign o_dc_c_offset_m_axis_tdata = 32'hc0a0_0000;
+	assign o_igbt_t_gain_m_axis_tdata = 32'h3920_0000;
+	assign o_igbt_t_offset_m_axis_tdata = 32'hc0a0_0000;
+	assign o_i_id_t_gain_m_axis_tdata = 32'h3920_0000;
+	assign o_i_id_t_offset_m_axis_tdata = 32'hc0a0_0000;
+	assign o_o_id_t_gain_m_axis_tdata = 32'h3920_0000;
+	assign o_o_id_t_offset_m_axis_tdata = 32'hc0a0_0000;
 
 	assign i_gain_m_axis_tvalid = 1;
 	assign i_offset_m_axis_tvalid = 1;

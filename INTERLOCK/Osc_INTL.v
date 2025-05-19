@@ -3,11 +3,11 @@
 /*
 
 MPS INTerLock Module
-ê°œë°œ 2íŒ€ ì „ê²½ì› ë¶€ì¥
+ê°œë°œ 2?? ? „ê²½ì› ë¶??¥
 
-25.04.10 :	ìµœì´ˆ ìƒì„±
+25.04.10 :	ìµœì´ˆ ?ƒ?„±
 
-Interlockì´ ë§ì•„ì ¸ì„œ ìƒˆë¡œ ëª¨ë“ˆ ë§Œë“¬
+Interlock?´ ë§ì•„? ¸?„œ ?ƒˆë¡? ëª¨ë“ˆ ë§Œë“¬
 
  - 
 
@@ -29,7 +29,11 @@ module Osc_INTL
 
 	output reg o_osc_flag,
 
-	output [2:0] o_state
+	output [2:0] o_state,
+	
+	// Debug
+	output [31:0] o_osc_cnt,
+	output reg [31:0] o_sub_buf
 );
 
 	parameter IDLE	= 0;
@@ -196,5 +200,17 @@ module Osc_INTL
 							(min_buf[22:0] < i_data[22:0]) ? 1 : 0);
 
 	assign o_state = state;
+	
+	// Debug
+	assign o_osc_cnt = osc_cnt;
+	
+	always @(posedge i_clk or negedge i_rst) 
+	begin
+		if (~i_rst)
+			o_sub_buf <= 0;
+
+		else
+			o_sub_buf <= (sub_valid) ? sub_buf : o_sub_buf;
+	end
 
 endmodule

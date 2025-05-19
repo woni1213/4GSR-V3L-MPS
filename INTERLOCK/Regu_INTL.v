@@ -29,7 +29,8 @@ module Regu_INTL
 
 	output reg o_regu_flag,
 
-	output [1:0] o_state
+	output [1:0] o_state,
+	output reg [31:0] o_regu_sub
 );
 
 	parameter IDLE	= 0;
@@ -99,6 +100,15 @@ module Regu_INTL
 
 		else
 			o_regu_flag <= (regu_flag && comp_valid) ? 1 : ((i_clr) ? 0 : o_regu_flag);
+	end
+
+	always @(posedge i_clk or negedge i_rst)
+	begin
+		if (~i_rst)
+			o_regu_sub <= 0;
+
+		else
+			o_regu_sub <= (abs_valid) ? abs_buf : o_regu_sub;
 	end
 
 	floating_point_sub

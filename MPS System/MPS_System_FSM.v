@@ -3,7 +3,7 @@
 /*
 
 BR MPS System FSM Module
-ê°œë°œ 2íŒ€ ì „ê²½ì› ë¶€ì¥
+°³¹ß 2ÆÀ Àü°æ¿ø ºÎÀå
 
 o_mc[0] : Main MC (Active 1)
 o_mc[1] : Slow Charge MC (Active 1)
@@ -136,5 +136,6 @@ module MPS_System_FSM
 
 	assign o_pwm_en = (state == RUN);
 	assign o_pm = (pm_cnt == 1);
+	assign o_mps_fsm_m = state;
 
 endmodule

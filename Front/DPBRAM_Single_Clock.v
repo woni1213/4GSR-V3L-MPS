@@ -12,25 +12,29 @@ Dual Port BRAM
 
 */
 
-module DPBRAM_Single_Clock
+module DPBRAM_Single_Clock #
+(
+    parameter integer DWIDTH = 16,			// DPBRAM Data Width (Bit)
+	parameter integer RAM_DEPTH = 1000		// DPBRAM Depth
+)
 (
 	input i_clk,
 
 	// BUS Interface. IP Package 시 Port들 Bus로 지정
-	input [7:0] s_addr,
-	input s_ce,
-	input s_we,
-	input [23:0] s_din,
-	output reg [23:0] s_dout,
+	(* X_INTERFACE_INFO = "HMT:JKW:s_dpbram_port:1.0 S_DPBRAM_PORT addr0" *) input [$clog2(RAM_DEPTH) - 1 : 0] s_addr,
+	(* X_INTERFACE_INFO = "HMT:JKW:s_dpbram_port:1.0 S_DPBRAM_PORT ce0" *) input s_ce,
+	(* X_INTERFACE_INFO = "HMT:JKW:s_dpbram_port:1.0 S_DPBRAM_PORT we0" *) input s_we,
+	(* X_INTERFACE_INFO = "HMT:JKW:s_dpbram_port:1.0 S_DPBRAM_PORT din0" *) input [DWIDTH - 1 : 0] s_din,
+	(* X_INTERFACE_INFO = "HMT:JKW:s_dpbram_port:1.0 S_DPBRAM_PORT dout0" *) output reg [DWIDTH - 1 : 0] s_dout,
 
-	input [7:0] m_addr,
-	input m_ce,
-	input m_we,
-	input [23:0] m_din,
-	output reg [23:0] m_dout
+	(* X_INTERFACE_INFO = "HMT:JKW:m_dpbram_port:1.0 M_DPBRAM_PORT addr1" *) input [$clog2(RAM_DEPTH) - 1 : 0] m_addr,
+	(* X_INTERFACE_INFO = "HMT:JKW:m_dpbram_port:1.0 M_DPBRAM_PORT ce1" *) input m_ce,
+	(* X_INTERFACE_INFO = "HMT:JKW:m_dpbram_port:1.0 M_DPBRAM_PORT we1" *) input m_we,
+	(* X_INTERFACE_INFO = "HMT:JKW:m_dpbram_port:1.0 M_DPBRAM_PORT din1" *) input [DWIDTH - 1 : 0] m_din,
+	(* X_INTERFACE_INFO = "HMT:JKW:m_dpbram_port:1.0 M_DPBRAM_PORT dout1" *) output reg [DWIDTH - 1 : 0] m_dout
 );
  
-(* RAM_STYLE = "BLOCK"*) reg [23:0] ram[7:0];	// Sythesis에서 RAM을 Block으로 합성하도록 지시
+(* RAM_STYLE = "BLOCK"*) reg [DWIDTH - 1 : 0] ram[0 : RAM_DEPTH - 1];	// Sythesis에서 RAM을 Block으로 합성하도록 지시
 
 always @(posedge i_clk) 
 begin
