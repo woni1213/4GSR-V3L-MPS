@@ -38,26 +38,26 @@ module DPBRAM_Single_Clock #
 
 always @(posedge i_clk) 
 begin
-    if(s_ce)
-    begin
-        if(s_we)
-            ram[s_addr] <= s_din;
+	if(s_ce)
+	begin
+		if(s_we)
+			ram[s_addr] <= s_din;
 
-        else
-            s_dout <= ram[s_addr];
-    end
+		else
+			s_dout <= ram[s_addr];
+	end
 end
 
 always @(posedge i_clk) 
 begin
-    if(m_ce)
-    begin
-        if(m_we)
-            ram[m_addr] <= m_din;
+	if(m_ce)
+	begin
+		if(m_we)
+			ram[m_addr] <= m_din;
 
-        else
-            m_dout <= ram[m_addr];
-    end
+		else
+			m_dout <= ram[m_addr];
+	end
 end
-            
+
 endmodule

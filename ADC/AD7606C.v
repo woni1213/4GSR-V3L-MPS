@@ -82,22 +82,6 @@ module AD7606C
 			state <= n_state;
 	end
 
-	// always @(*)
-	// begin
-	// 	case (state)
-	// 		DELAY		: n_state = (&delay_cnt) ? INIT : DELAY;
-	// 		INIT		: n_state = INIT_WAIT;
-	// 		INIT_WAIT	: n_state = (i_init_spi_done) ? ((init_cnt == 3) ? IDLE : DELAY) : INIT_WAIT;
-	// 		IDLE		: n_state = (conv_flag) ? CONV : IDLE;
-	// 		CONV		: n_state = (&conv_cnt) ? BUSY : CONV;
-	// 		BUSY		: n_state = (~i_adc_busy) ? SPI : BUSY;
-	// 		SPI			: n_state = SPI_WAIT;
-	// 		SPI_WAIT	: n_state = (i_adc_spi_done) ? DONE : SPI_WAIT;
-	// 		DONE		: n_state = IDLE;
-	// 		default 	: n_state = DELAY;
-	// 	endcase
-	// end
-
 	always @(*)
 	begin
 		case (state)

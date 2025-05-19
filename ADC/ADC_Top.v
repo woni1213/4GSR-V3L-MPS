@@ -124,7 +124,6 @@ module ADC_Top #
 		.i_adc_data_6(i_m_adc_data_6),
 		.i_adc_data_7(i_m_adc_data_7),
 
-		// .i_adc_cyc_t(100),
 		.i_adc_cyc_t(m_adc_cyc_t),
 		.o_adc_init_data(o_m_adc_init_data),
 		.o_i_adc_data(o_i_adc_data),
