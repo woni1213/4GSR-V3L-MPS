@@ -30,7 +30,16 @@ module Regu_INTL
 	output reg o_regu_flag,
 
 	output [1:0] o_state,
-	output reg [31:0] o_regu_sub
+
+	// Debug
+	output [31:0] o_sub_buf,
+	output o_sub_valid,
+
+	output [31:0] o_abs_buf,
+	output o_abs_valid,
+
+	output o_o_regu_flag,
+	output o_o_comp_valid
 );
 
 	parameter IDLE	= 0;
@@ -102,15 +111,6 @@ module Regu_INTL
 			o_regu_flag <= (regu_flag && comp_valid) ? 1 : ((i_clr) ? 0 : o_regu_flag);
 	end
 
-	always @(posedge i_clk or negedge i_rst)
-	begin
-		if (~i_rst)
-			o_regu_sub <= 0;
-
-		else
-			o_regu_sub <= (abs_valid) ? abs_buf : o_regu_sub;
-	end
-
 	floating_point_sub
 	u_floating_point_sub_regu
 	(
@@ -146,5 +146,15 @@ module Regu_INTL
 
 	assign o_state = state;
 	assign sp_flag = (sp_buf != i_set_point);
+
+	// Debug
+	assign o_sub_buf = sub_buf;
+	assign o_sub_valid = sub_valid;
+
+	assign o_abs_buf = abs_buf;
+	assign o_abs_valid = abs_valid;
+
+	assign o_o_regu_flag = regu_flag;
+	assign o_o_comp_valid = comp_valid;
 
 endmodule

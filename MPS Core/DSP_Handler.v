@@ -97,7 +97,7 @@ module DSP_Handler
 	output reg [31:0] o_slave_v,
 	output reg [31:0] o_slave_status,
 	output reg [31:0] o_wf_read_cnt,
-	output [15:0] o_dsp_status,
+	output reg [15:0] o_dsp_status,
 	output reg [15:0] o_dsp_cmd,
 	output reg [15:0] o_dsp_ver,
 
@@ -164,9 +164,7 @@ module DSP_Handler
 	reg [25:0] on_cnt;
     reg [25:0] off_cnt;
 	wire [32:0] zynq_intl;
-	wire duty_intl;
 	wire [15:0] zynq_status;
-	reg [15:0] dsp_status;
 
 	// SFP
 	wire pwm_en;
@@ -439,7 +437,7 @@ module DSP_Handler
 			o_slave_v <= 0;
 			o_slave_status <= 0;
 			o_wf_read_cnt <= 0;
-			dsp_status <= 0;
+			o_dsp_status <= 0;
 			o_dsp_cmd <= 0;
         end
 
@@ -494,7 +492,7 @@ module DSP_Handler
 				170 : begin o_xintf_r_ram_addr <= 171;		o_slave_status[31:16]		<= i_xintf_r_ram_dout;	end
 				171 : begin o_xintf_r_ram_addr <= 172;		o_wf_read_cnt[15:0]			<= i_xintf_r_ram_dout;  end
 				172 : begin o_xintf_r_ram_addr <= 173;		o_wf_read_cnt[31:16]		<= i_xintf_r_ram_dout;  end
-				173 : begin o_xintf_r_ram_addr <= 174;		dsp_status					<= i_xintf_r_ram_dout;  end
+				173 : begin o_xintf_r_ram_addr <= 174;		o_dsp_status					<= i_xintf_r_ram_dout;  end
 				174 : begin o_xintf_r_ram_addr <= 175;		o_dsp_cmd					<= i_xintf_r_ram_dout;  end
 				175 : begin o_xintf_r_ram_addr <= 176;															end
 				176 : begin o_xintf_r_ram_addr <= 177;		o_dsp_ver					<= i_xintf_r_ram_dout;  end
@@ -525,7 +523,7 @@ module DSP_Handler
 					o_slave_v <= o_slave_v;
 					o_slave_status <= o_slave_status;
 					o_wf_read_cnt <= o_wf_read_cnt;
-					dsp_status <= dsp_status;
+					o_dsp_status <= o_dsp_status;
 					o_dsp_cmd <= o_dsp_cmd;
                 end
             endcase
@@ -557,12 +555,10 @@ module DSP_Handler
 			o_slave_v <= o_slave_v;
 			o_slave_status <= o_slave_status;
 			o_wf_read_cnt <= o_wf_read_cnt;
-			dsp_status <= dsp_status;
+			o_dsp_status <= o_dsp_status;
 			o_dsp_cmd <= o_dsp_cmd;
 		end
     end
     
 	assign o_w_valid = (w_state == DELAY) ? 1 : 0;					
-	assign duty_intl = ~(o_intl_clr) ? dsp_status[7] : 0;
-
 endmodule

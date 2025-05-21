@@ -25,33 +25,35 @@ module DSP_XINTF_MUX_Top
 	(* X_INTERFACE_INFO = "HMT:JKW:s_dpbram_port:1.0 M_XINTF_W_DPBRAM ce0" *) output o_d_to_z_ce,
 	(* X_INTERFACE_INFO = "HMT:JKW:s_dpbram_port:1.0 M_XINTF_W_DPBRAM we0" *) output o_d_to_z_we,
 	(* X_INTERFACE_INFO = "HMT:JKW:s_dpbram_port:1.0 M_XINTF_W_DPBRAM din0" *) output [15:0] o_d_to_z_din,
-	(* X_INTERFACE_INFO = "HMT:JKW:s_dpbram_port:1.0 M_XINTF_W_DPBRAM dout0" *) input [15:0] i_d_to_z_dout,
+	(* X_INTERFACE_INFO = "HMT:JKW:s_dpbram_port:1.0 M_XINTF_W_DPBRAM dout0" *) input [15:0] i_d_to_z_dout
 	
-	output [2:0] o_r_cnt
+	// output [2:0] o_r_cnt
 );
 
-	reg [2:0] r_cnt;
+	// reg [2:0] r_cnt;
 
-	always @(posedge i_clk or negedge i_rst)
-	begin
-		if (~i_rst)
-			r_cnt <= 0;
+	// always @(posedge i_clk or negedge i_rst)
+	// begin
+	// 	if (~i_rst)
+	// 		r_cnt <= 0;
 			
-		else
-			r_cnt <= ((~i_nZ_B_CS) && (~i_nZ_B_WE)) ? ((&r_cnt) ? r_cnt : r_cnt + 1) : 0;
-	end
+	// 	else
+	// 		r_cnt <= ((~i_nZ_B_CS) && (~i_nZ_B_WE)) ? ((&r_cnt) ? r_cnt : r_cnt + 1) : 0;
+	// end
 	
 	assign o_z_to_d_addr = ((!i_wf_en) && (i_nZ_B_WE)) ? i_Z_B_XA : 0;
 	assign o_d_to_z_addr = ((!i_wf_en) && (!i_nZ_B_WE)) ? i_Z_B_XA : 0;
 
 	assign o_z_to_d_ce = ((!i_wf_en) && (i_nZ_B_WE)) ? ~i_nZ_B_CS : 0;
-	assign o_d_to_z_ce = ((!i_wf_en) && (!i_nZ_B_WE) && (r_cnt == 3)) ? ~i_nZ_B_WE : 0;
+	// assign o_d_to_z_ce = ((!i_wf_en) && (!i_nZ_B_WE) && (r_cnt == 3)) ? ~i_nZ_B_WE : 0;
+	assign o_d_to_z_ce = ((!i_wf_en) && (!i_nZ_B_WE)) ? ~i_nZ_B_WE : 0;
 
 	assign o_z_to_d_we = 0;
 	assign o_d_to_z_we = 1;
 
 	assign io_Z_B_XD = ((!i_wf_en) && (i_nZ_B_WE)) ? i_z_to_d_dout : 16'hZZZZ;
-	assign o_d_to_z_din = ((!i_wf_en) && (!i_nZ_B_WE) && (r_cnt == 3)) ? io_Z_B_XD : 16'hZZZZ;
-	assign o_r_cnt = r_cnt;
+	// assign o_d_to_z_din = ((!i_wf_en) && (!i_nZ_B_WE) && (r_cnt == 3)) ? io_Z_B_XD : 16'hZZZZ;
+	assign o_d_to_z_din = ((!i_wf_en) && (!i_nZ_B_WE)) ? io_Z_B_XD : 16'hZZZZ;
+	// assign o_r_cnt = r_cnt;
 
 endmodule

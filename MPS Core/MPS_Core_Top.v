@@ -88,6 +88,8 @@ module MPS_Core_Top #
     (* X_INTERFACE_INFO = "HMT:JKW:m_dpbram_port:1.0 S_XINTF_R_DPBRAM din1" *) output [15:0] o_xintf_r_ram_din,
     (* X_INTERFACE_INFO = "HMT:JKW:m_dpbram_port:1.0 S_XINTF_R_DPBRAM dout1" *) input [15:0] i_xintf_r_ram_dout,
 
+	output o_dsp_status,
+
 	output [31:0] o_set_c,
 	output [31:0] o_set_v,
 	output reg [31:0] o_c,
@@ -690,5 +692,7 @@ module MPS_Core_Top #
 
 	assign o_set_c = set_c;
 	assign o_set_v = set_v;
+
+	assign o_dsp_status = dsp_status[4];
 
 endmodule

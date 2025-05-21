@@ -3,11 +3,11 @@
 /*
 
 MPS INTerLock Module
-ê°œë°œ 2?? ? „ê²½ì› ë¶??¥
+ê°œë°œ 2?? ?ï¿½ï¿½ê²½ì› ï¿½??ï¿½ï¿½
 
-25.04.10 :	ìµœì´ˆ ?ƒ?„±
+25.04.10 :	ìµœì´ˆ ?ï¿½ï¿½?ï¿½ï¿½
 
-Interlock?´ ë§ì•„? ¸?„œ ?ƒˆë¡? ëª¨ë“ˆ ë§Œë“¬
+Interlock?ï¿½ï¿½ ë§ì•„?ï¿½ï¿½?ï¿½ï¿½ ?ï¿½ï¿½ï¿½? ëª¨ë“ˆ ë§Œë“¬
 
  - 
 
@@ -32,8 +32,17 @@ module Osc_INTL
 	output [2:0] o_state,
 	
 	// Debug
-	output [31:0] o_osc_cnt,
-	output reg [31:0] o_sub_buf
+	output [31:0] o_min_buf,
+	output [31:0] o_max_buf,
+	output o_min_flag,
+	output o_max_flag,
+
+	output o_o_osc_flag,
+	output o_o_osc_valid,
+	output [31:0] o_sub_buf,
+	output o_sub_valid,
+	output [31:0] o_osc_cnt
+
 );
 
 	parameter IDLE	= 0;
@@ -115,7 +124,7 @@ module Osc_INTL
 			min_buf <= 0;
 
 		else if ((state == IDLE) || (state == RESET))
-			min_buf <= 0;
+			min_buf <= i_data;
 
 		else
 			min_buf <= (state == RUN) ? ((min_flag) ? i_data : min_buf) : min_buf;
@@ -127,7 +136,7 @@ module Osc_INTL
 			max_buf <= 0;
 
 		else if ((state == IDLE) || (state == RESET))
-			max_buf <= 0;
+			max_buf <= i_data;
 
 		else
 			max_buf <= (state == RUN) ? ((max_flag) ? i_data : max_buf) : max_buf;
@@ -202,15 +211,15 @@ module Osc_INTL
 	assign o_state = state;
 	
 	// Debug
-	assign o_osc_cnt = osc_cnt;
-	
-	always @(posedge i_clk or negedge i_rst) 
-	begin
-		if (~i_rst)
-			o_sub_buf <= 0;
+	assign o_min_buf = min_buf;
+	assign o_max_buf = max_buf;
+	assign o_min_flag = min_flag;
+	assign o_max_flag = max_flag;
 
-		else
-			o_sub_buf <= (sub_valid) ? sub_buf : o_sub_buf;
-	end
+	assign o_o_osc_flag = osc_flag;
+	assign o_o_osc_valid = osc_valid;
+	assign o_sub_buf = sub_buf;
+	assign o_sub_valid = sub_valid;
+	assign o_osc_cnt = osc_cnt;
 
 endmodule

@@ -158,7 +158,7 @@ module MPS_Operation_FSM
 		.aclk(i_clk),
 		.s_axis_a_tdata(i_dc_v),
 		.s_axis_a_tvalid(on_state == DC_CHK),
-		.s_axis_b_tdata(32'h438c0000),			// 280
+		.s_axis_b_tdata(32'h43898000),			// 275
 		.s_axis_b_tvalid(on_state == DC_CHK),
 		.m_axis_result_tdata(dc_on_flag),
 		.m_axis_result_tvalid(dc_on_valid)

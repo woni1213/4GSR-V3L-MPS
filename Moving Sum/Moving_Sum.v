@@ -184,6 +184,24 @@ module Moving_Sum
 		end
 	end
 
+	always @(posedge i_clk or negedge i_rst)
+    begin
+        if (~i_rst)
+			add_7_buf <= 0;
+
+		else
+			add_7_buf <= (state == ADD_7) ? (add_6_buf[0] + add_6_buf[1]) : add_7_buf;
+	end
+
+	always @(posedge i_clk or negedge i_rst)
+    begin
+        if (~i_rst)
+			adc_m_axis_tdata <= 0;
+
+		else
+			adc_m_axis_tdata <= (state == SHIFT) ? (add_7_buf >> 7) : adc_m_axis_tdata;
+	end
+
 	generate
 		for (adc_tmp_len = 0; adc_tmp_len < 128; adc_tmp_len = adc_tmp_len + 1)
 		begin

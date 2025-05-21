@@ -29,6 +29,8 @@ module MPS_System_Top #
 	input [17:0] i_analog_intl,
 	output o_pwm_en,
 
+	input i_duty_intl,
+
 	input [31:0] i_dc_v,
 	input [15:0] i_ext_di,
 	output [7:0] o_ext_do,
@@ -84,14 +86,25 @@ module MPS_System_Top #
 	wire [3:0] op_on_fsm;
 	wire [3:0] op_off_fsm;
 
+	reg duty_intl;
+
+	always @(posedge i_clk or negedge i_rst)
+	begin
+		if (~i_rst)
+			duty_intl <= 0;
+
+		else
+			duty_intl <= (o_intl_clr) ? 0 : (i_duty_intl) ? 1 : duty_intl;
+	end
+
 	always @(posedge i_clk or negedge i_rst)
 	begin
 		if (~i_rst)
 			intl_flag <= 0;
 
 		else
-			intl_flag <= (|i_analog_intl);
-			// intl_flag <= ((|i_analog_intl) || (i_ext_di[0]) || (|i_ext_di[8:4]));
+			intl_flag <= ((|i_analog_intl) || (duty_intl));
+			// intl_flag <= ((|i_analog_intl) || (duty_intl) || (i_ext_di[0]) || (|i_ext_di[8:4]));
 	end
 
 	AXI4_Lite_MPS_System #
