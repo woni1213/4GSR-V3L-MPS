@@ -54,7 +54,7 @@ module Regu_INTL
 	wire [31:0] abs_buf;
 	reg [31:0] delay_cnt;
 
-	wire sp_flag;
+	wire regu_start_flag;
 	wire sub_valid;
 	wire abs_valid;
 	wire comp_valid;
@@ -68,7 +68,7 @@ module Regu_INTL
 		else
 		begin
 			if (state == IDLE)
-				state <= (sp_flag && i_regu_en && ~o_regu_flag) ? DELAY : IDLE;
+				state <= (regu_start_flag) ? DELAY : IDLE;
 
 			else if (state == DELAY)
 				state <= (delay_cnt >= i_delay) ? RUN : DELAY;
@@ -99,7 +99,7 @@ module Regu_INTL
 			delay_cnt <= 0;
 
 		else
-			delay_cnt <= (state == DELAY) ? delay_cnt + 1 : 0;
+			delay_cnt <= (state == DELAY) ? ((regu_start_flag) ? 0 : delay_cnt + 1) : 0;
 	end
 
 	always @(posedge i_clk or negedge i_rst)
@@ -145,7 +145,7 @@ module Regu_INTL
 	);
 
 	assign o_state = state;
-	assign sp_flag = (sp_buf != i_set_point);
+	assign regu_start_flag = ((sp_buf != i_set_point) && i_regu_en && ~o_regu_flag);
 
 	// Debug
 	assign o_sub_buf = sub_buf;
