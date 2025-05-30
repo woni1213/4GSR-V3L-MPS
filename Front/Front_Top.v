@@ -20,7 +20,9 @@ MPS Front Panel Module
 module Front_Top #
 (
 	parameter integer C_S_AXI_DATA_WIDTH = 32,
-	parameter integer C_S_AXI_ADDR_WIDTH = 6
+	parameter integer C_S_AXI_ADDR_WIDTH = 6,
+	parameter integer DWIDTH = 24,
+	parameter integer RAM_DEPTH = 256
 )
 (
 	// to SPI Module
@@ -164,7 +166,11 @@ module Front_Top #
 		.o_ro_enc_dir(ro_enc_dir)
 	);
 
-	DPBRAM_Single_Clock
+	DPBRAM_Single_Clock #
+	(
+		.DWIDTH(DWIDTH),
+		.RAM_DEPTH(RAM_DEPTH)
+	)
 	u_DPBRAM_Single_Clock
 	(
 		.i_clk(s00_axi_aclk),
