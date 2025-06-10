@@ -37,6 +37,7 @@ module MPS_System_Top #
 	input [3:0] i_pwm_fault,
 	input i_intl_OC,
 
+	output o_intl_flag,
 	output o_intl_clr,
 	input i_sys_rst_flag,
 	output o_en_dsp_boot,
@@ -198,6 +199,7 @@ module MPS_System_Top #
 		.o_off_state(op_off_fsm)
 	);
 
+	assign o_intl_flag = intl_flag;
 	assign o_dc_v_under_intl_en = ((o_mps_fsm_m == 3) || (o_mps_fsm_m == 4));
 	assign o_op_on_state = op_on_fsm;
 	assign o_op_off_state = op_off_fsm;

@@ -14,7 +14,7 @@ Dual Port BRAM
 
 module DPBRAM_Single_Clock #
 (
-    parameter integer DWIDTH = 16,			// DPBRAM Data Width (Bit)
+	parameter integer DWIDTH = 16,			// DPBRAM Data Width (Bit)
 	parameter integer RAM_DEPTH = 1000		// DPBRAM Depth
 )
 (
@@ -34,30 +34,30 @@ module DPBRAM_Single_Clock #
 	(* X_INTERFACE_INFO = "HMT:JKW:m_dpbram_port:1.0 M_DPBRAM_PORT dout1" *) output reg [DWIDTH - 1 : 0] m_dout
 );
  
-(* RAM_STYLE = "BLOCK"*) reg [DWIDTH - 1 : 0] ram[0 : RAM_DEPTH - 1];	// Sythesis에서 RAM을 Block으로 합성하도록 지시
+	(* RAM_STYLE = "BLOCK"*) reg [DWIDTH - 1 : 0] ram[0 : RAM_DEPTH - 1];	// Sythesis에서 RAM을 Block으로 합성하도록 지시
 
-always @(posedge i_clk) 
-begin
-    if(s_ce)
-    begin
-        if(s_we)
-            ram[s_addr] <= s_din;
+	always @(posedge i_clk) 
+	begin
+		if(s_ce)
+		begin
+			if(s_we)
+				ram[s_addr] <= s_din;
 
-        else
-            s_dout <= ram[s_addr];
-    end
-end
+			else
+				s_dout <= ram[s_addr];
+		end
+	end
 
-always @(posedge i_clk) 
-begin
-    if(m_ce)
-    begin
-        if(m_we)
-            ram[m_addr] <= m_din;
+	always @(posedge i_clk) 
+	begin
+		if(m_ce)
+		begin
+			if(m_we)
+				ram[m_addr] <= m_din;
 
-        else
-            m_dout <= ram[m_addr];
-    end
-end
-            
+			else
+				m_dout <= ram[m_addr];
+		end
+	end
+
 endmodule
