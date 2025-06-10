@@ -4,9 +4,7 @@ module AXI4_Lite_MPS_Core #
 (
 	parameter integer C_S_AXI_DATA_WIDTH	= 0,
 	parameter integer C_S_AXI_ADDR_NUM 		= 0,
-	parameter integer C_S_AXI_ADDR_WIDTH	= 0,
-
-	parameter integer C_DATA_FRAME_BIT = 0
+	parameter integer C_S_AXI_ADDR_WIDTH	= 0
 )
 (
 	// ADC Data
@@ -24,7 +22,7 @@ module AXI4_Lite_MPS_Core #
 	input [31:0]		i_phase_rms_s,
 	input [31:0]		i_phase_rms_t,
 
-	output reg [3:0] 	o_mps_status,
+	output reg [3:0] 	o_mps_setup,
 	output reg [31:0] 	o_set_c,
 	output reg [31:0] 	o_set_v,
 	output reg [31:0] 	o_max_duty,
@@ -63,126 +61,6 @@ module AXI4_Lite_MPS_Core #
 	input [31:0] i_dsp_set_c,
 	input [31:0] i_dsp_set_v,
 	input [31:0] i_dsp_status,
-
-	output reg o_sfp_en,
-	output reg o_sfp_id,
-	// ADC Calc Factor
-// 	output reg [31:0]	o_c_factor,
-// 	output reg [31:0]	o_v_factor,
-// 	output reg [31:0]	o_dc_c_factor,
-// 	output reg [31:0]	o_dc_v_factor,
-//     output reg [31:0]	o_phase_r_factor,
-// 	output reg [31:0]	o_phase_s_factor,
-//     output reg [31:0]	o_phase_t_factor,
-// 	output reg [31:0]	o_igbt_t_factor,
-//     output reg [31:0]	o_i_inductor_t_factor,
-// 	output reg [31:0]	o_o_inductor_t_factor,
-
-// 	// ADC Data
-// 	input [31:0]		i_c_adc_data,
-// 	input [31:0]		i_v_adc_data,
-
-// 	// DPBRAM Write
-// 	output reg [15:0]	o_write_index,
-// 	output reg [31:0]	o_index_data,
-// 	output reg [12:0]	o_zynq_status,
-//     output reg [31:0]	o_set_c,
-// 	output reg			o_write_index_flag,
-// 	output reg [31:0] 	o_max_duty,
-//     output reg [31:0] 	o_max_phase,
-//     output reg [31:0] 	o_max_freq,
-//     output reg [31:0] 	o_min_freq,
-// 	output reg [31:0] 	o_set_v,
-// 	output reg [2:0]    o_slave_count,
-// 	output reg		    o_slave_1_ram_cs,
-// 	output reg [7:0]    o_slave_1_ram_addr,
-// 	output reg		    o_slave_2_ram_cs,
-// 	output reg [7:0]    o_slave_2_ram_addr,
-// 	output reg		    o_slave_3_ram_cs,
-// 	output reg [7:0]    o_slave_3_ram_addr,
-// 	output reg		    o_axi_pwm_en,
-
-// 	// DPBRAM Read
-// 	input [31:0]		i_dsp_max_duty,
-// 	input [31:0]		i_dsp_max_phase,
-// 	input [31:0]		i_dsp_max_frequency,
-// 	input [31:0]		i_dsp_min_frequency,
-// 	input [31:0]		i_dsp_min_v,
-// 	input [31:0]		i_dsp_max_v,
-// 	input [31:0]		i_dsp_min_c,
-// 	input [31:0]		i_dsp_max_c,
-// 	input [15:0]		i_dsp_deadband,
-// 	input [15:0]		i_dsp_sw_freq,
-// 	input [31:0]		i_dsp_p_gain_c,
-// 	input [31:0]		i_dsp_i_gain_c,
-// 	input [31:0]		i_dsp_d_gain_c,
-// 	input [31:0]		i_dsp_p_gain_v,
-// 	input [31:0]		i_dsp_i_gain_v,
-// 	input [31:0]		i_dsp_d_gain_v,
-// 	input [31:0]		i_dsp_set_c,
-// 	input [31:0]		i_dsp_set_v,
-// 	input [31:0]		i_dsp_pi_param,
-// 	input [31:0]		i_slave_c,
-// 	input [31:0]		i_slave_v,
-// 	input [31:0]		i_slave_status,
-// 	input [31:0]		i_dc_c_data,
-// 	input [31:0]		i_dc_v_data,
-// 	input [15:0]		i_dsp_status,
-// 	input [15:0]		i_dsp_ver,
-// 	input [31:0]		i_slave_1_ram_data,
-// 	input [31:0]		i_slave_2_ram_data,
-// 	input [31:0]		i_slave_3_ram_data,
-// 	input [31:0]		i_phase_r_adc,
-// 	input [31:0]		i_phase_s_adc,
-// 	input [31:0]		i_phase_t_adc,
-// 	input [31:0]		i_igbt_t_adc,
-// 	input [31:0]		i_i_inductor_t_adc,
-// 	input [31:0]		i_o_inductor_t_adc,
-
-// 	input [31:0]		i_sfp_c_factor,
-// 	input [31:0]		i_sfp_v_factor,
-// 	input [31:0] 		i_sfp_max_duty,
-// 	input [31:0] 		i_sfp_max_phase,
-// 	input [31:0] 		i_sfp_max_freq,
-// 	input [31:0] 		i_sfp_min_freq,
-// 	output reg			o_axi_data_valid,
-
-// 	/////////////////////////////////////////////////////////
-// 	output reg o_sfp_en,
-// 	output reg [1:0] o_sfp_id,
-
-// 	input [15:0] i_sfp_cmd,
-// 	input [31:0] i_sfp_data_1,
-// 	input [31:0] i_sfp_data_2,
-// 	input [31:0] i_sfp_data_3,
-
-// 	output reg [7:0] o_m_sfp_1_cmd,
-// 	output reg [31:0] o_m_sfp_1_data,
-
-// 	output reg [7:0] o_m_sfp_2_cmd,
-// 	output reg [31:0] o_m_sfp_2_data,
-
-// 	output reg [7:0] o_m_sfp_3_cmd,
-// 	output reg [31:0] o_m_sfp_3_data,
-
-// 	input [15:0] i_s_sfp_1_cmd,
-// 	input [31:0] i_s_sfp_1_data_1,
-// 	input [31:0] i_s_sfp_1_data_2,
-// 	input [31:0] i_s_sfp_1_data_3,
-
-// 	input [15:0] i_s_sfp_2_cmd,
-// 	input [31:0] i_s_sfp_2_data_1,
-// 	input [31:0] i_s_sfp_2_data_2,
-// 	input [31:0] i_s_sfp_2_data_3,
-
-// 	input [15:0] i_s_sfp_3_cmd,
-// 	input [31:0] i_s_sfp_3_data_1,
-// 	input [31:0] i_s_sfp_3_data_2,
-// 	input [31:0] i_s_sfp_3_data_3,
-// /////////////////////////////////////////////////////////
-
-	output reg [C_DATA_FRAME_BIT - 1 : 0] o_master_stream_data,
-	input [C_DATA_FRAME_BIT - 1: 0] i_master_stream_data,
 
 	input S_AXI_ACLK,
 	input S_AXI_ARESETN,
@@ -408,47 +286,9 @@ module AXI4_Lite_MPS_Core #
 		end
 	end
 
-	// DSP Write DPBRAM
 	always @(posedge S_AXI_ACLK)
 	begin
-		// o_c_factor 			    <= (o_sfp_en && (o_sfp_id != 0)) ? i_sfp_c_factor : slv_reg[1];
-		// o_v_factor 			    <= (o_sfp_en && (o_sfp_id != 0)) ? i_sfp_v_factor : slv_reg[2];
-		// o_write_index		    <= slv_reg[3][15:0];
-		// o_index_data		    <= slv_reg[4];
-		// o_zynq_status 		    <= slv_reg[5][12:0];
-		// o_set_c				    <= slv_reg[6];
-		// o_write_index_flag	    <= slv_reg[7][0];
-		// o_max_duty 			    <= (o_sfp_en && (o_sfp_id != 0)) ? i_sfp_max_duty : slv_reg[8];
-		// o_max_phase			    <= (o_sfp_en && (o_sfp_id != 0)) ? i_sfp_max_phase : slv_reg[9];
-		// o_max_freq 			    <= (o_sfp_en && (o_sfp_id != 0)) ? i_sfp_max_freq : slv_reg[10];
-		// o_min_freq 			    <= (o_sfp_en && (o_sfp_id != 0)) ? i_sfp_min_freq : slv_reg[11];
-		// o_set_v				    <= slv_reg[12];
-		// o_slave_count		    <= slv_reg[13][2:0];
-		// o_slave_1_ram_cs	    <= slv_reg[14][0];
-		// o_slave_1_ram_addr	    <= slv_reg[15][7:0];
-		// o_slave_2_ram_cs	    <= slv_reg[16][0];
-		// o_slave_2_ram_addr	    <= slv_reg[17][7:0];
-		// o_slave_3_ram_cs	    <= slv_reg[18][0];
-		// o_slave_3_ram_addr	    <= slv_reg[19][7:0];
-		// o_axi_pwm_en		    <= slv_reg[20][0];
-		// o_dc_c_factor 		    <= slv_reg[21];
-		// o_dc_v_factor 		    <= slv_reg[22];
-        // o_phase_r_factor 		<= slv_reg[23];
-		// o_phase_s_factor 		<= slv_reg[24];
-        // o_phase_t_factor 		<= slv_reg[25];
-		// o_igbt_t_factor 		<= slv_reg[26];
-        // o_i_inductor_t_factor 	<= slv_reg[27];
-		// o_o_inductor_t_factor 	<= slv_reg[28];
-
-		// o_axi_data_valid	    <= slv_reg[57];
-		// o_m_sfp_1_cmd		    <= slv_reg[58][7:0];
-		// o_m_sfp_1_data		    <= slv_reg[59];
-		// o_m_sfp_2_cmd		    <= slv_reg[60][7:0];
-		// o_m_sfp_2_data		    <= slv_reg[61];
-		// o_m_sfp_3_cmd		    <= slv_reg[62][7:0];
-		// o_m_sfp_3_data		    <= slv_reg[63];
-
-		o_mps_status	<= slv_reg[0];
+		o_mps_setup	<= slv_reg[0];
 		o_set_c			<= slv_reg[1];
 		o_set_v 		<= slv_reg[2];
 		o_max_duty 		<= slv_reg[3];
@@ -467,60 +307,10 @@ module AXI4_Lite_MPS_Core #
 		o_p_gain_v 		<= slv_reg[16];
 		o_i_gain_v 		<= slv_reg[17];
 		o_d_gain_v 		<= slv_reg[18];
-		o_sfp_en 		<= slv_reg[19];
-		o_sfp_id 		<= slv_reg[20];
 	end
 
-	// SFP Control
-	// always @(posedge S_AXI_ACLK)
-	// begin
-	// 	o_sfp_id 			<= slv_reg[0][1:0];
-	// 	o_sfp_en			<= slv_reg[0][3];
-	// end
-
-	// Zynq, DSP Data
 	always @(posedge S_AXI_ACLK)
 	begin
-		// slv_reg[65]			<= i_c_adc_data;
-		// slv_reg[66]			<= i_v_adc_data;
-		// slv_reg[67]			<= i_dsp_pi_param;
-		// slv_reg[68]			<= i_dsp_set_c;
-		// slv_reg[69]			<= i_dsp_set_v;
-		// slv_reg[70]			<= i_dsp_p_gain_v;
-		// slv_reg[71]			<= i_dsp_i_gain_v;
-		// slv_reg[72]			<= i_dsp_p_gain_c;
-		// slv_reg[73]			<= i_dsp_i_gain_c;
-		// slv_reg[74]			<= i_dsp_max_duty;
-		// slv_reg[75][15:0]	<= i_dsp_deadband;
-		// slv_reg[76]			<= i_dsp_max_phase;
-		// slv_reg[77]			<= i_dsp_max_frequency;
-		// slv_reg[78]			<= i_dsp_min_frequency;
-		// slv_reg[79]			<= i_dsp_max_v;
-		// slv_reg[80]			<= i_dsp_min_v;
-		// slv_reg[81]			<= i_dsp_max_c;
-		// slv_reg[82]			<= i_dsp_min_c;
-		// slv_reg[83][15:0]	<= i_dsp_sw_freq;
-		// slv_reg[84][15:0]	<= i_dsp_status;
-		// slv_reg[85]			<= i_slave_c;
-		// slv_reg[86]			<= i_slave_v;
-		// slv_reg[87]			<= i_slave_status;
-		// slv_reg[88]			<= i_dc_c_data;
-		// slv_reg[89]			<= i_slave_1_ram_data;
-		// slv_reg[90]			<= i_slave_2_ram_data;
-		// slv_reg[91]			<= i_slave_3_ram_data;
-		// slv_reg[92]			<= i_dsp_ver;
-		// slv_reg[94]			<= i_dsp_d_gain_v;
-		// slv_reg[95]			<= i_dsp_d_gain_c;
-
-
-
-		// slv_reg[96]			<= i_dc_v_data;
-		// slv_reg[97]			<= i_phase_r_adc;
-		// slv_reg[98]			<= i_phase_s_adc;
-		// slv_reg[99]			<= i_phase_t_adc;
-		// slv_reg[100]		<= i_igbt_t_adc;
-		// slv_reg[101]		<= i_i_inductor_t_adc;
-		// slv_reg[102]		<= i_o_inductor_t_adc;
 
 		slv_reg[64] 	<= i_c_data;
 		slv_reg[65] 	<= i_v_data;
@@ -556,27 +346,6 @@ module AXI4_Lite_MPS_Core #
 		slv_reg[94]		<= i_dsp_set_v;
 		slv_reg[95]		<= i_dsp_status;
 	end
-
-	// always @(posedge S_AXI_ACLK)
-	// begin
-	// 	slv_reg[93]			<= {slv_reg[0][3], 1'd0, slv_reg[0][1:0]};
-	//     slv_reg[112][15:0]	<= i_sfp_cmd;
-	// 	slv_reg[113]		<= i_sfp_data_1;
-	// 	slv_reg[114]		<= i_sfp_data_2;
-	// 	slv_reg[115]		<= i_sfp_data_3;
-	// 	slv_reg[116][15:0]	<= i_s_sfp_1_cmd;
-	// 	slv_reg[117]		<= i_s_sfp_1_data_1;
-	// 	slv_reg[118]		<= i_s_sfp_1_data_2;
-	// 	slv_reg[119]		<= i_s_sfp_1_data_3;
-	// 	slv_reg[120][15:0]	<= i_s_sfp_2_cmd;
-	// 	slv_reg[121]		<= i_s_sfp_2_data_1;
-	// 	slv_reg[122]		<= i_s_sfp_2_data_2;
-	// 	slv_reg[123]		<= i_s_sfp_2_data_3;
-	// 	slv_reg[124][15:0]	<= i_s_sfp_3_cmd;
-	// 	slv_reg[125]		<= i_s_sfp_3_data_1;
-	// 	slv_reg[126]		<= i_s_sfp_3_data_2;
-	// 	slv_reg[127]		<= i_s_sfp_3_data_3;
-	// end
 
 	// User logic ends
 
