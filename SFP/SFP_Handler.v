@@ -1,7 +1,11 @@
+`timescale 1 ns / 1 ps
+
 module SFP_Handler
 (
 	input i_clk,
 	input i_rst,
+	
+	input i_channel_up,
 
 	input i_channel_up,
 
@@ -167,7 +171,7 @@ module SFP_Handler
 			case (s_tx_state)
 				IDLE : 	s_tx_state <= (((|i_peer_wr_data_cnt) || (|i_local_wr_data_cnt)) && (~sfp_master)) ? L_RUN : IDLE;
 				L_RUN : s_tx_state <= P_RUN;
-				P_RUN : s_tx_state <= P_RUN;
+				P_RUN : s_tx_state <= DONE;
 				DONE : 	s_tx_state <= IDLE;
 				default : s_tx_state <= s_tx_state;
 			endcase
@@ -303,7 +307,7 @@ module SFP_Handler
 
 		else if (s_rx_sfp_tready && s_rx_sfp_tvalid && sfp_master)
 		begin
-			case (s_rx_sfp_tdata[63:32])
+			casex (s_rx_sfp_tdata[63:32])
 				32'h1200_0000 : o_s0_status <= s_rx_sfp_tdata[31:0];
 				32'h1200_0001 : o_s0_intl <= s_rx_sfp_tdata[31:0];
 				32'h1200_0002 : o_s0_c <= s_rx_sfp_tdata[31:0];
