@@ -11,7 +11,7 @@ BR MPS SFP Module
 module SFP_Top #
 (
 	parameter integer C_S_AXI_DATA_WIDTH = 32,								// AXI4-Lite Data Width
-	parameter integer C_S_AXI_ADDR_NUM = 20,								// AXI4-Lite Slave Reg Number
+	parameter integer C_S_AXI_ADDR_NUM = 21,								// AXI4-Lite Slave Reg Number
 	parameter integer C_S_AXI_ADDR_WIDTH = $clog2(C_S_AXI_ADDR_NUM) + 2		// AXI4-Lite Address
 )
 (
@@ -88,7 +88,7 @@ module SFP_Top #
 
 	wire [31:0] m_sfp_cmd;
 	wire [31:0] m_sfp_data;
-	wire [31:0] m_sfp_flag;
+	wire m_sfp_flag;
 
 	wire [63:0] m_sfp_rsp;
 	wire [31:0] s_sfp_cmd;
@@ -140,12 +140,9 @@ module SFP_Top #
 		// Slave
 		.i_s_sfp_cmd(s_sfp_cmd),
 		.i_s_sfp_data(s_sfp_data),
-		.i_s_sfp_flag(s_sfp_flag),
-		.o_s_sfp_done(s_sfp_done),
 
 		.o_s_sfp_rsp(s_sfp_rsp),
 		.o_s_sfp_rsp_flag(s_sfp_rsp_flag),
-
 
 		.S_AXI_ACLK(i_clk),
 		.S_AXI_ARESETN(i_rst),
@@ -207,27 +204,25 @@ module SFP_Top #
 		// Slave
 		.o_s_sfp_cmd(s_sfp_cmd),
 		.o_s_sfp_data(s_sfp_data),
-		.o_s_sfp_flag(s_sfp_flag),
-		.i_s_sfp_done(s_sfp_done),
 
 		.i_s_sfp_rsp(s_sfp_rsp),
 		.i_s_sfp_flag(s_sfp_rsp_flag),
 
-		.o_peer_tdata(peer_m_axis_tdata),
-		.i_peer_tready(peer_m_axis_tready),
-		.o_peer_tvalid(peer_m_axis_tvalid),
+		.m_peer_tdata(peer_m_axis_tdata),
+		.m_peer_tready(peer_m_axis_tready),
+		.m_peer_tvalid(peer_m_axis_tvalid),
 
-		.o_local_tdata(local_m_axis_tdata),
-		.i_local_tready(local_m_axis_tready),
-		.o_local_tvalid(local_m_axis_tvalid),
+		.m_local_tdata(local_m_axis_tdata),
+		.m_local_tready(local_m_axis_tready),
+		.m_local_tvalid(local_m_axis_tvalid),
 
-		.i_peer_tdata(peer_s_axis_tdata),
-		.o_peer_tready(peer_s_axis_tready),
-		.i_peer_tvalid(peer_s_axis_tvalid),
+		.s_peer_tdata(peer_s_axis_tdata),
+		.s_peer_tready(peer_s_axis_tready),
+		.s_peer_tvalid(peer_s_axis_tvalid),
 
-		.i_local_tdata(local_s_axis_tdata),
-		.o_local_tready(local_s_axis_tready),
-		.i_local_tvalid(local_s_axis_tvalid),
+		.s_local_tdata(local_s_axis_tdata),
+		.s_local_tready(local_s_axis_tready),
+		.s_local_tvalid(local_s_axis_tvalid),
 
 		.i_peer_wr_data_cnt(i_peer_wr_data_cnt),
 		.i_local_wr_data_cnt(i_local_wr_data_cnt),
@@ -240,7 +235,12 @@ module SFP_Top #
 		.i_dc_v(i_dc_v),
 		.i_phase_r(i_phase_r),
 		.i_phase_s(i_phase_s),
-		.i_phase_t(i_phase_t)
+		.i_phase_t(i_phase_t),
+
+		.o_m_tx_state(),
+		.o_s_peer_tx_state(),
+		.o_s_local_tx_state(),
+		.o_s_tx_state()
 	);
 
 endmodule
