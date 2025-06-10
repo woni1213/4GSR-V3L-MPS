@@ -1,7 +1,11 @@
+`timescale 1 ns / 1 ps
+
 module SFP_Handler
 (
 	input i_clk,
 	input i_rst,
+	
+	input i_channel_up,
 
 	input i_sfp_en,
 	input [1:0] i_sfp_id,
@@ -139,7 +143,7 @@ module SFP_Handler
 		else
 		begin
 			case (s_local_tx_state)
-				IDLE : 	s_local_tx_state <= ((local_tx_period_cnt < 4000) && (~sfp_master)) ? STAT : IDLE;
+				IDLE : 	s_local_tx_state <= ((local_tx_period_cnt < 4000) && (~sfp_master) && i_channel_up) ? STAT : IDLE;
 				STAT :	s_local_tx_state <= INTL;
 				INTL :	s_local_tx_state <= CULL;
 				CULL :	s_local_tx_state <= VOLT;
@@ -165,7 +169,7 @@ module SFP_Handler
 			case (s_tx_state)
 				IDLE : 	s_tx_state <= (((|i_peer_wr_data_cnt) || (|i_local_wr_data_cnt)) && (~sfp_master)) ? L_RUN : IDLE;
 				L_RUN : s_tx_state <= P_RUN;
-				P_RUN : s_tx_state <= P_RUN;
+				P_RUN : s_tx_state <= DONE;
 				DONE : 	s_tx_state <= IDLE;
 				default : s_tx_state <= s_tx_state;
 			endcase
@@ -266,14 +270,14 @@ module SFP_Handler
 			m_local_tvalid <= 1;
 
 			if (s_local_tx_state == STAT)		m_local_tdata <= {i_sfp_id, 28'h200_0000, i_status};
-			else if (s_local_tx_state == INTL)	m_local_tdata <= {i_sfp_id, 28'h200_0000, i_intl};
-			else if (s_local_tx_state == CULL)	m_local_tdata <= {i_sfp_id, 28'h200_0000, i_c};
-			else if (s_local_tx_state == VOLT)	m_local_tdata <= {i_sfp_id, 28'h200_0000, i_v};
-			else if (s_local_tx_state == DC_C)	m_local_tdata <= {i_sfp_id, 28'h200_0000, i_dc_c};
-			else if (s_local_tx_state == DC_V)	m_local_tdata <= {i_sfp_id, 28'h200_0000, i_dc_v};
-			else if (s_local_tx_state == PH_R)	m_local_tdata <= {i_sfp_id, 28'h200_0000, i_phase_r};
-			else if (s_local_tx_state == PH_S)	m_local_tdata <= {i_sfp_id, 28'h200_0000, i_phase_s};
-			else if (s_local_tx_state == PH_T)	m_local_tdata <= {i_sfp_id, 28'h200_0000, i_phase_t};
+			else if (s_local_tx_state == INTL)	m_local_tdata <= {i_sfp_id, 28'h200_0001, i_intl};
+			else if (s_local_tx_state == CULL)	m_local_tdata <= {i_sfp_id, 28'h200_0002, i_c};
+			else if (s_local_tx_state == VOLT)	m_local_tdata <= {i_sfp_id, 28'h200_0003, i_v};
+			else if (s_local_tx_state == DC_C)	m_local_tdata <= {i_sfp_id, 28'h200_0004, i_dc_c};
+			else if (s_local_tx_state == DC_V)	m_local_tdata <= {i_sfp_id, 28'h200_0005, i_dc_v};
+			else if (s_local_tx_state == PH_R)	m_local_tdata <= {i_sfp_id, 28'h200_0006, i_phase_r};
+			else if (s_local_tx_state == PH_S)	m_local_tdata <= {i_sfp_id, 28'h200_0007, i_phase_s};
+			else if (s_local_tx_state == PH_T)	m_local_tdata <= {i_sfp_id, 28'h200_0008, i_phase_t};
 		end
 
 		else
@@ -301,7 +305,7 @@ module SFP_Handler
 
 		else if (s_rx_sfp_tready && s_rx_sfp_tvalid && sfp_master)
 		begin
-			case (s_rx_sfp_tdata[63:32])
+			casex (s_rx_sfp_tdata[63:32])
 				32'h1200_0000 : o_s0_status <= s_rx_sfp_tdata[31:0];
 				32'h1200_0001 : o_s0_intl <= s_rx_sfp_tdata[31:0];
 				32'h1200_0002 : o_s0_c <= s_rx_sfp_tdata[31:0];
