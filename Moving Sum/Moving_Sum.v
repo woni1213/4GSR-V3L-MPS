@@ -2,20 +2,6 @@
 
 /*
 
-MPS ADC Module
-���� 4�� ����� ����
-
-24.05.08 :	���� ����
-
-1. ����
- �� 16���� ADC Data�� �ջ�
- ADC �ֱ⸶�� Shift�Ͽ� ������
-
-2. �����
- n-15 + n-14 + ... + n = Output Data
- n�� ���� ADC ��
- �ش� ���� Floating Point�� ��ȯ �� ���Ŀ� ���ؼ� 1���� �����ͷ� �����
- 
 */
 
 module Moving_Sum
@@ -116,7 +102,7 @@ module Moving_Sum
 					add_2_buf[add_2_len] <= 0;
 				
 				else
-					add_2_buf[add_2_len] <= (state == ADD_1) ? add_1_buf[add_2_len * 2] + add_1_buf[(add_2_len * 2) + 1] : add_2_buf[add_2_len];
+					add_2_buf[add_2_len] <= (state == ADD_2) ? add_1_buf[add_2_len * 2] + add_1_buf[(add_2_len * 2) + 1] : add_2_buf[add_2_len];
 			end
 		end
 	endgenerate
@@ -130,7 +116,7 @@ module Moving_Sum
 					add_3_buf[add_3_len] <= 0;
 				
 				else
-					add_3_buf[add_3_len] <= (state == ADD_1) ? add_2_buf[add_3_len * 2] + add_2_buf[(add_3_len * 2) + 1] : add_3_buf[add_3_len];
+					add_3_buf[add_3_len] <= (state == ADD_3) ? add_2_buf[add_3_len * 2] + add_2_buf[(add_3_len * 2) + 1] : add_3_buf[add_3_len];
 			end
 		end
 	endgenerate
@@ -144,7 +130,7 @@ module Moving_Sum
 					add_4_buf[add_4_len] <= 0;
 				
 				else
-					add_4_buf[add_4_len] <= (state == ADD_1) ? add_3_buf[add_4_len * 2] + add_3_buf[(add_4_len * 2) + 1] : add_4_buf[add_4_len];
+					add_4_buf[add_4_len] <= (state == ADD_4) ? add_3_buf[add_4_len * 2] + add_3_buf[(add_4_len * 2) + 1] : add_4_buf[add_4_len];
 			end
 		end
 	endgenerate
@@ -158,7 +144,7 @@ module Moving_Sum
 					add_5_buf[add_5_len] <= 0;
 				
 				else
-					add_5_buf[add_5_len] <= (state == ADD_1) ? add_4_buf[add_5_len * 2] + add_4_buf[(add_5_len * 2) + 1] : add_5_buf[add_5_len];
+					add_5_buf[add_5_len] <= (state == ADD_5) ? add_4_buf[add_5_len * 2] + add_4_buf[(add_5_len * 2) + 1] : add_5_buf[add_5_len];
 			end
 		end
 	endgenerate
