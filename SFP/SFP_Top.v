@@ -11,22 +11,22 @@ BR MPS SFP Module
 module SFP_Top #
 (
 	parameter integer C_S_AXI_DATA_WIDTH = 32,								// AXI4-Lite Data Width
-	parameter integer C_S_AXI_ADDR_NUM = 21,								// AXI4-Lite Slave Reg Number
+	parameter integer C_S_AXI_ADDR_NUM = 30,								// AXI4-Lite Slave Reg Number
 	parameter integer C_S_AXI_ADDR_WIDTH = $clog2(C_S_AXI_ADDR_NUM) + 2		// AXI4-Lite Address
 )
 (
 	input i_clk,
 	input i_rst,
 
-	input [31:0] i_status,
-	input [31:0] i_intl,
+	input [31:0] i_analog_intl,
+	input [31:0] i_digital_intl,
 	input [31:0] i_c,
 	input [31:0] i_v,
 	input [31:0] i_dc_c,
 	input [31:0] i_dc_v,
-	input [31:0] i_phase_r,
-	input [31:0] i_phase_s,
-	input [31:0] i_phase_t,
+	input [31:0] i_phase_rms_r,
+	input [31:0] i_phase_rms_s,
+	input [31:0] i_phase_rms_t,
 
 	input [31:0] i_peer_wr_data_cnt,
 	input [31:0] i_local_wr_data_cnt,
@@ -99,15 +99,15 @@ module SFP_Top #
 	wire [63:0] s_sfp_rsp;
 	wire s_sfp_rsp_flag;
 
-	wire [31:0] s0_status;
-	wire [31:0] s0_intl;
+	wire [31:0] s0_analog_intl;
+	wire [31:0] s0_digital_intl;
 	wire [31:0] s0_c;
 	wire [31:0] s0_v;
 	wire [31:0] s0_dc_c;
 	wire [31:0] s0_dc_v;
-	wire [31:0] s0_phase_r;
-	wire [31:0] s0_phase_s;
-	wire [31:0] s0_phase_t;
+	wire [31:0] s0_phase_rms_r;
+	wire [31:0] s0_phase_rms_s;
+	wire [31:0] s0_phase_rms_t;
 
 	AXI4_Lite_SFP #
 	(
@@ -127,15 +127,15 @@ module SFP_Top #
 
 		.i_m_sfp_rsp(m_sfp_rsp),
 
-		.i_s0_status(s0_status),			// FSM, MPS Setting
-		.i_s0_intl(s0_intl),
+		.i_s0_analog_intl(s0_analog_intl),			// FSM, MPS Setting
+		.i_s0_digital_intl(s0_digital_intl),
 		.i_s0_c(s0_c),
 		.i_s0_v(s0_v),
 		.i_s0_dc_c(s0_dc_c),
 		.i_s0_dc_v(s0_dc_v),
-		.i_s0_phase_r(s0_phase_r),
-		.i_s0_phase_s(s0_phase_s),
-		.i_s0_phase_t(s0_phase_t),
+		.i_s0_phase_rms_r(s0_phase_rms_r),
+		.i_s0_phase_rms_s(s0_phase_rms_s),
+		.i_s0_phase_rms_t(s0_phase_rms_t),
 
 		// Slave
 		.i_s_sfp_cmd(s_sfp_cmd),
@@ -176,13 +176,13 @@ module SFP_Top #
 		.i_sfp_en(sfp_en),
 		.i_sfp_id(sfp_id),
 
-		.o_tx_sfp_tdata(sfp_m_axis_tdata),
-		.i_tx_sfp_tready(sfp_m_axis_tready),
-		.o_tx_sfp_tvalid(sfp_m_axis_tvalid),
+		.m_tx_sfp_tdata(sfp_m_axis_tdata),
+		.m_tx_sfp_tready(sfp_m_axis_tready),
+		.m_tx_sfp_tvalid(sfp_m_axis_tvalid),
 
-		.i_rx_sfp_tdata(sfp_s_axis_tdata),
-		.o_rx_sfp_tready(sfp_s_axis_tready),
-		.i_rx_sfp_tvalid(sfp_s_axis_tvalid),
+		.s_rx_sfp_tdata(sfp_s_axis_tdata),
+		.s_rx_sfp_tready(sfp_s_axis_tready),
+		.s_rx_sfp_tvalid(sfp_s_axis_tvalid),
 
 		// Master
 		.i_m_sfp_cmd(m_sfp_cmd),
@@ -191,15 +191,15 @@ module SFP_Top #
 
 		.o_m_sfp_rsp(m_sfp_rsp),
 
-		.o_s0_status(s0_status),
-		.o_s0_intl(s0_intl),
+		.o_s0_analog_intl(s0_analog_intl),
+		.o_s0_digital_intl(s0_digital_intl),
 		.o_s0_c(s0_c),
 		.o_s0_v(s0_v),
 		.o_s0_dc_c(s0_dc_c),
 		.o_s0_dc_v(s0_dc_v),
-		.o_s0_phase_r(s0_phase_r),
-		.o_s0_phase_s(s0_phase_s),
-		.o_s0_phase_t(s0_phase_t),
+		.o_s0_phase_rms_r(s0_phase_rms_r),
+		.o_s0_phase_rms_s(s0_phase_rms_s),
+		.o_s0_phase_rms_t(s0_phase_rms_t),
 
 		// Slave
 		.o_s_sfp_cmd(s_sfp_cmd),
@@ -227,15 +227,15 @@ module SFP_Top #
 		.i_peer_wr_data_cnt(i_peer_wr_data_cnt),
 		.i_local_wr_data_cnt(i_local_wr_data_cnt),
 
-		.i_status(i_status),
-		.i_intl(i_intl),
+		.i_analog_intl(i_analog_intl),
+		.i_digital_intl(i_digital_intl),
 		.i_c(i_c),
 		.i_v(i_v),
 		.i_dc_c(i_dc_c),
 		.i_dc_v(i_dc_v),
-		.i_phase_r(i_phase_r),
-		.i_phase_s(i_phase_s),
-		.i_phase_t(i_phase_t),
+		.i_phase_rms_r(i_phase_rms_r),
+		.i_phase_rms_s(i_phase_rms_s),
+		.i_phase_rms_t(i_phase_rms_t),
 
 		.o_m_tx_state(),
 		.o_s_peer_tx_state(),

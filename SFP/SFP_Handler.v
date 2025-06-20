@@ -7,8 +7,6 @@ module SFP_Handler
 	
 	input i_channel_up,
 
-	input i_channel_up,
-
 	input i_sfp_en,
 	input [1:0] i_sfp_id,
 
@@ -27,15 +25,15 @@ module SFP_Handler
 
 	output reg [63:0] o_m_sfp_rsp,
 
-	output reg [31:0] o_s0_status,
-	output reg [31:0] o_s0_intl,
+	output reg [31:0] o_s0_analog_intl,
+	output reg [31:0] o_s0_digital_intl,
 	output reg [31:0] o_s0_c,
 	output reg [31:0] o_s0_v,
 	output reg [31:0] o_s0_dc_c,
 	output reg [31:0] o_s0_dc_v,
-	output reg [31:0] o_s0_phase_r,
-	output reg [31:0] o_s0_phase_s,
-	output reg [31:0] o_s0_phase_t,
+	output reg [31:0] o_s0_phase_rms_r,
+	output reg [31:0] o_s0_phase_rms_s,
+	output reg [31:0] o_s0_phase_rms_t,
 
 	// Slave
 	// SFP -> PS
@@ -65,15 +63,15 @@ module SFP_Handler
 	input [31:0] i_peer_wr_data_cnt,
 	input [31:0] i_local_wr_data_cnt,
 
-	input [31:0] i_status,
-	input [31:0] i_intl,
+	input [31:0] i_analog_intl,
+	input [31:0] i_digital_intl,
 	input [31:0] i_c,
 	input [31:0] i_v,
 	input [31:0] i_dc_c,
 	input [31:0] i_dc_v,
-	input [31:0] i_phase_r,
-	input [31:0] i_phase_s,
-	input [31:0] i_phase_t,
+	input [31:0] i_phase_rms_r,
+	input [31:0] i_phase_rms_s,
+	input [31:0] i_phase_rms_t,
 
 	output [1:0] o_m_tx_state,
 	output [1:0] o_s_peer_tx_state,
@@ -101,7 +99,7 @@ module SFP_Handler
 	reg [3:0] s_local_tx_state;
 	reg [2:0] s_tx_state;
 
-	reg [12:0] local_tx_period_cnt;
+	reg [15:0] local_tx_period_cnt;
 
 	wire sfp_master;
 
@@ -145,7 +143,7 @@ module SFP_Handler
 		else
 		begin
 			case (s_local_tx_state)
-				IDLE : 	s_local_tx_state <= ((local_tx_period_cnt < 4000) && (~sfp_master) && i_channel_up) ? STAT : IDLE;
+				IDLE : 	s_local_tx_state <= ((local_tx_period_cnt < 40000) && (~sfp_master) && i_channel_up) ? STAT : IDLE;
 				STAT :	s_local_tx_state <= INTL;
 				INTL :	s_local_tx_state <= CULL;
 				CULL :	s_local_tx_state <= VOLT;
@@ -184,7 +182,7 @@ module SFP_Handler
 			local_tx_period_cnt <= 0;
 
 		else
-			local_tx_period_cnt <= (local_tx_period_cnt < 4000) ? local_tx_period_cnt + 1 : 0;
+			local_tx_period_cnt <= (local_tx_period_cnt < 40000) ? local_tx_period_cnt + 1 : 0;
 	end
 
 	always @(posedge i_clk or negedge i_rst)
@@ -271,15 +269,15 @@ module SFP_Handler
 		begin
 			m_local_tvalid <= 1;
 
-			if (s_local_tx_state == STAT)		m_local_tdata <= {i_sfp_id, 28'h200_0000, i_status};
-			else if (s_local_tx_state == INTL)	m_local_tdata <= {i_sfp_id, 28'h200_0001, i_intl};
+			if (s_local_tx_state == STAT)		m_local_tdata <= {i_sfp_id, 28'h200_0000, i_analog_intl};
+			else if (s_local_tx_state == INTL)	m_local_tdata <= {i_sfp_id, 28'h200_0001, i_digital_intl};
 			else if (s_local_tx_state == CULL)	m_local_tdata <= {i_sfp_id, 28'h200_0002, i_c};
 			else if (s_local_tx_state == VOLT)	m_local_tdata <= {i_sfp_id, 28'h200_0003, i_v};
 			else if (s_local_tx_state == DC_C)	m_local_tdata <= {i_sfp_id, 28'h200_0004, i_dc_c};
 			else if (s_local_tx_state == DC_V)	m_local_tdata <= {i_sfp_id, 28'h200_0005, i_dc_v};
-			else if (s_local_tx_state == PH_R)	m_local_tdata <= {i_sfp_id, 28'h200_0006, i_phase_r};
-			else if (s_local_tx_state == PH_S)	m_local_tdata <= {i_sfp_id, 28'h200_0007, i_phase_s};
-			else if (s_local_tx_state == PH_T)	m_local_tdata <= {i_sfp_id, 28'h200_0008, i_phase_t};
+			else if (s_local_tx_state == PH_R)	m_local_tdata <= {i_sfp_id, 28'h200_0006, i_phase_rms_r};
+			else if (s_local_tx_state == PH_S)	m_local_tdata <= {i_sfp_id, 28'h200_0007, i_phase_rms_s};
+			else if (s_local_tx_state == PH_T)	m_local_tdata <= {i_sfp_id, 28'h200_0008, i_phase_rms_t};
 		end
 
 		else
@@ -294,29 +292,29 @@ module SFP_Handler
 		if (~i_rst)
 		begin
 			o_m_sfp_rsp <= 0;
-			o_s0_status <= 0;
-			o_s0_intl <= 0;
+			o_s0_analog_intl <= 0;
+			o_s0_digital_intl <= 0;
 			o_s0_c <= 0;
 			o_s0_v <= 0;
 			o_s0_dc_c <= 0;
 			o_s0_dc_v <= 0;
-			o_s0_phase_r <= 0;
-			o_s0_phase_s <= 0;
-			o_s0_phase_t <= 0;
+			o_s0_phase_rms_r <= 0;
+			o_s0_phase_rms_s <= 0;
+			o_s0_phase_rms_t <= 0;
 		end
 
 		else if (s_rx_sfp_tready && s_rx_sfp_tvalid && sfp_master)
 		begin
-			casex (s_rx_sfp_tdata[63:32])
-				32'h1200_0000 : o_s0_status <= s_rx_sfp_tdata[31:0];
-				32'h1200_0001 : o_s0_intl <= s_rx_sfp_tdata[31:0];
+			case (s_rx_sfp_tdata[63:32])
+				32'h1200_0000 : o_s0_analog_intl <= s_rx_sfp_tdata[31:0];
+				32'h1200_0001 : o_s0_digital_intl <= s_rx_sfp_tdata[31:0];
 				32'h1200_0002 : o_s0_c <= s_rx_sfp_tdata[31:0];
 				32'h1200_0003 : o_s0_v <= s_rx_sfp_tdata[31:0];
 				32'h1200_0004 : o_s0_dc_c <= s_rx_sfp_tdata[31:0];
 				32'h1200_0005 : o_s0_dc_v <= s_rx_sfp_tdata[31:0];
-				32'h1200_0006 : o_s0_phase_r <= s_rx_sfp_tdata[31:0];
-				32'h1200_0007 : o_s0_phase_s <= s_rx_sfp_tdata[31:0];
-				32'h1200_0008 : o_s0_phase_t <= s_rx_sfp_tdata[31:0];
+				32'h1200_0006 : o_s0_phase_rms_r <= s_rx_sfp_tdata[31:0];
+				32'h1200_0007 : o_s0_phase_rms_s <= s_rx_sfp_tdata[31:0];
+				32'h1200_0008 : o_s0_phase_rms_t <= s_rx_sfp_tdata[31:0];
 				default :
 					o_m_sfp_rsp <= s_rx_sfp_tdata;
 			endcase

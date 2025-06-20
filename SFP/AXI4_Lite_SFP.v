@@ -17,15 +17,15 @@ module AXI4_Lite_SFP #
 
 	input [63:0] i_m_sfp_rsp,
 
-	input [31:0] i_s0_status,
-	input [31:0] i_s0_intl,
+	input [31:0] i_s0_analog_intl,
+	input [31:0] i_s0_digital_intl,
 	input [31:0] i_s0_c,
 	input [31:0] i_s0_v,
 	input [31:0] i_s0_dc_c,
 	input [31:0] i_s0_dc_v,
-	input [31:0] i_s0_phase_r,
-	input [31:0] i_s0_phase_s,
-	input [31:0] i_s0_phase_t,
+	input [31:0] i_s0_phase_rms_r,
+	input [31:0] i_s0_phase_rms_s,
+	input [31:0] i_s0_phase_rms_t,
 
 	// Slave
 	input [31:0] i_s_sfp_cmd,
@@ -279,15 +279,15 @@ module AXI4_Lite_SFP #
 		slv_reg[8] <= i_m_sfp_rsp[31:0];
 		slv_reg[9] <= i_m_sfp_rsp[63:32];
 
-		slv_reg[10] <= i_s0_status;
-		slv_reg[11] <= i_s0_intl;
+		slv_reg[10] <= i_s0_analog_intl;
+		slv_reg[11] <= i_s0_digital_intl;
 		slv_reg[12] <= i_s0_c;
 		slv_reg[13] <= i_s0_v;
 		slv_reg[14] <= i_s0_dc_c;
 		slv_reg[15] <= i_s0_dc_v;
-		slv_reg[16] <= i_s0_phase_r;
-		slv_reg[17] <= i_s0_phase_s;
-		slv_reg[18] <= i_s0_phase_t;
+		slv_reg[16] <= i_s0_phase_rms_r;
+		slv_reg[17] <= i_s0_phase_rms_s;
+		slv_reg[18] <= i_s0_phase_rms_t;
 
 		slv_reg[19] <= i_s_sfp_cmd;
 		slv_reg[20] <= i_s_sfp_data;
