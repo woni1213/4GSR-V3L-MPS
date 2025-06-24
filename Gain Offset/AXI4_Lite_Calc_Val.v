@@ -15,9 +15,6 @@ module AXI4_Lite_Calc_Val #
 	output reg [31:0]	o_phase_r_factor,
 	output reg [31:0]	o_phase_s_factor,
 	output reg [31:0]	o_phase_t_factor,
-	output reg [31:0]	o_igbt_t_factor,
-	output reg [31:0]	o_i_inductor_t_factor,
-	output reg [31:0]	o_o_inductor_t_factor,
 
 	output reg [31:0]	o_c_factor_offset,
 	output reg [31:0]	o_v_factor_offset,
@@ -26,9 +23,6 @@ module AXI4_Lite_Calc_Val #
 	output reg [31:0]	o_phase_r_factor_offset,
 	output reg [31:0]	o_phase_s_factor_offset,
 	output reg [31:0]	o_phase_t_factor_offset,
-	output reg [31:0]	o_igbt_t_factor_offset,
-	output reg [31:0]	o_i_inductor_t_factor_offset,
-	output reg [31:0]	o_o_inductor_t_factor_offset,
 
 
 	input S_AXI_ACLK,
@@ -264,9 +258,6 @@ module AXI4_Lite_Calc_Val #
 		o_phase_r_factor		<= slv_reg[4];
 		o_phase_s_factor		<= slv_reg[5];
 		o_phase_t_factor		<= slv_reg[6];
-		o_igbt_t_factor			<= slv_reg[7];
-		o_i_inductor_t_factor	<= slv_reg[8];
-		o_o_inductor_t_factor	<= slv_reg[9];
 
 		o_c_factor_offset				<= slv_reg[10];
 		o_v_factor_offset				<= slv_reg[11];
@@ -275,9 +266,6 @@ module AXI4_Lite_Calc_Val #
 		o_phase_r_factor_offset			<= slv_reg[14];
 		o_phase_s_factor_offset			<= slv_reg[15];
 		o_phase_t_factor_offset			<= slv_reg[16];
-		o_igbt_t_factor_offset			<= slv_reg[17];
-		o_i_inductor_t_factor_offset	<= slv_reg[18];
-		o_o_inductor_t_factor_offset	<= slv_reg[19];
 	end
 	// User logic ends
 

@@ -53,6 +53,8 @@ module MPS_Operation_FSM
 	reg [27:0] off_hold_cnt;
 	reg [28:0] timeout_cnt;
 
+	reg [30:0] off_timeout_cnt;
+
 	wire dc_on_flag;
 	wire dc_on_valid;
 	wire dc_off_flag;
@@ -76,7 +78,7 @@ module MPS_Operation_FSM
 			off_state <= IDLE;
 
 		else 
-			off_state <= n_off_state;
+			off_state <= (&off_timeout_cnt) ? FAIL : n_off_state;
 	end
 
 	always @(*)
@@ -107,6 +109,7 @@ module MPS_Operation_FSM
 			MAIN_OFF		: n_off_state = (&off_hold_cnt) ? DISCHA_ON : MAIN_OFF;
 			DISCHA_ON		: n_off_state = (dc_off_flag && dc_off_valid) ? SYSTEM_OFF : DISCHA_ON;
 			SYSTEM_OFF		: n_off_state = IDLE;
+			FAIL			: n_off_state = IDLE;
 			default 		: n_off_state = IDLE;
 		endcase
 	end
@@ -150,6 +153,15 @@ module MPS_Operation_FSM
 
 		else
 			timeout_cnt <= (&on_hold_cnt) ? ((&timeout_cnt) ? timeout_cnt : timeout_cnt + 1) : 0;
+	end
+
+	always @(posedge i_clk or negedge i_rst)
+	begin
+		if (~i_rst)
+			off_timeout_cnt <= 0;
+
+		else
+			off_timeout_cnt <= ((off_state == IDLE) || (off_state == SYSTEM_OFF)) ? 0 : (&off_timeout_cnt) ? off_timeout_cnt : off_timeout_cnt + 1;
 	end
 
 	// A > B
