@@ -14,7 +14,9 @@ module Moving_Sum
 
 	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
 	output reg [31:0] adc_m_axis_tdata,
-	output adc_m_axis_tvalid
+	output adc_m_axis_tvalid,
+
+	output [31:0] o_mov_sum_data
 );
 
 	localparam IDLE		= 0;
@@ -185,7 +187,7 @@ module Moving_Sum
 			adc_m_axis_tdata <= 0;
 
 		else
-			adc_m_axis_tdata <= (state == SHIFT) ? (add_7_buf >> 7) : adc_m_axis_tdata;
+			adc_m_axis_tdata <= (state == SHIFT) ? {~add_7_buf[30], add_7_buf[29:7]} : adc_m_axis_tdata;
 	end
 
 	generate
@@ -197,11 +199,13 @@ module Moving_Sum
 					adc_tmp[adc_tmp_len] <= 0;
 
 				else
-					adc_tmp[adc_tmp_len] <= (i_adc_valid) ? ((adc_tmp_len == 0) ? {~i_adc_data[23], i_adc_data[22:0]} : adc_tmp[adc_tmp_len - 1]) : adc_tmp[adc_tmp_len];
+					adc_tmp[adc_tmp_len] <= (i_adc_valid) ? (adc_tmp[adc_tmp_len - 1]) : adc_tmp[adc_tmp_len];
 			end
 		end
 	endgenerate
 
 	assign adc_m_axis_tvalid = (state == DONE);
+	assign o_mov_sum_data = adc_m_axis_tdata;
+	
 
 endmodule
