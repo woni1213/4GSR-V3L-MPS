@@ -3,11 +3,24 @@
 # 그리고 포트의 라우팅 이름이 해당 보드의 핀 이름임
 # 예시) 회로도 내 CN1001의 라우팅 이름이 A3라면  Kria_K26_SOM_Rev1.xdc 파일의 get_ports는 "som240_1_a3"이다.
 
+## Clock Constraints
+create_clock -period 6.400 -name GT_DIFF_REFCLK_0_clk_p -waveform {0.000 3.200} [get_ports {GT_DIFF_REFCLK_0_clk_p}]
 set_property -dict { PACKAGE_PIN C3		IOSTANDARD LVCMOS18 } [get_ports sys_clk];			# HPARCK
 
 ### LAN Constraints (See Notion - Zynq - Error and Critical Warning Page)
 set_property IODELAY_GROUP tri_mode_ethernet_mac_iodelay_grp1 [get_cells -hier -filter {NAME =~ design_1_i/Ethernet/axi_ethernet_1/* && IODELAY_GROUP != "" }] 
 set_property IODELAY_GROUP tri_mode_ethernet_mac_iodelay_grp2 [get_cells -hier -filter {NAME =~ design_1_i/Ethernet/axi_ethernet_2/* && IODELAY_GROUP != "" }]
+
+## SFP 1
+set_property PACKAGE_PIN R4 [get_ports GT_SERIAL_TX_0_txp];										# SFTDPA
+set_property PACKAGE_PIN R3 [get_ports GT_SERIAL_TX_0_txn];										# SFTDNA
+set_property PACKAGE_PIN T2 [get_ports GT_SERIAL_RX_0_rxp];										# SFRDPA
+set_property PACKAGE_PIN T1 [get_ports GT_SERIAL_RX_0_rxn];										# SFRDNA
+
+set_property PACKAGE_PIN Y5 [get_ports GT_DIFF_REFCLK_0_clk_n];									# GTHRCK0N
+set_property PACKAGE_PIN Y6 [get_ports GT_DIFF_REFCLK_0_clk_p];									# GTHRCK0P
+
+set_property -dict {PACKAGE_PIN Y10 IOSTANDARD LVCMOS33} [get_ports o_sfp_0_tx_en];				# SFTDISA
 
 # Reset
 # Interlock Reset
@@ -48,7 +61,7 @@ set_property -dict { PACKAGE_PIN AF3   IOSTANDARD LVCMOS18 } [get_ports i_s_adc_
 # DSP Control
 set_property -dict { PACKAGE_PIN Y9		IOSTANDARD LVCMOS33 } [get_ports i_dsp_ce];			# CESOM~
 set_property -dict { PACKAGE_PIN AB10	IOSTANDARD LVCMOS33 } [get_ports i_dsp_we];			# XWE0~
-set_property -dict { PACKAGE_PIN AA8	IOSTANDARD LVCMOS33 } [get_ports i_dsp_rd];			# XRD~
+#set_property -dict { PACKAGE_PIN AA8	IOSTANDARD LVCMOS33 } [get_ports i_dsp_rd];			# XRD~
 
 # DSP Address
 set_property -dict { PACKAGE_PIN AB15	IOSTANDARD LVCMOS33 } [get_ports i_dsp_addr[0]];	# XA [0]
@@ -122,7 +135,7 @@ set_property -dict { PACKAGE_PIN F7		IOSTANDARD LVCMOS18 } [get_ports o_intl_OC_
 # set_property -dict { PACKAGE_PIN AF10	IOSTANDARD LVCMOS33 } [get_ports ];		# MEXTRG~
 set_property -dict { PACKAGE_PIN D11	IOSTANDARD LVCMOS33 } [get_ports o_en_dsp_boot];	# ENSOMBT~
 set_property -dict { PACKAGE_PIN B10	IOSTANDARD LVCMOS33 } [get_ports o_sys_rst];		# ENSOMMR
-# set_property -dict { PACKAGE_PIN G8		IOSTANDARD LVCMOS18 } [get_ports o_eeprom_rst];		# WEMEEP~
+set_property -dict { PACKAGE_PIN G8		IOSTANDARD LVCMOS18 } [get_ports o_eeprom_rst];		# WEMEEP~
 set_property -dict { PACKAGE_PIN E12	IOSTANDARD LVCMOS33 } [get_ports o_ext_do_buf_en];	# MENILO~
 
 set_property -dict { PACKAGE_PIN R7		IOSTANDARD LVCMOS18 } [get_ports o_ext_do[0]];		# ILDO0xM
