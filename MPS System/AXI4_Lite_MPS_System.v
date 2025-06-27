@@ -27,6 +27,7 @@ module AXI4_Lite_MPS_System #
 	output reg o_en_dsp_boot,
 	output reg o_sys_rst,
 	output reg o_intl_OC_rst,
+	output reg o_eeprom_rst,
 
 	input S_AXI_ACLK,
 	input S_AXI_ARESETN,
@@ -266,6 +267,7 @@ module AXI4_Lite_MPS_System #
 		o_sys_rst		<= slv_reg[6];	//
 		o_intl_OC_rst	<= slv_reg[7];	//
 		o_intl_clr		<= slv_reg[8];	//
+		o_eeprom_rst    <= slv_reg[9];
 	end
 
 	always @(posedge S_AXI_ACLK)

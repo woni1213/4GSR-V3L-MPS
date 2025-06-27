@@ -43,11 +43,15 @@ module MPS_System_Top #
 	output o_en_dsp_boot,
 	output o_sys_rst,
 	output o_intl_OC_rst,
+	output o_eeprom_rst,
 	output o_dc_v_under_intl_en,
 
 	output [2:0] o_mps_fsm_m,
 	output [3:0] o_op_on_state,
 	output [3:0] o_op_off_state,
+
+	output [31:0] o_digital_intl,
+	output [31:0] o_analog_intl,
 
 	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
 	input [C_S_AXI_ADDR_WIDTH-1 : 0] s00_axi_awaddr,
@@ -136,6 +140,7 @@ module MPS_System_Top #
 		.o_en_dsp_boot	(o_en_dsp_boot),
 		.o_sys_rst		(o_sys_rst),
 		.o_intl_OC_rst	(o_intl_OC_rst),
+		.o_eeprom_rst	(o_eeprom_rst),
 
 		.S_AXI_ACLK(i_clk),
 		.S_AXI_ARESETN(i_rst),
@@ -204,5 +209,8 @@ module MPS_System_Top #
 	assign o_op_on_state = op_on_fsm;
 	assign o_op_off_state = op_off_fsm;
 	assign o_ext_do = {ext_do, mc};
+
+	assign o_digital_intl = {16'h0, i_ext_di};
+	assign o_analog_intl = {13'h0, i_duty_intl, i_analog_intl};
 
 endmodule

@@ -199,7 +199,7 @@ module Moving_Sum
 					adc_tmp[adc_tmp_len] <= 0;
 
 				else
-					adc_tmp[adc_tmp_len] <= (i_adc_valid) ? (adc_tmp[adc_tmp_len - 1]) : adc_tmp[adc_tmp_len];
+					adc_tmp[adc_tmp_len] <= (i_adc_valid) ?  ((adc_tmp_len == 0) ? i_adc_data : adc_tmp[adc_tmp_len - 1]) : adc_tmp[adc_tmp_len];
 			end
 		end
 	endgenerate

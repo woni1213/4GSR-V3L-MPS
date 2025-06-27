@@ -18,6 +18,8 @@ module SFP_Top #
 	input i_clk,
 	input i_rst,
 
+	input i_channel_up,
+
 	input [31:0] i_analog_intl,
 	input [31:0] i_digital_intl,
 	input [31:0] i_c,
@@ -60,6 +62,11 @@ module SFP_Top #
 	input [63:0] 	local_s_axis_tdata,
 	output			local_s_axis_tready,
 	input 			local_s_axis_tvalid,
+
+	output [31:0] o_s_sfp_set_c,
+	output [31:0] o_s_sfp_set_v,
+
+	output o_sfp_slave,
 
 	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
 	input [C_S_AXI_ADDR_WIDTH-1 : 0] s00_axi_awaddr,
@@ -173,6 +180,8 @@ module SFP_Top #
 		.i_clk(i_clk),
 		.i_rst(i_rst),
 
+		.i_channel_up(i_channel_up),
+
 		.i_sfp_en(sfp_en),
 		.i_sfp_id(sfp_id),
 
@@ -240,7 +249,11 @@ module SFP_Top #
 		.o_m_tx_state(),
 		.o_s_peer_tx_state(),
 		.o_s_local_tx_state(),
-		.o_s_tx_state()
+		.o_s_tx_state(),
+
+		.o_s_sfp_set_c(o_s_sfp_set_c),
+		.o_s_sfp_set_v(o_s_sfp_set_v),
+		.o_sfp_slave(o_sfp_slave)
 	);
 
 endmodule

@@ -23,8 +23,6 @@ module ADC_Calc_Val #
 	parameter integer C_S_AXI_ADDR_WIDTH = $clog2(C_S_AXI_ADDR_NUM) + 2		// AXI4-Lite Address
 )
 (
-	input [1:0] i_rack_sel,
-
 	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
 	output [31:0] i_gain_m_axis_tdata,
 	output i_gain_m_axis_tvalid,
@@ -186,15 +184,23 @@ module ADC_Calc_Val #
 	input wire  s00_axi_rready
 );
 
-	wire [31:0] o_c_factor_axis;
-	wire [31:0] o_v_factor_axis;
-	wire [31:0] o_dc_c_factor_axis;
-	wire [31:0] o_dc_v_factor_axis;
-	wire [31:0] o_p_r_factor_axis;
-	wire [31:0] o_p_s_factor_axis;
-	wire [31:0] o_p_t_factor_axis;
+	wire [31:0] c_factor_axis;
+	wire [31:0] v_factor_axis;
+	wire [31:0] dc_c_factor_axis;
+	wire [31:0] dc_v_factor_axis;
+	wire [31:0] p_r_factor_axis;
+	wire [31:0] p_s_factor_axis;
+	wire [31:0] p_t_factor_axis;
 	
-	wire [31:0] o_dc_c_factor_offset_axis;
+	wire [31:0] c_factor_offset_axis;
+	wire [31:0] v_factor_offset_axis;
+	wire [31:0] dc_c_factor_offset_axis;
+	wire [31:0] dc_v_factor_offset_axis;
+	wire [31:0] p_r_factor_offset_axis;
+	wire [31:0] p_s_factor_offset_axis;
+	wire [31:0] p_t_factor_offset_axis;
+
+	wire [31:0] rack_sel;
 
 	AXI4_Lite_Calc_Val #
 	(
@@ -205,21 +211,23 @@ module ADC_Calc_Val #
 	u_AXI4_Lite_Calc_Val
 	(
 		// ADC Calc Factor
-		.o_c_factor(o_c_factor_axis),
-		.o_v_factor(o_v_factor_axis),
-		.o_dc_c_factor(o_dc_c_factor_axis),
-		.o_dc_v_factor(o_dc_v_factor_axis),
-		.o_phase_r_factor(o_p_r_factor_axis),
-		.o_phase_s_factor(o_p_s_factor_axis),
-		.o_phase_t_factor(o_p_t_factor_axis),
+		.o_c_factor(c_factor_axis),
+		.o_v_factor(v_factor_axis),
+		.o_dc_c_factor(dc_c_factor_axis),
+		.o_dc_v_factor(dc_v_factor_axis),
+		.o_phase_r_factor(p_r_factor_axis),
+		.o_phase_s_factor(p_s_factor_axis),
+		.o_phase_t_factor(p_t_factor_axis),
 
-		.o_c_factor_offset(o_c_factor_offset_axis_tdata),
-		.o_v_factor_offset(o_v_factor_offset_axis_tdata),
-		.o_dc_c_factor_offset(o_dc_c_factor_offset_axis),
-		.o_dc_v_factor_offset(o_dc_v_factor_offset_axis_tdata),
-		.o_phase_r_factor_offset(o_p_r_factor_offset_axis_tdata),
-		.o_phase_s_factor_offset(o_p_s_factor_offset_axis_tdata),
-		.o_phase_t_factor_offset(o_p_t_factor_offset_axis_tdata),
+		.o_c_factor_offset(c_factor_offset_axis),
+		.o_v_factor_offset(v_factor_offset_axis),
+		.o_dc_c_factor_offset(dc_c_factor_offset_axis),
+		.o_dc_v_factor_offset(dc_v_factor_offset_axis),
+		.o_phase_r_factor_offset(p_r_factor_offset_axis),
+		.o_phase_s_factor_offset(p_s_factor_offset_axis),
+		.o_phase_t_factor_offset(p_t_factor_offset_axis),
+
+		.o_rack_sel(rack_sel),
 
 		.S_AXI_ACLK(s00_axi_aclk),
 		.S_AXI_ARESETN(s00_axi_aresetn),
@@ -265,15 +273,21 @@ module ADC_Calc_Val #
 	assign o_o_id_t_gain_m_axis_tdata = 32'h3920_0000;
 	assign o_o_id_t_offset_m_axis_tdata = 32'hc0a0_0000;
 
-	assign o_c_factor_axis_tdata = (~|i_rack_sel) ? o_c_factor_axis : 32'h4230_0000;			// 44
-	assign o_v_factor_axis_tdata = (~|i_rack_sel) ? o_v_factor_axis : 32'h41f8_0000;			// 31
-	assign o_dc_c_factor_axis_tdata = (~|i_rack_sel) ? o_dc_c_factor_axis : (i_rack_sel) ? 32'h42f9_1f6f : 32'h42e6_9f07;		// Rack 1 124.561395, Rack 2 115.3106
-	assign o_dc_v_factor_axis_tdata = (~|i_rack_sel) ? o_dc_v_factor_axis : 32'h42f4_4a30;		// 122.144897
-	assign o_phase_r_factor_axis_tdata = (~|i_rack_sel) ? o_p_r_factor_axis : 32'h42f4_2388;	// 122.0694
-	assign o_phase_s_factor_axis_tdata = (~|i_rack_sel) ? o_p_s_factor_axis : 32'h42f4_2388;	// 122.0694
-	assign o_phase_t_factor_axis_tdata = (~|i_rack_sel) ? o_p_t_factor_axis : 32'h42f4_2388;	// 122.0694
+	assign o_c_factor_axis_tdata = (~|rack_sel) ? c_factor_axis : 32'h4230_0000;			// 44
+	assign o_v_factor_axis_tdata = (~|rack_sel) ? v_factor_axis : 32'h41f8_0000;			// 31
+	assign o_dc_c_factor_axis_tdata = (~|rack_sel) ? dc_c_factor_axis : (rack_sel) ? 32'h42f9_1f6f : 32'h42e6_9f07;		// Rack 1 124.561395, Rack 2 115.3106
+	assign o_dc_v_factor_axis_tdata = (~|rack_sel) ? dc_v_factor_axis : 32'h42f4_4a30;		// 122.144897
+	assign o_p_r_factor_axis_tdata = (~|rack_sel) ? p_r_factor_axis : 32'h42f4_2388;	// 122.0694
+	assign o_p_s_factor_axis_tdata = (~|rack_sel) ? p_s_factor_axis : 32'h42f4_2388;	// 122.0694
+	assign o_p_t_factor_axis_tdata = (~|rack_sel) ? p_t_factor_axis : 32'h42f4_2388;	// 122.0694
 
-	assign o_dc_c_factor_offset_axis_tdata = (~|i_rack_sel) ? o_dc_c_factor_offset_axis : (i_rack_sel) ? 32'hbea_3d70a : 32'h3ebe_76c9;	//  Rack 1 -0.32, Rack 2 0.372
+	assign o_c_factor_offset_axis_tdata = (~|rack_sel) ? c_factor_offset_axis : 0;
+	assign o_v_factor_offset_axis_tdata = (~|rack_sel) ? v_factor_offset_axis : 0;
+	assign o_dc_c_factor_offset_axis_tdata = (~|rack_sel) ? dc_c_factor_offset_axis : (rack_sel) ? 32'hbea_3d70a : 32'h3ebe_76c9;	//  Rack 1 -0.32, Rack 2 0.372
+	assign o_dc_v_factor_offset_axis_tdata = (~|rack_sel) ? dc_v_factor_offset_axis : 0;
+	assign o_p_r_factor_offset_axis_tdata = (~|rack_sel) ? p_r_factor_offset_axis : 0;
+	assign o_p_s_factor_offset_axis_tdata = (~|rack_sel) ? p_s_factor_offset_axis : 0;
+	assign o_p_t_factor_offset_axis_tdata = (~|rack_sel) ? p_t_factor_offset_axis : 0;
 
 	assign i_gain_m_axis_tvalid = 1;
 	assign i_offset_m_axis_tvalid = 1;

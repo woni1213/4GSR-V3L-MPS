@@ -93,6 +93,12 @@ module MPS_Core_Top #
 	output [31:0] o_phase_rms_s,
 	output [31:0] o_phase_rms_t,
 
+	// SFP Slave
+	input i_sfp_slave,
+	input [31:0] i_s_sfp_set_c,
+	input [31:0] i_s_sfp_set_v,
+
+	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
 	// AXI4 Lite Bus Interface Ports
 	input wire [C_S_AXI_ADDR_WIDTH-1 : 0] s00_axi_awaddr,
 	input wire [2 : 0] s00_axi_awprot,
@@ -282,6 +288,10 @@ module MPS_Core_Top #
 		.i_w_ready(i_w_ready),
 		.o_w_valid(o_w_valid),
 		.i_r_valid(i_r_valid),
+
+		.i_sfp_slave(i_sfp_slave),
+		.i_s_sfp_set_c(i_s_sfp_set_c),
+		.i_s_sfp_set_v(i_s_sfp_set_v),
 
 		// Zynq to DSP
 		.o_xintf_z_to_d_addr(o_xintf_z_to_d_addr),

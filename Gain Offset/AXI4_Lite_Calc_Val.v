@@ -24,6 +24,7 @@ module AXI4_Lite_Calc_Val #
 	output reg [31:0]	o_phase_s_factor_offset,
 	output reg [31:0]	o_phase_t_factor_offset,
 
+	output reg [31:0]	o_rack_sel,
 
 	input S_AXI_ACLK,
 	input S_AXI_ARESETN,
@@ -259,13 +260,15 @@ module AXI4_Lite_Calc_Val #
 		o_phase_s_factor		<= slv_reg[5];
 		o_phase_t_factor		<= slv_reg[6];
 
-		o_c_factor_offset				<= slv_reg[10];
-		o_v_factor_offset				<= slv_reg[11];
-		o_dc_c_factor_offset			<= slv_reg[12];
-		o_dc_v_factor_offset			<= slv_reg[13];
-		o_phase_r_factor_offset			<= slv_reg[14];
-		o_phase_s_factor_offset			<= slv_reg[15];
-		o_phase_t_factor_offset			<= slv_reg[16];
+		o_c_factor_offset		<= slv_reg[10];
+		o_v_factor_offset		<= slv_reg[11];
+		o_dc_c_factor_offset	<= slv_reg[12];
+		o_dc_v_factor_offset	<= slv_reg[13];
+		o_phase_r_factor_offset	<= slv_reg[14];
+		o_phase_s_factor_offset	<= slv_reg[15];
+		o_phase_t_factor_offset	<= slv_reg[16];
+
+		o_rack_sel				<= slv_reg[17];
 	end
 	// User logic ends
 

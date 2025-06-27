@@ -76,7 +76,11 @@ module SFP_Handler
 	output [1:0] o_m_tx_state,
 	output [1:0] o_s_peer_tx_state,
 	output [3:0] o_s_local_tx_state,
-	output [2:0] o_s_tx_state
+	output [2:0] o_s_tx_state,
+
+	output reg [31:0] o_s_sfp_set_c,
+	output reg [31:0] o_s_sfp_set_v,
+	output o_sfp_slave
 );
 
 	localparam IDLE	= 0;
@@ -143,7 +147,7 @@ module SFP_Handler
 		else
 		begin
 			case (s_local_tx_state)
-				IDLE : 	s_local_tx_state <= ((local_tx_period_cnt < 40000) && (~sfp_master) && i_channel_up) ? STAT : IDLE;
+				IDLE : 	s_local_tx_state <= ((local_tx_period_cnt == (40000 - 1)) && (~sfp_master) && i_channel_up) ? STAT : IDLE;
 				STAT :	s_local_tx_state <= INTL;
 				INTL :	s_local_tx_state <= CULL;
 				CULL :	s_local_tx_state <= VOLT;
@@ -327,12 +331,25 @@ module SFP_Handler
 		begin
 			o_s_sfp_cmd <= 0;
 			o_s_sfp_data <= 0;
+			o_s_sfp_set_c <= 0;
+			o_s_sfp_set_v <= 0;
 		end
 
 		else if (s_rx_sfp_tready && s_rx_sfp_tvalid && ~sfp_master)
 		begin
 			o_s_sfp_cmd <= s_rx_sfp_tdata[63:32];
 			o_s_sfp_data <= s_rx_sfp_tdata[31:0];
+
+			case (s_rx_sfp_tdata[63:32])
+				32'h1000_0010 : o_s_sfp_set_c <= s_rx_sfp_tdata[31:0];
+				32'h1000_0011 : o_s_sfp_set_v <= s_rx_sfp_tdata[31:0];
+
+				default :
+				begin
+					o_s_sfp_set_c <= o_s_sfp_set_c;
+					o_s_sfp_set_v <= o_s_sfp_set_v;
+				end
+			endcase
 		end
 	end
 
@@ -343,5 +360,7 @@ module SFP_Handler
 	assign o_s_peer_tx_state = s_peer_tx_state;
 	assign o_s_local_tx_state = s_local_tx_state;
 	assign o_s_tx_state = s_tx_state;
+
+	assign o_sfp_slave = (i_sfp_en && |i_sfp_id);
 
 endmodule
