@@ -64,19 +64,18 @@ module Waveform_Top #
 	wire s_ce;
 	wire [31:0] s_din;
 
-	reg [1:0] wf_trg_cnt;
+	reg delay_reg;
 	reg [16:0] wf_cnt;
 	wire wf_trg;
 
 	always @(posedge i_clk or negedge i_rst)
 	begin
 		if (~i_rst)
-			wf_trg_cnt <= 0;
+			delay_reg <= 0;
 
 		else
-			wf_trg_cnt <= (i_wf_trg) ? ((&wf_trg_cnt) ? wf_trg_cnt : wf_trg_cnt + 1) : 0;
+			delay_reg <= i_wf_trg;
 	end
-
 
 	always @(posedge i_clk or negedge i_rst)
 	begin
@@ -151,6 +150,6 @@ module Waveform_Top #
 		.m_dout(o_wf_sp)
 	);
 
-	assign wf_trg = (wf_trg_cnt == 1);
+	assign wf_trg = (~delay_reg && i_wf_trg);
 
 endmodule

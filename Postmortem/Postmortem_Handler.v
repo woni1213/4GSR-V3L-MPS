@@ -56,11 +56,11 @@ module Postmortem_Handler
 	localparam PERIOD 	= 4000;		// 20us, 50KHz
 	localparam ADDR 	= 50000;	// 50,000개, 1초, 0x3_0D40
 
-	localparam OUTPUT 		= 40'h00_0010_0000;
-	localparam DC_LINK 		= 40'h00_0020_0000;
-	localparam INDUCTER		= 40'h00_0030_0000;
-	localparam IGBT_RMS_R	= 40'h00_0040_0000;
-	localparam RMS_S_T		= 40'h00_0050_0000;
+	localparam OUTPUT 		= 40'h00_0040_0000;
+	localparam DC_LINK 		= 40'h00_0050_0000;
+	localparam INDUCTER		= 40'h00_0060_0000;
+	localparam IGBT_RMS_R	= 40'h00_0070_0000;
+	localparam RMS_S_T		= 40'h00_0080_0000;
 
 	reg [2:0] state;
 	reg [2:0] n_state;
