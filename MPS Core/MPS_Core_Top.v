@@ -19,6 +19,10 @@ module MPS_Core_Top #
 	input i_tx_en,								// from AXIS FRAME IP
 	input i_r_valid,
 
+	input [1:0] i_wf_en,
+	input [31:0] i_wf_sp,
+	output o_wf_set_flag,
+
 	// From ADC
 	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
 	input [31:0] 	c_adc_s_axis_tdata,					// Current ADC Data
@@ -292,6 +296,10 @@ module MPS_Core_Top #
 		.i_sfp_slave(i_sfp_slave),
 		.i_s_sfp_set_c(i_s_sfp_set_c),
 		.i_s_sfp_set_v(i_s_sfp_set_v),
+
+		.i_wf_en(i_wf_en),
+		.i_wf_sp(i_wf_sp),
+		.o_wf_set_flag(o_wf_set_flag),
 
 		// Zynq to DSP
 		.o_xintf_z_to_d_addr(o_xintf_z_to_d_addr),

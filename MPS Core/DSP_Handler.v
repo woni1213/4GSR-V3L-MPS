@@ -23,6 +23,11 @@ module DSP_Handler
 	input [31:0] i_s_sfp_set_c,
 	input [31:0] i_s_sfp_set_v,
 
+	// Waveform
+	input [1:0] i_wf_en,
+	input [31:0] i_wf_sp,
+	output o_wf_set_flag,
+
 	// Zynq to DSP
 	output reg [8:0] o_xintf_z_to_d_addr,
 	output reg [15:0] o_xintf_z_to_d_din,
@@ -244,10 +249,10 @@ module DSP_Handler
 				41 : begin o_xintf_z_to_d_addr <= 41;		o_xintf_z_to_d_din <= i_c_adc_data[31:16];	end
 				42 : begin o_xintf_z_to_d_addr <= 42;		o_xintf_z_to_d_din <= i_v_adc_data[15:0];	end
 				43 : begin o_xintf_z_to_d_addr <= 43;		o_xintf_z_to_d_din <= i_v_adc_data[31:16];	end
-				44 : begin o_xintf_z_to_d_addr <= 44;		o_xintf_z_to_d_din <= (i_sfp_slave) ? i_s_sfp_set_c[15:0]	: i_set_c[15:0];	end
-				45 : begin o_xintf_z_to_d_addr <= 45;		o_xintf_z_to_d_din <= (i_sfp_slave) ? i_s_sfp_set_c[31:16]	: i_set_c[31:16];	end
-				46 : begin o_xintf_z_to_d_addr <= 46;		o_xintf_z_to_d_din <= (i_sfp_slave) ? i_s_sfp_set_v[15:0]	: i_set_v[15:0];	end
-				47 : begin o_xintf_z_to_d_addr <= 47;		o_xintf_z_to_d_din <= (i_sfp_slave) ? i_s_sfp_set_v[31:16]	: i_set_v[31:16];	end
+				44 : begin o_xintf_z_to_d_addr <= 44;		o_xintf_z_to_d_din <= (i_sfp_slave) ? i_s_sfp_set_c[15:0]	: (i_wf_en == 1) ? i_wf_sp[15:0] : i_set_c[15:0];	end
+				45 : begin o_xintf_z_to_d_addr <= 45;		o_xintf_z_to_d_din <= (i_sfp_slave) ? i_s_sfp_set_c[31:16]	: (i_wf_en == 1) ? i_wf_sp[31:16] : i_set_c[31:16];	end
+				46 : begin o_xintf_z_to_d_addr <= 46;		o_xintf_z_to_d_din <= (i_sfp_slave) ? i_s_sfp_set_v[15:0]	: (i_wf_en == 3) ? i_wf_sp[15:0] : i_set_v[15:0];	end
+				47 : begin o_xintf_z_to_d_addr <= 47;		o_xintf_z_to_d_din <= (i_sfp_slave) ? i_s_sfp_set_v[31:16]	: (i_wf_en == 3) ? i_wf_sp[31:16] : i_set_v[31:16];	end
 				default :
 					o_xintf_z_to_d_addr <= 0;
 			endcase
@@ -375,4 +380,5 @@ module DSP_Handler
 	end
 
 	assign o_w_valid = (w_state == DELAY);
+	assign o_wf_set_flag = (w_state == W_SETUP);
 endmodule
