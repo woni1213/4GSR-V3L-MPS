@@ -288,7 +288,7 @@ module AXI4_Lite_MPS_Core #
 
 	always @(posedge S_AXI_ACLK)
 	begin
-		o_mps_setup	<= slv_reg[0];
+		o_mps_setup		<= slv_reg[0];
 		o_set_c			<= slv_reg[1];
 		o_set_v 		<= slv_reg[2];
 		o_max_duty 		<= slv_reg[3];

@@ -100,7 +100,7 @@ module Postmortem_Handler
 			period_cnt <= 0;
 
 		else
-			period_cnt <= (period_cnt < PERIOD - 1) ? ((intl_cnt > 25000) ? period_cnt + 1 : 0) : 0;
+			period_cnt <= (period_cnt < PERIOD - 1) ? ((intl_cnt < 25000) ? period_cnt + 1 : 0) : 0;
 	end
 
 	always @(posedge i_clk or negedge i_rst)
@@ -118,7 +118,7 @@ module Postmortem_Handler
 			intl_cnt <= 0;
 
 		else
-			intl_cnt <= (i_intl_flag) ? (((state == DONE) && (intl_cnt > 25000)) ? intl_cnt + 1 : intl_cnt) : 0;
+			intl_cnt <= (i_intl_flag) ? (((state == DONE) && (intl_cnt < 25000)) ? intl_cnt + 1 : intl_cnt) : 0;
 	end
 
 	always @(posedge i_clk or negedge i_rst)

@@ -18,6 +18,7 @@ module MPS_Core_Top #
 	output o_w_valid,							// Write Valid to DSP. to DSP (MXTMP3)
 	input i_tx_en,								// from AXIS FRAME IP
 	input i_r_valid,
+	input i_intl_clr,
 
 	// From ADC
 	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
@@ -127,7 +128,7 @@ module MPS_Core_Top #
 	wire [31:0] p_gain_v;
 	wire [31:0] i_gain_v;
 	wire [31:0] d_gain_v;
-	wire [12:0] mps_setup;
+	wire [3:0] mps_setup;
 	wire [31:0] set_c;
 	wire [31:0] max_duty;
 	wire [31:0] max_phase;
@@ -288,6 +289,7 @@ module MPS_Core_Top #
 		.i_w_ready(i_w_ready),
 		.o_w_valid(o_w_valid),
 		.i_r_valid(i_r_valid),
+		.i_intl_clr(i_intl_clr),
 
 		.i_sfp_slave(i_sfp_slave),
 		.i_s_sfp_set_c(i_s_sfp_set_c),
