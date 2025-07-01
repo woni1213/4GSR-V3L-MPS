@@ -18,6 +18,8 @@ module DSP_Handler
 	output o_w_valid,
 	input i_r_valid,
 
+	input i_intl_clr,
+
 	// SFP Slave
 	input i_sfp_slave,
 	input [31:0] i_s_sfp_set_c,
@@ -54,7 +56,7 @@ module DSP_Handler
 	input [31:0] i_max_v,
 	input [15:0] i_deadband,
 	input [15:0] i_sw_freq,
-	input [31:0] i_mps_setup,
+	input [3:0] i_mps_setup,
 
 	// DSP to Zynq
 	input [15:0] i_xintf_d_to_z_dout,
@@ -286,6 +288,7 @@ module DSP_Handler
 			o_dsp_d_gain_v <= 0;
 			o_dsp_set_c <= 0;
 			o_dsp_set_v <= 0;
+			o_dsp_status <= 0;
 		end
 
 		else if (r_state == R_SETUP)
@@ -351,6 +354,7 @@ module DSP_Handler
 					o_dsp_d_gain_v <= o_dsp_d_gain_v;
 					o_dsp_set_c <= o_dsp_set_c;
 					o_dsp_set_v <= o_dsp_set_v;
+					o_dsp_status <= o_dsp_status;
 				end
 			endcase
 		end
@@ -376,6 +380,7 @@ module DSP_Handler
 			o_dsp_d_gain_v <= o_dsp_d_gain_v;
 			o_dsp_set_c <= o_dsp_set_c;
 			o_dsp_set_v <= o_dsp_set_v;
+			o_dsp_status <= o_dsp_status;
 		end
 	end
 
