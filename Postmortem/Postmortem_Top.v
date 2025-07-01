@@ -7,6 +7,12 @@ BR MPS Postmortem Module
 
 25.06.10 :	최초 생성
 
+ - 모든 ADC 값에 대한 Postmortem
+ - AXI4를 이용해서 PS DDR4로 전달 (HP0)
+
+ - Test Bench는
+	1. Interlock 발생 시 o_intl_ddr_addr_cnt 값이 고정되는지 확인
+
 */
 module Postmortem_Top
 (
@@ -26,9 +32,11 @@ module Postmortem_Top
 
 	input i_intl_flag,
 
-	output [39:0] o_ddr_addr_pointer,
+	output [15:0] o_ddr_addr_cnt,
+	output reg [15:0] o_intl_ddr_addr_cnt,
 
-	output [2:0] o_state,
+	output [2:0] o_axi4_state,
+	output [2:0] o_postm_state,
 
 	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
 	// Write Address Channel
@@ -90,6 +98,27 @@ module Postmortem_Top
 	wire done;
 	wire [39:0] ddr_addr;
 	wire [63:0] ddr_data;
+	wire [15:0] addr_cnt;
+
+	reg intl_flag_buf;
+
+	always @(posedge i_clk or negedge i_rst)
+	begin
+		if (~i_rst)
+			o_intl_ddr_addr_cnt <= 0;
+
+		else
+			o_intl_ddr_addr_cnt <= (i_intl_flag) ? ((intl_flag_buf) ? o_intl_ddr_addr_cnt : addr_cnt) : 0;
+	end
+
+	always @(posedge i_clk or negedge i_rst)
+	begin
+		if (~i_rst)
+			intl_flag_buf <= 0;
+
+		else
+			intl_flag_buf <= (i_intl_flag);
+	end
 
 	AXI4_Postmortem u_AXI4_Postmortem
 	(
@@ -102,7 +131,7 @@ module Postmortem_Top
 		.i_ddr_addr(ddr_addr),
 		.i_ddr_data(ddr_data),
 
-		.o_state(o_state),
+		.o_state(o_axi4_state),
 
 		.M_AXI_AWID(M_AXI_AWID),
 		.M_AXI_AWADDR(M_AXI_AWADDR),
@@ -171,9 +200,12 @@ module Postmortem_Top
 		.i_done(done),
 
 		.o_ddr_addr(ddr_addr),
-		.o_ddr_data(ddr_data)
+		.o_ddr_data(ddr_data),
+		.o_addr_cnt(addr_cnt),
+
+		.o_state(o_postm_state)
 	);
 
-	assign o_ddr_addr_pointer = ddr_addr;
+	assign o_ddr_addr_cnt = addr_cnt;
 
 endmodule

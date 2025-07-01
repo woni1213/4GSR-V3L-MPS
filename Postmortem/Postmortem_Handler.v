@@ -1,5 +1,23 @@
 `timescale 1ns / 1ps
 
+/*
+
+25.07.01 :	최초 생성
+
+ - 저장 데이터는 32 + 32 비트로 ADC 값 저장
+ - Interlock 방생 전에는 1초 동안의 데이터를 Queue 방식으로 계속 저장 (o_addr_cnt)
+ - Interlock 발생 후에는 0.5초 동안의 데이터를 저장하고 스톱 (intl_cnt)
+ - Interlock 클리어 후 다시 동작
+
+ - Test Bench는
+	1. Test Bench로 Interlock 전 후 o_addr_cnt, intl_cnt 동작 확인
+	2. Interlock 클리어 후 정상 동작 확인
+
+ - Test는
+	1. PS DDR4 데이터 저장 유무 (Vitis로 확인, 64비트로 32비트씩 읽어야 함)
+
+*/
+
 module Postmortem_Handler
 (
 	input i_clk,
@@ -21,7 +39,10 @@ module Postmortem_Handler
 	input i_done,
 
 	output reg [39:0] o_ddr_addr,
-	output reg [63:0] o_ddr_data
+	output reg [63:0] o_ddr_data,
+	output reg [15:0] o_addr_cnt,
+
+	output [2:0] o_state
 );
 
 	localparam IDLE = 0;
@@ -31,7 +52,7 @@ module Postmortem_Handler
 	localparam RMS1 = 4;
 	localparam RMS2 = 5;
 	localparam DONE = 6;
-
+	
 	localparam PERIOD 	= 4000;		// 20us, 50KHz
 	localparam ADDR 	= 50000;	// 50,000개, 1초, 0x3_0D40
 
@@ -45,7 +66,7 @@ module Postmortem_Handler
 	reg [2:0] n_state;
 
 	reg [11:0] period_cnt;
-	reg [15:0] addr_cnt;
+	reg [14:0] intl_cnt;
 
 	wire ddr_start_flag;
 
@@ -79,16 +100,25 @@ module Postmortem_Handler
 			period_cnt <= 0;
 
 		else
-			period_cnt <= (period_cnt < PERIOD - 1) ? ((~i_intl_flag) ? period_cnt + 1 : 0) : 0;
+			period_cnt <= (period_cnt < PERIOD - 1) ? ((intl_cnt > 25000) ? period_cnt + 1 : 0) : 0;
 	end
 
 	always @(posedge i_clk or negedge i_rst)
 	begin
 		if (~i_rst)
-			addr_cnt <= 0;
+			o_addr_cnt <= 0;
 
 		else
-			addr_cnt <= (state == DONE) ? ((addr_cnt == ADDR - 1) ? 0 : addr_cnt + 1) : addr_cnt;
+			o_addr_cnt <= (state == DONE) ? ((o_addr_cnt == ADDR - 1) ? 0 : o_addr_cnt + 1) : o_addr_cnt;
+	end
+
+	always @(posedge i_clk or negedge i_rst)
+	begin
+		if (~i_rst)
+			intl_cnt <= 0;
+
+		else
+			intl_cnt <= (i_intl_flag) ? (((state == DONE) && (intl_cnt > 25000)) ? intl_cnt + 1 : intl_cnt) : 0;
 	end
 
 	always @(posedge i_clk or negedge i_rst)
@@ -101,34 +131,36 @@ module Postmortem_Handler
 
 		else if (state == OUTP)
 		begin
-			o_ddr_addr <= OUTPUT + (addr_cnt * 8);
+			o_ddr_addr <= OUTPUT + (o_addr_cnt * 8);
 			o_ddr_data <= {i_c, i_v};
 		end
 
 		else if (state == DC_L)
 		begin
-			o_ddr_addr <= DC_LINK + (addr_cnt * 8);
+			o_ddr_addr <= DC_LINK + (o_addr_cnt * 8);
 			o_ddr_data <= {i_dc_c, i_dc_v};
 		end
 
 		else if (state == IDT)
 		begin
-			o_ddr_addr <= INDUCTER + (addr_cnt * 8);
+			o_ddr_addr <= INDUCTER + (o_addr_cnt * 8);
 			o_ddr_data <= {i_i_inductor_t, i_o_inductor_t};
 		end
 
 		else if (state == RMS1)
 		begin
-			o_ddr_addr <= IGBT_RMS_R + (addr_cnt * 8);
+			o_ddr_addr <= IGBT_RMS_R + (o_addr_cnt * 8);
 			o_ddr_data <= {i_igbt_t, i_phase_rms_r};
 		end
 
 		else if (state == RMS2)
 		begin
-			o_ddr_addr <= RMS_S_T + (addr_cnt * 8);
+			o_ddr_addr <= RMS_S_T + (o_addr_cnt * 8);
 			o_ddr_data <= {i_phase_rms_s, i_phase_rms_t};
 		end
 	end
+
+	assign o_state = state;
 
 	assign ddr_start_flag = (period_cnt == PERIOD - 1);
 	assign o_start = ~((state == IDLE) || (state == DONE));

@@ -3,9 +3,9 @@
 /*
 
 BR MPS Interlock Module
-°³¹ß 2ÆÀ Àü°æ¿ø ºÎÀå
+ï¿½ï¿½ï¿½ï¿½ 2ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-25.04.14 :	ÃÖÃÊ »ý¼º
+25.04.14 :	ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 */
 
@@ -48,7 +48,7 @@ module Analog_INTL_Top #
 	output [31:0] o_phase_under_data,
 	output [31:0] o_phase_over_data,
 
-
+	
 
 	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
 	input wire [C_S_AXI_ADDR_WIDTH-1 : 0] s00_axi_awaddr,
