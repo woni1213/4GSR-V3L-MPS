@@ -105,6 +105,8 @@ module SFP_Top #
 
 	wire [63:0] s_sfp_rsp;
 	wire s_sfp_rsp_flag;
+	wire s_sfp_rx_flag;
+	wire s_sfp_rx_clr;
 
 	wire [31:0] s0_analog_intl;
 	wire [31:0] s0_digital_intl;
@@ -145,9 +147,11 @@ module SFP_Top #
 		.i_s0_phase_rms_t(s0_phase_rms_t),
 
 		// Slave
+		.i_s_sfp_rx_flag(s_sfp_rx_flag),
 		.i_s_sfp_cmd(s_sfp_cmd),
 		.i_s_sfp_data(s_sfp_data),
 
+		.o_s_sfp_rx_clr(s_sfp_rx_clr),
 		.o_s_sfp_rsp(s_sfp_rsp),
 		.o_s_sfp_rsp_flag(s_sfp_rsp_flag),
 
@@ -253,7 +257,10 @@ module SFP_Top #
 
 		.o_s_sfp_set_c(o_s_sfp_set_c),
 		.o_s_sfp_set_v(o_s_sfp_set_v),
-		.o_sfp_slave(o_sfp_slave)
+		.o_sfp_slave(o_sfp_slave),
+
+		.i_s_sfp_rx_clr(s_sfp_rx_clr),
+		.o_s_sfp_rx_flag(s_sfp_rx_flag)
 	);
 
 endmodule

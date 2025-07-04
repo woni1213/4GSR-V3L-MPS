@@ -108,7 +108,7 @@ module MPS_System_Top #
 			intl_flag <= 0;
 
 		else
-			intl_flag <= ((|i_analog_intl) || (duty_intl));
+			intl_flag <= ((|i_analog_intl) || (duty_intl) || (i_ext_di[0]) || (|i_ext_di[6:4]));
 			// intl_flag <= ((|i_analog_intl) || (duty_intl) || (i_ext_di[0]) || (|i_ext_di[8:4]));
 	end
 

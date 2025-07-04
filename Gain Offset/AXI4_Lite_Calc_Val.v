@@ -267,8 +267,6 @@ module AXI4_Lite_Calc_Val #
 		o_phase_r_factor_offset	<= slv_reg[14];
 		o_phase_s_factor_offset	<= slv_reg[15];
 		o_phase_t_factor_offset	<= slv_reg[16];
-
-		o_rack_sel				<= slv_reg[17];
 	end
 	// User logic ends
 

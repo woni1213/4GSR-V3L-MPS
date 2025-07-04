@@ -4,21 +4,21 @@
 
 25.07.01 :	최초 생성
 
- - PS에서 Waveform BRAM에 100000개의 데이터 저장
+ - PS에서 Waveform BRAM에 65000개의 데이터 저장
  - 저장된 데이터는 Waveform Mode 시 DSP_Handler의 Set Point에 바로 값 보내줌
  - 보내주는 주기는 DSP Handler의 W_SETUP임 (i_wf_set_flag)
  - Waveform Mode는 o_wf_en[0], CV / CC는 o_wf_en[1]
  - Waveform Mode 시 BRAM의 마지막 데이터로 Set Point 값 계속 유지
  - Waveform 시작은 i_wf_trg로 시작 (외부 External Trigger. XDC로 Port 뚫어줘야함)
- - 만약 저장하는 데이터가 100000개 이하면 나머지 BRAM의 공간에는 필요한 값의 마지막 값으로 BRAM 데이터를 다 채워야함
- - Waveform 시작 중 100000개에 도달하지 못했는 경우에 Trigger가 입력되면 다시 0부터 시작해야함
- - 100000개가 다 동작한 후에는 마지막 데이터로 계속 유지되야함 (Trigger 입력 전까지 계속)
+ - 만약 저장하는 데이터가 65000개 이하면 나머지 BRAM의 공간에는 필요한 값의 마지막 값으로 BRAM 데이터를 다 채워야함
+ - Waveform 시작 중 65000개에 도달하지 못했는 경우에 Trigger가 입력되면 다시 0부터 시작해야함
+ - 65000개가 다 동작한 후에는 마지막 데이터로 계속 유지되야함 (Trigger 입력 전까지 계속)
 
  - Test Bench는
 	1. BRAM 데이터 저장 유무
 	2. i_wf_trg 동작 유무 및 동작 중 해당 신호가 다시 동작하는 경우 0부터 시작하는지 유무
 	3. wf_cnt 증가 및 Overflow 확인
-	4. wf_cnt 100000번 후 마지막 데이터 유지하는지 확인
+	4. wf_cnt 65000번 후 마지막 데이터 유지하는지 확인
 
  - Test는 Test Bench꺼 그대로 다시 확인
 
@@ -36,7 +36,7 @@ module Waveform_Top #
 
 	input i_wf_trg,						// External Trigger
 	input i_wf_set_flag,				// MPS Core
-	output [1:0] o_wf_en,				// MNPS_Core, 01 : C, 11 : V
+	output [1:0] o_wf_en,				// MPS Core, 01 : C, 11 : V
 	output [31:0] o_wf_sp,				// MPS Core
 
 	(* X_INTERFACE_PARAMETER = "FREQ_HZ 199998001" *)
@@ -67,6 +67,10 @@ module Waveform_Top #
 	reg delay_reg;
 	reg [16:0] wf_cnt;
 	wire wf_trg;
+	wire i_wf_trg_n;
+
+	reg wf_en;
+	reg [16:0] prev_o_wf_cnt;
 
 	always @(posedge i_clk or negedge i_rst)
 	begin
@@ -74,22 +78,37 @@ module Waveform_Top #
 			delay_reg <= 0;
 
 		else
-			delay_reg <= i_wf_trg;
+			delay_reg <= i_wf_trg_n;
 	end
 
 	always @(posedge i_clk or negedge i_rst)
 	begin
 		if (~i_rst)
-			wf_cnt <= 100000 - 1;
+			wf_cnt <= 65000 - 1;
 
 		else if (wf_trg)
 			wf_cnt <= 0;
 
-		else if ((i_wf_set_flag) && (wf_cnt < 100000 - 1))
+		else if ((i_wf_set_flag) && (wf_cnt < 65000 - 1))
 			wf_cnt <= wf_cnt + 1;
 
 		else
 			wf_cnt <= wf_cnt;
+	end
+
+	always @(posedge i_clk or negedge i_rst)
+	begin
+		if (~i_rst)
+		begin
+			prev_o_wf_cnt <= 0;
+			wf_en <= 0;
+		end
+
+		else
+		begin
+			prev_o_wf_cnt <= wf_cnt;
+			wf_en <= (o_wf_en[1]) ? ((prev_o_wf_cnt > wf_cnt) ? 1 : wf_en) : 0;
+		end
 	end
 
 	AXI4_Lite_Waveform #
@@ -133,10 +152,12 @@ module Waveform_Top #
 	DPBRAM_Single_Clock #
 	(
 		.DWIDTH(32),
-		.RAM_DEPTH(10000)
+		.RAM_DEPTH(65000)
 	)
 	u_DPBRAM_Single_Clock
 	(
+		.i_clk(i_clk),
+
 		.s_addr(s_addr),
 		.s_ce(s_ce),
 		.s_we(1),
@@ -144,12 +165,13 @@ module Waveform_Top #
 		.s_dout(),
 
 		.m_addr(wf_cnt),
-		.m_ce(o_wf_en[0]),
+		.m_ce(wf_en),
 		.m_we(0),
 		.m_din(0),
 		.m_dout(o_wf_sp)
 	);
 
-	assign wf_trg = (~delay_reg && i_wf_trg);
+	assign wf_trg = (~delay_reg && i_wf_trg_n);
+	assign i_wf_trg_n = ~i_wf_trg;
 
 endmodule

@@ -15,7 +15,6 @@ module MPS_Operation_FSM
 	input i_op_on_flag,
 	input i_op_off_flag,
 	input i_op_intl,
-	input i_fsm_intl,
 
 	input [31:0] i_dc_v,
 	input [15:0] i_ext_di,
@@ -43,6 +42,8 @@ module MPS_Operation_FSM
 	localparam MAIN_OFF		= 1;
 	localparam DISCHA_ON	= 2;
 	localparam SYSTEM_OFF	= 3;
+
+	localparam TIME_OUT	= 2_000_000_000;		// 10s
 
 	reg [3:0] on_state;
 	reg [3:0] n_on_state;
@@ -78,7 +79,7 @@ module MPS_Operation_FSM
 			off_state <= IDLE;
 
 		else 
-			off_state <= (&off_timeout_cnt) ? FAIL : n_off_state;
+			off_state <= (off_timeout_cnt == (TIME_OUT - 1)) ? FAIL : n_off_state;
 	end
 
 	always @(*)
@@ -161,7 +162,7 @@ module MPS_Operation_FSM
 			off_timeout_cnt <= 0;
 
 		else
-			off_timeout_cnt <= ((off_state == IDLE) || (off_state == SYSTEM_OFF)) ? 0 : (&off_timeout_cnt) ? off_timeout_cnt : off_timeout_cnt + 1;
+			off_timeout_cnt <= ((off_state == IDLE) || (off_state == FAIL)) ? 0 : (off_timeout_cnt == (TIME_OUT - 1)) ? off_timeout_cnt : off_timeout_cnt + 1;
 	end
 
 	// A > B
@@ -170,7 +171,8 @@ module MPS_Operation_FSM
 		.aclk(i_clk),
 		.s_axis_a_tdata(i_dc_v),
 		.s_axis_a_tvalid(on_state == DC_CHK),
-		.s_axis_b_tdata(32'h43898000),			// 275
+		// .s_axis_b_tdata(32'h43898000),			// 275
+		.s_axis_b_tdata(32'h43858000),			// 267
 		.s_axis_b_tvalid(on_state == DC_CHK),
 		.m_axis_result_tdata(dc_on_flag),
 		.m_axis_result_tvalid(dc_on_valid)

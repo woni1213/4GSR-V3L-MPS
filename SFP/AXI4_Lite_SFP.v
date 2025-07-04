@@ -28,9 +28,11 @@ module AXI4_Lite_SFP #
 	input [31:0] i_s0_phase_rms_t,
 
 	// Slave
+	input i_s_sfp_rx_flag,
 	input [31:0] i_s_sfp_cmd,
 	input [31:0] i_s_sfp_data,
 
+	output reg o_s_sfp_rx_clr,
 	output reg [63:0] o_s_sfp_rsp,
 	output reg o_s_sfp_rsp_flag,
 
@@ -73,7 +75,7 @@ module AXI4_Lite_SFP #
 
 	// slv_reg IO Type Select. 0 : Input, 1 : Output
 	// slv_reg Start to LSB
-	localparam [C_S_AXI_ADDR_NUM - 1 : 0] io_sel = {8{1'b1}};	// 0 : Input, 1 : Output
+	localparam [C_S_AXI_ADDR_NUM - 1 : 0] io_sel = {10{1'b1}};	// 0 : Input, 1 : Output
 
 	reg [C_S_AXI_DATA_WIDTH - 1 : 0] slv_reg[C_S_AXI_ADDR_NUM - 1 : 0];
 
@@ -272,25 +274,27 @@ module AXI4_Lite_SFP #
 		o_s_sfp_rsp[31:0]	<= slv_reg[5];
 		o_s_sfp_rsp[63:32]	<= slv_reg[6];
 		o_s_sfp_rsp_flag	<= slv_reg[7][0];
+		o_s_sfp_rx_clr		<= slv_reg[8][0];
 	end
 
 	always @(posedge S_AXI_ACLK)
 	begin
-		slv_reg[8] <= i_m_sfp_rsp[31:0];
-		slv_reg[9] <= i_m_sfp_rsp[63:32];
+		slv_reg[10] <= i_m_sfp_rsp[31:0];
+		slv_reg[11] <= i_m_sfp_rsp[63:32];
 
-		slv_reg[10] <= i_s0_analog_intl;
-		slv_reg[11] <= i_s0_digital_intl;
-		slv_reg[12] <= i_s0_c;
-		slv_reg[13] <= i_s0_v;
-		slv_reg[14] <= i_s0_dc_c;
-		slv_reg[15] <= i_s0_dc_v;
-		slv_reg[16] <= i_s0_phase_rms_r;
-		slv_reg[17] <= i_s0_phase_rms_s;
-		slv_reg[18] <= i_s0_phase_rms_t;
+		slv_reg[12] <= i_s0_analog_intl;
+		slv_reg[13] <= i_s0_digital_intl;
+		slv_reg[14] <= i_s0_c;
+		slv_reg[15] <= i_s0_v;
+		slv_reg[16] <= i_s0_dc_c;
+		slv_reg[17] <= i_s0_dc_v;
+		slv_reg[18] <= i_s0_phase_rms_r;
+		slv_reg[19] <= i_s0_phase_rms_s;
+		slv_reg[20] <= i_s0_phase_rms_t;
 
-		slv_reg[19] <= i_s_sfp_cmd;
-		slv_reg[20] <= i_s_sfp_data;
+		slv_reg[21] <= i_s_sfp_cmd;
+		slv_reg[22] <= i_s_sfp_data;
+		slv_reg[23] <= i_s_sfp_rx_flag;
 	end
 
 	// User logic ends

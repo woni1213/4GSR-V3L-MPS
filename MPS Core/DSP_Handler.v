@@ -216,41 +216,41 @@ module DSP_Handler
 		else if (w_state == WRITE)
 		begin
 			case (w_addr_pointer)
-				8  : begin o_xintf_z_to_d_addr <= 8 ;		o_xintf_z_to_d_din <= i_max_duty[15:0];		end
-				9  : begin o_xintf_z_to_d_addr <= 9 ;		o_xintf_z_to_d_din <= i_max_duty[31:16];	end
-				10 : begin o_xintf_z_to_d_addr <= 10;		o_xintf_z_to_d_din <= i_max_phase[15:0];	end
-				11 : begin o_xintf_z_to_d_addr <= 11;		o_xintf_z_to_d_din <= i_max_phase[31:16];	end
-				12 : begin o_xintf_z_to_d_addr <= 12;		o_xintf_z_to_d_din <= i_max_freq[15:0];		end 
-				13 : begin o_xintf_z_to_d_addr <= 13;		o_xintf_z_to_d_din <= i_max_freq[31:16];	end
-				14 : begin o_xintf_z_to_d_addr <= 14;		o_xintf_z_to_d_din <= i_min_freq[15:0];		end
-				15 : begin o_xintf_z_to_d_addr <= 15;		o_xintf_z_to_d_din <= i_min_freq[31:16];	end
-				16 : begin o_xintf_z_to_d_addr <= 16;		o_xintf_z_to_d_din <= i_min_v[15:0];		end
-				17 : begin o_xintf_z_to_d_addr <= 17;		o_xintf_z_to_d_din <= i_min_v[31:16];		end
-				18 : begin o_xintf_z_to_d_addr <= 18;		o_xintf_z_to_d_din <= i_max_v[15:0];		end
-				19 : begin o_xintf_z_to_d_addr <= 19;		o_xintf_z_to_d_din <= i_max_v[31:16];		end
-				20 : begin o_xintf_z_to_d_addr <= 20;		o_xintf_z_to_d_din <= i_min_c[15:0];		end
-				21 : begin o_xintf_z_to_d_addr <= 21;		o_xintf_z_to_d_din <= i_min_c[31:16];		end
-				22 : begin o_xintf_z_to_d_addr <= 22;		o_xintf_z_to_d_din <= i_max_c[15:0];		end
-				23 : begin o_xintf_z_to_d_addr <= 23;		o_xintf_z_to_d_din <= i_max_c[31:16];		end
-				24 : begin o_xintf_z_to_d_addr <= 24;		o_xintf_z_to_d_din <= i_deadband;			end
-				25 : begin o_xintf_z_to_d_addr <= 25;		o_xintf_z_to_d_din <= i_sw_freq;			end
-				26 : begin o_xintf_z_to_d_addr <= 26;		o_xintf_z_to_d_din <= i_p_gain_c[15:0];		end
-				27 : begin o_xintf_z_to_d_addr <= 27;		o_xintf_z_to_d_din <= i_p_gain_c[31:16];	end
-				28 : begin o_xintf_z_to_d_addr <= 28;		o_xintf_z_to_d_din <= i_i_gain_c[15:0];		end
-				29 : begin o_xintf_z_to_d_addr <= 29;		o_xintf_z_to_d_din <= i_i_gain_c[31:16];	end
-				30 : begin o_xintf_z_to_d_addr <= 30;		o_xintf_z_to_d_din <= i_d_gain_c[15:0];		end
-				31 : begin o_xintf_z_to_d_addr <= 31;		o_xintf_z_to_d_din <= i_d_gain_c[31:16];	end
-				32 : begin o_xintf_z_to_d_addr <= 32;		o_xintf_z_to_d_din <= i_p_gain_v[15:0];		end
-				33 : begin o_xintf_z_to_d_addr <= 33;		o_xintf_z_to_d_din <= i_p_gain_v[31:16];	end
-				34 : begin o_xintf_z_to_d_addr <= 34;		o_xintf_z_to_d_din <= i_i_gain_v[15:0];		end
-				35 : begin o_xintf_z_to_d_addr <= 35;		o_xintf_z_to_d_din <= i_i_gain_v[31:16];	end
-				36 : begin o_xintf_z_to_d_addr <= 36;		o_xintf_z_to_d_din <= i_d_gain_v[15:0];		end
-				37 : begin o_xintf_z_to_d_addr <= 37;		o_xintf_z_to_d_din <= i_d_gain_v[31:16];	end
-				39 : begin o_xintf_z_to_d_addr <= 39;		o_xintf_z_to_d_din <= i_mps_setup;			end
-				40 : begin o_xintf_z_to_d_addr <= 40;		o_xintf_z_to_d_din <= i_c_adc_data[15:0];	end
-				41 : begin o_xintf_z_to_d_addr <= 41;		o_xintf_z_to_d_din <= i_c_adc_data[31:16];	end
-				42 : begin o_xintf_z_to_d_addr <= 42;		o_xintf_z_to_d_din <= i_v_adc_data[15:0];	end
-				43 : begin o_xintf_z_to_d_addr <= 43;		o_xintf_z_to_d_din <= i_v_adc_data[31:16];	end
+				8  : begin o_xintf_z_to_d_addr <= 8 ;		o_xintf_z_to_d_din <= i_max_duty[15:0];				end
+				9  : begin o_xintf_z_to_d_addr <= 9 ;		o_xintf_z_to_d_din <= i_max_duty[31:16];			end
+				10 : begin o_xintf_z_to_d_addr <= 10;		o_xintf_z_to_d_din <= i_max_phase[15:0];			end
+				11 : begin o_xintf_z_to_d_addr <= 11;		o_xintf_z_to_d_din <= i_max_phase[31:16];			end
+				12 : begin o_xintf_z_to_d_addr <= 12;		o_xintf_z_to_d_din <= i_max_freq[15:0];				end 
+				13 : begin o_xintf_z_to_d_addr <= 13;		o_xintf_z_to_d_din <= i_max_freq[31:16];			end
+				14 : begin o_xintf_z_to_d_addr <= 14;		o_xintf_z_to_d_din <= i_min_freq[15:0];				end
+				15 : begin o_xintf_z_to_d_addr <= 15;		o_xintf_z_to_d_din <= i_min_freq[31:16];			end
+				16 : begin o_xintf_z_to_d_addr <= 16;		o_xintf_z_to_d_din <= i_min_v[15:0];				end
+				17 : begin o_xintf_z_to_d_addr <= 17;		o_xintf_z_to_d_din <= i_min_v[31:16];				end
+				18 : begin o_xintf_z_to_d_addr <= 18;		o_xintf_z_to_d_din <= i_max_v[15:0];				end
+				19 : begin o_xintf_z_to_d_addr <= 19;		o_xintf_z_to_d_din <= i_max_v[31:16];				end
+				20 : begin o_xintf_z_to_d_addr <= 20;		o_xintf_z_to_d_din <= i_min_c[15:0];				end
+				21 : begin o_xintf_z_to_d_addr <= 21;		o_xintf_z_to_d_din <= i_min_c[31:16];				end
+				22 : begin o_xintf_z_to_d_addr <= 22;		o_xintf_z_to_d_din <= i_max_c[15:0];				end
+				23 : begin o_xintf_z_to_d_addr <= 23;		o_xintf_z_to_d_din <= i_max_c[31:16];				end
+				24 : begin o_xintf_z_to_d_addr <= 24;		o_xintf_z_to_d_din <= i_deadband;					end
+				25 : begin o_xintf_z_to_d_addr <= 25;		o_xintf_z_to_d_din <= i_sw_freq;					end
+				26 : begin o_xintf_z_to_d_addr <= 26;		o_xintf_z_to_d_din <= i_p_gain_c[15:0];				end
+				27 : begin o_xintf_z_to_d_addr <= 27;		o_xintf_z_to_d_din <= i_p_gain_c[31:16];			end
+				28 : begin o_xintf_z_to_d_addr <= 28;		o_xintf_z_to_d_din <= i_i_gain_c[15:0];				end
+				29 : begin o_xintf_z_to_d_addr <= 29;		o_xintf_z_to_d_din <= i_i_gain_c[31:16];			end
+				30 : begin o_xintf_z_to_d_addr <= 30;		o_xintf_z_to_d_din <= i_d_gain_c[15:0];				end
+				31 : begin o_xintf_z_to_d_addr <= 31;		o_xintf_z_to_d_din <= i_d_gain_c[31:16];			end
+				32 : begin o_xintf_z_to_d_addr <= 32;		o_xintf_z_to_d_din <= i_p_gain_v[15:0];				end
+				33 : begin o_xintf_z_to_d_addr <= 33;		o_xintf_z_to_d_din <= i_p_gain_v[31:16];			end
+				34 : begin o_xintf_z_to_d_addr <= 34;		o_xintf_z_to_d_din <= i_i_gain_v[15:0];				end
+				35 : begin o_xintf_z_to_d_addr <= 35;		o_xintf_z_to_d_din <= i_i_gain_v[31:16];			end
+				36 : begin o_xintf_z_to_d_addr <= 36;		o_xintf_z_to_d_din <= i_d_gain_v[15:0];				end
+				37 : begin o_xintf_z_to_d_addr <= 37;		o_xintf_z_to_d_din <= i_d_gain_v[31:16];			end
+				39 : begin o_xintf_z_to_d_addr <= 39;		o_xintf_z_to_d_din <= {i_intl_clr, i_mps_setup};	end
+				40 : begin o_xintf_z_to_d_addr <= 40;		o_xintf_z_to_d_din <= i_c_adc_data[15:0];			end
+				41 : begin o_xintf_z_to_d_addr <= 41;		o_xintf_z_to_d_din <= i_c_adc_data[31:16];			end
+				42 : begin o_xintf_z_to_d_addr <= 42;		o_xintf_z_to_d_din <= i_v_adc_data[15:0];			end
+				43 : begin o_xintf_z_to_d_addr <= 43;		o_xintf_z_to_d_din <= i_v_adc_data[31:16];			end
 				44 : begin o_xintf_z_to_d_addr <= 44;		o_xintf_z_to_d_din <= (i_sfp_slave) ? i_s_sfp_set_c[15:0]	: (i_wf_en == 1) ? i_wf_sp[15:0] : i_set_c[15:0];	end
 				45 : begin o_xintf_z_to_d_addr <= 45;		o_xintf_z_to_d_din <= (i_sfp_slave) ? i_s_sfp_set_c[31:16]	: (i_wf_en == 1) ? i_wf_sp[31:16] : i_set_c[31:16];	end
 				46 : begin o_xintf_z_to_d_addr <= 46;		o_xintf_z_to_d_din <= (i_sfp_slave) ? i_s_sfp_set_v[15:0]	: (i_wf_en == 3) ? i_wf_sp[15:0] : i_set_v[15:0];	end

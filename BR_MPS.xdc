@@ -132,7 +132,7 @@ set_property -dict { PACKAGE_PIN K12	IOSTANDARD LVCMOS33 } [get_ports i_pwm_faul
 set_property -dict { PACKAGE_PIN F7		IOSTANDARD LVCMOS18 } [get_ports o_intl_OC_rst];	# MCLOCF~
 
 # System Control
-# set_property -dict { PACKAGE_PIN AF10	IOSTANDARD LVCMOS33 } [get_ports ];		# MEXTRG~
+set_property -dict { PACKAGE_PIN AF10	IOSTANDARD LVCMOS33 } [get_ports i_wf_trg];			# MEXTRG~
 set_property -dict { PACKAGE_PIN D11	IOSTANDARD LVCMOS33 } [get_ports o_en_dsp_boot];	# ENSOMBT~
 set_property -dict { PACKAGE_PIN B10	IOSTANDARD LVCMOS33 } [get_ports o_sys_rst];		# ENSOMMR
 set_property -dict { PACKAGE_PIN G8		IOSTANDARD LVCMOS18 } [get_ports o_eeprom_rst];		# WEMEEP~

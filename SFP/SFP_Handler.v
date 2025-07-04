@@ -80,7 +80,10 @@ module SFP_Handler
 
 	output reg [31:0] o_s_sfp_set_c,
 	output reg [31:0] o_s_sfp_set_v,
-	output o_sfp_slave
+	output o_sfp_slave,
+
+	input i_s_sfp_rx_clr,
+	output reg o_s_sfp_rx_flag
 );
 
 	localparam IDLE	= 0;
@@ -341,8 +344,8 @@ module SFP_Handler
 			o_s_sfp_data <= s_rx_sfp_tdata[31:0];
 
 			case (s_rx_sfp_tdata[63:32])
-				32'h1000_0010 : o_s_sfp_set_c <= s_rx_sfp_tdata[31:0];
-				32'h1000_0011 : o_s_sfp_set_v <= s_rx_sfp_tdata[31:0];
+				32'h1000_0004 : o_s_sfp_set_c <= s_rx_sfp_tdata[31:0];
+				32'h1000_0005 : o_s_sfp_set_v <= s_rx_sfp_tdata[31:0];
 
 				default :
 				begin
@@ -351,6 +354,15 @@ module SFP_Handler
 				end
 			endcase
 		end
+	end
+
+	always @(posedge i_clk or negedge i_rst)
+	begin
+		if (~i_rst)
+			o_s_sfp_rx_flag <= 0;
+
+		else
+			o_s_sfp_rx_flag <= (i_s_sfp_rx_clr) ? 0 : (s_rx_sfp_tready && s_rx_sfp_tvalid && ~sfp_master) ? 1 : o_s_sfp_rx_flag;
 	end
 
 	assign sfp_master = (i_sfp_en && (i_sfp_id == 0));

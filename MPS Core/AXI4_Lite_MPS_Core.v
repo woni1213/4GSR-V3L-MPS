@@ -61,6 +61,7 @@ module AXI4_Lite_MPS_Core #
 	input [31:0] i_dsp_set_c,
 	input [31:0] i_dsp_set_v,
 	input [31:0] i_dsp_status,
+	input i_intl_ddr_addr_cnt,
 
 	input S_AXI_ACLK,
 	input S_AXI_ARESETN,
@@ -345,6 +346,7 @@ module AXI4_Lite_MPS_Core #
 		slv_reg[93]		<= i_dsp_set_c;
 		slv_reg[94]		<= i_dsp_set_v;
 		slv_reg[95]		<= i_dsp_status;
+		slv_reg[100]	<= i_intl_ddr_addr_cnt;
 	end
 
 	// User logic ends

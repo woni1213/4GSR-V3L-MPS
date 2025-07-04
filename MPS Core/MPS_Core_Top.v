@@ -20,6 +20,8 @@ module MPS_Core_Top #
 	input i_r_valid,
 	input i_intl_clr,
 
+	input [15:0] i_intl_ddr_addr_cnt,
+
 	input [1:0] i_wf_en,
 	input [31:0] i_wf_sp,
 	output o_wf_set_flag,
@@ -260,6 +262,7 @@ module MPS_Core_Top #
 		.i_dsp_set_c(dsp_set_c),
 		.i_dsp_set_v(dsp_set_v),
 		.i_dsp_status(dsp_status),
+		.i_intl_ddr_addr_cnt(i_intl_ddr_addr_cnt),
 
 		.S_AXI_ACLK(i_clk),
 		.S_AXI_ARESETN(i_rst),
